@@ -38,6 +38,7 @@ dependencies = [
 ]
 
 [project.urls]
+documentation = "https://sphinx-thumb-image.readthedocs.io"
 repository = "https://github.com/Robpol86/sphinx_thumb_image"
 
 [tool.poetry]
@@ -45,6 +46,12 @@ packages = [{include = "sphinx_thumb_image"}]
 
 [dependency-groups]
 dev = [
+    # Docs.
+    "sphinx-copybutton",
+    "sphinx-design",
+    "sphinx-notfound-page",
+    "sphinx-rtd-theme",
+    "toml",
     # Linters.
     "black",
     "flake8",
@@ -53,13 +60,27 @@ dev = [
     "pep8-naming",
     "pylint",
     # Tests.
+    "coverage[toml]",
     "pytest",
+    "pytest-cov",
     "pytest-icdiff",
 ]
 
 [tool.black]
 line-length = 125
 target-version = ["py39", "py310", "py311", "py312"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "^\\s*from",
+    "^\\s*import",
+    "^\\s*raise AssertionError",
+    "^\\s*raise NotImplementedError",
+]
+fail_under = 85
+
+[tool.coverage.run]
+branch = true
 
 [tool.pylint.FORMAT]
 good-names = ["i", "j", "k", "ex", "Run", "_", "x", "y", "z", "fd"]
