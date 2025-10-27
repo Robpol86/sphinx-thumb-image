@@ -11,7 +11,7 @@ PYPROJECT = toml.loads(Path(__file__).parent.parent.joinpath("pyproject.toml").r
 
 
 # General configuration.
-author = PYPROJECT["tool"]["poetry"]["authors"][0].split()[0]
+author = "Robpol86"
 copyright = f'{time.strftime("%Y")}, {author}'  # pylint: disable=redefined-builtin  # noqa
 html_last_updated_fmt = f"%c {time.tzname[time.localtime().tm_isdst]}"
 exclude_patterns = []
@@ -20,7 +20,7 @@ extensions = [
     "sphinx_copybutton",  # https://sphinx-copybutton.readthedocs.io
     "sphinx_design",  # https://sphinx-design.readthedocs.io
 ]
-project = PYPROJECT["tool"]["poetry"]["name"]
+project = PYPROJECT["project"]["name"]
 pygments_style = "sphinx"
 
 
