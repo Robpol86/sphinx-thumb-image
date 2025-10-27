@@ -1,23 +1,59 @@
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
 [project]
 name = "sphinx-thumb-image"
 version = "0.0.1"
 description = "Sphinx extension that resizes images into thumbnails on the fly"
-authors = [
-    {name = "Robpol86",email = "robpol86@gmail.com"}
-]
-license = {text = "BSD-2-Clause"}
 readme = "README.md"
+authors = [{name = "Robpol86", email = "robpol86@gmail.com"}]
+license = "BSD-2-Clause"
+classifiers = [
+    # TODO
+    "Private :: Do Not Upload",
+]
 requires-python = "^3.9"
 dependencies = [
-    "sphinx (>=8.2.3,<9.0.0)"
+    "pillow",
+    "sphinx",
 ]
+
+[project.urls]
+repository = "https://github.com/Robpol86/sphinx_thumb_image"
+
+[tool.poetry]
+packages = [{include = "sphinx_thumb_image"}]
 
 [dependency-groups]
 dev = [
-    "pytest (>=8.4.2,<9.0.0)"
+    # Linters.
+    "black",
+    "flake8",
+    "flake8-docstrings",
+    "flake8-import-order",
+    "pep8-naming",
+    "pylint",
+    # Tests.
+    "pytest",
+    "pytest-icdiff",
 ]
 
+[tool.black]
+line-length = 125
+target-version = ["py39", "py310", "py311", "py312"]
 
-[build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
+[tool.pylint.FORMAT]
+good-names = ["i", "j", "k", "ex", "Run", "_", "x", "y", "z", "fd"]
+ignore = [
+    ".venv/*",
+    "build/*",
+    "dist/*",
+    "docs/_build/*",
+]
+max-line-length = 125
+reports = false
+
+[tool.pytest.ini_options]
+addopts = "--durations=15 --showlocals --verbose --verbose"
+log_level = "DEBUG"
