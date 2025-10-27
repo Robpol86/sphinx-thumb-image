@@ -94,5 +94,5 @@ max-line-length = 125
 reports = false
 
 [tool.pytest.ini_options]
-addopts = "--durations=15 --showlocals --verbose --verbose"
+addopts = "--cov-report=term-missing --durations=15 --showlocals --verbose --verbose"
 log_level = "DEBUG"
