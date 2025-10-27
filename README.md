@@ -2,7 +2,7 @@
 
 Sphinx extension that resizes images into thumbnails on the fly.
 
-* Python 3.9 through 3.15 supported on Linux, macOS, and Windows.
+* Python 3.9 through 3.14 supported on Linux, macOS, and Windows.
 
 📖 Full documentation: https://sphinx-thumb-image.readthedocs.io
 
