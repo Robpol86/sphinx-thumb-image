@@ -68,7 +68,7 @@ dev = [
 
 [tool.black]
 line-length = 125
-target-version = ["py39", "py310", "py311", "py312"]
+target-version = ["py39", "py315"]
 
 [tool.coverage.report]
 exclude_lines = [
