@@ -11,7 +11,7 @@ jobs:
   Test:
     strategy:
       matrix:
-        os: [ubuntu-latest]  # TODO , macos-latest, windows-latest
+        os: [ubuntu-latest, windows-latest]  # TODO , macos-latest
         python: ["3.9", "3.14"]
     runs-on: ${{ matrix.os }}
     steps:
