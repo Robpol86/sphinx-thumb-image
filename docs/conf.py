@@ -11,7 +11,7 @@ PYPROJECT = toml.loads(Path(__file__).parent.parent.joinpath("pyproject.toml").r
 
 
 # General configuration.
-author = "Robpol86"
+author = PYPROJECT["project"]["authors"][0]["name"]
 copyright = f'{time.strftime("%Y")}, {author}'  # pylint: disable=redefined-builtin  # noqa
 html_last_updated_fmt = f"%c {time.tzname[time.localtime().tm_isdst]}"
 exclude_patterns = []
