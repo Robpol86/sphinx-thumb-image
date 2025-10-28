@@ -47,3 +47,9 @@ jobs:
 
       - name: Build Package
         run: make build
+
+      - name: Upload Coverage
+        uses: codecov/codecov-action@v5
+        with:
+          name: coverage-${{ runner.os }}-py${{ matrix.python }}
+          token: ${{ secrets.CODECOV_TOKEN }}
