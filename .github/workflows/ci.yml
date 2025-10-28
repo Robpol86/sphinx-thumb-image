@@ -1,0 +1,90 @@
+name: Continuous Integration
+
+
+on:
+  pull_request:
+  push:
+
+
+jobs:
+
+  Test:
+    strategy:
+      matrix:
+        os: [&artifact_os ubuntu-latest, macos-latest, windows-latest]
+        python: ["3.9", &artifact_py "3.14"]
+    runs-on: ${{ matrix.os }}
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v4
+
+      - name: Install Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python }}
+          cache: poetry
+
+      - name: Install Dependencies
+        run: make deps
+
+      - name: Run Lints
+        run: make lint
+
+      - name: Run Tests
+        env:
+          PY_COLORS: 1
+        run: make test
+
+      - name: Run Integration Tests
+        run: make it
+
+      - name: Build Docs
+        run: make docs
+
+      - name: Build Package
+        run: make build
+
+      - name: Upload Coverage
+        uses: codecov/codecov-action@v5
+        with:
+          name: coverage-${{ runner.os }}-py${{ matrix.python }}
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload Artifact
+        env:
+          artifact_os: *artifact_os
+          artifact_py: *artifact_py
+        if: matrix.os == env.artifact_os && matrix.python == env.artifact_py
+        uses: actions/upload-artifact@v5
+        with:
+          name: dist
+          path: dist
+          if-no-files-found: error
+
+  Validate:
+    needs: Test
+    runs-on: *artifact_os
+    steps:
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v6
+        with:
+          name: dist
+
+      - name: Extract
+        run: |
+          ls -lah
+          unzip -t *.whl
+          unzip -p *.whl '*/METADATA'
+
+      - name: Install Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: *artifact_py
+
+      - name: Pip Install
+        run: pip install *.whl

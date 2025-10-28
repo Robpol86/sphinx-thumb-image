@@ -1,0 +1,86 @@
+name: PyPI
+
+
+on:
+  release: {types: [published]}
+
+
+jobs:
+
+  Docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v4
+      - name: Install Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: &artifact_py "3.14"
+          cache: poetry
+      - name: Build Docs
+        run: make docs
+      - name: Compress
+        run: tar -C docs/_build -czvf docs.tar.gz --transform s/^html/docs/ html/
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: docs
+          path: docs.tar.gz
+          if-no-files-found: error
+
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v4
+      - name: Install Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: *artifact_py
+          cache: poetry
+      - name: Copy LICENSE to COPYING  # For Python wheel
+        run: cp --no-clobber --verbose LICENSE COPYING
+      - name: Build Package
+        run: make build
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: dist
+          path: dist
+          if-no-files-found: error
+
+  Publish:
+    needs: [Build, Docs]
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/sphinx-thumb-image
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v6
+        with:
+          name: dist
+          path: dist
+      - name: Download Documentation Artifact
+        uses: actions/download-artifact@v6
+        with:
+          name: docs
+          path: release
+      - name: Copy
+        run: cp -v dist/* release/
+      - name: Upload to Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          file: release/*
+          file_glob: true
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref }}
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
