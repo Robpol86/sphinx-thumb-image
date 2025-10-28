@@ -1,8 +1,8 @@
 """Fake tests for now (TODO)."""
 
-from sphinx_thumb_image import __version__
+from sphinx_thumb_image.thumb import ThumbImage
 
 
 def test():
     """Test valid and invalid values."""
-    assert __version__
+    assert ThumbImage
