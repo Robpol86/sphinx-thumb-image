@@ -50,6 +50,6 @@ def setup(app: Sphinx) -> Dict[str, str]:
 
     :returns: Extension version.
     """
-    app.add_directive("thumb-figure", ThumbFigure)
     app.add_directive("thumb-image", ThumbImage)
+    app.add_directive("thumb-figure", ThumbFigure)
     return {"version": __version__}
