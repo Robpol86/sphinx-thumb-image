@@ -3,6 +3,24 @@
 https://sphinx-thumb-image.readthedocs.io
 https://github.com/Robpol86/sphinx-thumb-image
 https://pypi.org/project/sphinx-thumb-image
+
+TODO:
+* Support pdf and non-html builders
+* If source image <= thumb size: noop
+* Support parallel resizing, use lock files (one image may be referenced by multiple pages)
+* Supported targets:
+    * No target: just resize image, _build dir should not have source images, just thumbnails
+    * Link original (default): embedded image is thumb, but source image should be in _build and linked to
+    * Formatted link: Let user specify in config and/or directive a %s formatted link to original (e.g. GitHub blob)
+    * :target: override as user expects
+* thumb-image directive
+    * Default scales down to default width
+    * :thumb_width: 700px (unitless == px, no other units supported)
+    * :no_target:
+    * :target_fmt: https://localhost/images/%s
+* config option to thumbisize all images/figures (sphinx directives)
+    * No new directive options for ..image/..figure
+* Remote/linked images unsupported
 """
 
 from typing import Dict
@@ -14,13 +32,13 @@ from sphinx_thumb_image import __version__
 
 
 class ThumbImage(images.Image):
-    """Thumb image directive."""
+    """Thumbnail image directive."""
 
     option_spec = images.Image.option_spec.copy()
 
 
 class ThumbFigure(images.Figure):
-    """Thumb figure directive."""
+    """Thumbnail figure directive."""
 
     option_spec = images.Figure.option_spec.copy()
 
