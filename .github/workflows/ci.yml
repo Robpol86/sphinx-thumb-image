@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python: ["3.9", "3.14"]
+        python: ["3.9", &py_version_high "3.14"]
     runs-on: ${{ matrix.os }}
     steps:
 
@@ -53,3 +53,37 @@ jobs:
         with:
           name: coverage-${{ runner.os }}-py${{ matrix.python }}
           token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload Artifact
+        env:
+          py_version_high: *py_version_high
+        if: runner.os == 'Linux' && matrix.python == env.py_version_high
+        uses: actions/upload-artifact@v5
+        with:
+          name: dist
+          path: dist
+          if-no-files-found: error
+
+  Validate:
+    needs: Test
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v6
+        with:
+          name: dist
+
+      - name: Extract
+        run: |
+          ls -lah
+          unzip -t *.whl
+          unzip -p *.whl '*/METADATA'
+
+      - name: Install Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: *py_version_high
+
+      - name: Pip Install
+        run: pip install *.whl
