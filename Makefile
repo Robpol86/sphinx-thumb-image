@@ -56,7 +56,8 @@ all: test it lint docs build
 .PHONY: build
 build: _HELP = Build Python package (sdist and wheel)
 build:
-	poetry build -n -vvv
+	poetry build -n -vv
+	tar -tzf dist/*.tar.gz
 
 docs/_build/html/index.html::
 	poetry run sphinx-build -a -E -n -W docs $(@D)
