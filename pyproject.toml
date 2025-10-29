@@ -59,6 +59,7 @@ dev = [
     "pep8-naming",
     "pylint",
     # Tests.
+    "beautifulsoup4",
     "coverage[toml]",
     "pytest",
     "pytest-cov",
@@ -91,6 +92,15 @@ ignore = [
 ]
 max-line-length = 125
 reports = false
+
+[tool.pylint."MESSAGES CONTROL"]
+disable = [
+    "fixme",
+]
+
+[tool.pylint.SIMILARITIES]
+ignore-imports = true
+min-similarity-lines = 7
 
 [tool.pytest.ini_options]
 addopts = "--cov-report=term-missing --durations=15 --showlocals --verbose --verbose"
