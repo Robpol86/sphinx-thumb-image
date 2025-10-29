@@ -1,7 +1,7 @@
 """pytest fixtures."""
 
 from pathlib import Path
-from typing import Generator, List
+from typing import List
 
 import pytest
 from bs4 import BeautifulSoup, element
@@ -17,7 +17,7 @@ def rootdir() -> Path:
 
 
 @pytest.fixture(name="sphinx_app")
-def _sphinx_app(app: SphinxTestApp) -> Generator[SphinxTestApp]:
+def _sphinx_app(app: SphinxTestApp):
     """Instantiate a new Sphinx app per test function."""
     app.build()
     yield app
