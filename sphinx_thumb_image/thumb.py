@@ -21,6 +21,7 @@ TODO:
 * config option to thumbisize all images/figures (sphinx directives)
     * No new directive options for ..image/..figure
 * Remote/linked images unsupported
+* Supported image formats: jpg png bmp gif gif[animated] apng svg webp
 """
 
 from typing import Dict

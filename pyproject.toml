@@ -59,6 +59,7 @@ dev = [
     "pep8-naming",
     "pylint",
     # Tests.
+    "beautifulsoup4",
     "coverage[toml]",
     "pytest",
     "pytest-cov",
