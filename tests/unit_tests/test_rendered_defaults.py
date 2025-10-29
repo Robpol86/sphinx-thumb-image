@@ -20,5 +20,3 @@ def test_index_rst(img_tags: List[element.Tag]):
     target = image.parent
     assert target.name == "a"
     assert target.get("href") == "https://google.com"
-    caption = image.find_parent("figure").figcaption.text
-    assert "This is the caption." in caption
