@@ -93,6 +93,11 @@ ignore = [
 max-line-length = 125
 reports = false
 
+[tool.pylint."MESSAGES CONTROL"]
+disable = [
+    "fixme",
+]
+
 [tool.pylint.SIMILARITIES]
 ignore-imports = true
 min-similarity-lines = 7

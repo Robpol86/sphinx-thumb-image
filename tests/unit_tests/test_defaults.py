@@ -26,3 +26,6 @@ def test_figure(img_tags: List[element.Tag]):
     assert target.get("href") == "https://google.com"
     caption = image.find_parent("figure").figcaption.text
     assert "This is the caption." in caption
+
+
+# TODO revisit above tests, then merge PR as test boilerplate
