@@ -93,6 +93,10 @@ ignore = [
 max-line-length = 125
 reports = false
 
+[tool.pylint.SIMILARITIES]
+ignore-imports = true
+min-similarity-lines = 7
+
 [tool.pytest.ini_options]
 addopts = "--cov-report=term-missing --durations=15 --showlocals --verbose --verbose"
 log_level = "DEBUG"
