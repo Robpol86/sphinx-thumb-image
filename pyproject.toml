@@ -106,3 +106,10 @@ min-similarity-lines = 7
 [tool.pytest.ini_options]
 addopts = "--cov-report=term-missing --durations=15 --showlocals --verbose --verbose"
 log_level = "DEBUG"
+
+[tool.ruff]
+line-length = 125
+
+[tool.ruff.lint]
+select = ["E", "F"]
+extend-select = ["E501"]
