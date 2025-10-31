@@ -111,5 +111,5 @@ log_level = "DEBUG"
 line-length = 125
 
 [tool.ruff.lint]
-select = ["E", "F"]
+select = ["E", "F", "I"]
 extend-select = ["E501"]
