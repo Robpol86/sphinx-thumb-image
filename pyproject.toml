@@ -30,7 +30,7 @@ classifiers = [
     "Topic :: Documentation :: Sphinx",
     "Topic :: Software Development :: Documentation",
 ]
-requires-python = "^3.9"
+requires-python = ">=3.9"
 dependencies = [
     "pillow",
     "sphinx",
@@ -52,12 +52,7 @@ dev = [
     "sphinx-rtd-theme",
     "toml",
     # Linters.
-    "black",
-    "flake8",
-    "flake8-docstrings",
-    "flake8-import-order",
-    "pep8-naming",
-    "pylint",
+    "ruff",
     # Tests.
     "beautifulsoup4",
     "coverage[toml]",
@@ -65,10 +60,6 @@ dev = [
     "pytest-cov",
     "pytest-icdiff",
 ]
-
-[tool.black]
-line-length = 125
-target-version = ["py39", "py313"]
 
 [tool.coverage.report]
 exclude_lines = [
@@ -82,26 +73,17 @@ fail_under = 85
 [tool.coverage.run]
 branch = true
 
-[tool.pylint.FORMAT]
-good-names = ["i", "j", "k", "ex", "Run", "_", "x", "y", "z", "fd"]
-ignore = [
-    ".venv/*",
-    "build/*",
-    "dist/*",
-    "docs/_build/*",
-]
-max-line-length = 125
-reports = false
-
-[tool.pylint."MESSAGES CONTROL"]
-disable = [
-    "fixme",
-]
-
-[tool.pylint.SIMILARITIES]
-ignore-imports = true
-min-similarity-lines = 7
-
 [tool.pytest.ini_options]
 addopts = "--cov-report=term-missing --durations=15 --showlocals --verbose --verbose"
 log_level = "DEBUG"
+
+[tool.ruff]
+line-length = 125
+
+[tool.ruff.lint]
+select = ["D", "E", "F", "I", "N", "PLR", "S"]
+extend-select = ["E501"]
+ignore = ["D203", "D213"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S607"]
