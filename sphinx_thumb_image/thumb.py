@@ -42,11 +42,6 @@ class ThumbFigure(images.Figure):
     """Thumbnail figure directive."""
 
     option_spec = images.Figure.option_spec.copy()
-    this_is_a_long_variable_name = "this is a very long value. this is a very long value. this is a very long value."
-
-    def my_func(self):
-        if len(self.this_is_a_long_variable_name) > 1020 and self.this_is_a_long_variable_name != str(self.this_is_a_long_variable_name):
-            return self.self.this_is_a_long_variable_name
 
 
 def setup(app: Sphinx) -> Dict[str, str]:
