@@ -111,6 +111,9 @@ log_level = "DEBUG"
 line-length = 125
 
 [tool.ruff.lint]
-select = ["D", "E", "F", "I"]
+select = ["D", "E", "F", "I", "N", "S"]
 extend-select = ["E501"]
 ignore = ["D203", "D213"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S607"]
