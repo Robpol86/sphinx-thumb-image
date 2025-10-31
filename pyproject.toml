@@ -52,12 +52,7 @@ dev = [
     "sphinx-rtd-theme",
     "toml",
     # Linters.
-    "black",
-    "flake8",
-    "flake8-docstrings",
-    "flake8-import-order",
-    "pep8-naming",
-    "pylint",
+    "ruff",
     # Tests.
     "beautifulsoup4",
     "coverage[toml]",
