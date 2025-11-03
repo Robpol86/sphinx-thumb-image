@@ -3,14 +3,14 @@ PROJECT_NAME = sphinx_thumb_image
 
 ## Dependencies
 
-poetry.lock: _HELP = Lock dependency versions to file
-poetry.lock:
-	poetry lock
+uv.lock: _HELP = Lock dependency versions to file
+uv.lock:
+	uv lock
 
 .PHONY: relock
-relock: _HELP = Delete and recreate poetry lock file
+relock: _HELP = Delete and recreate uv lock file
 relock:
-	rm -f poetry.lock && $(MAKE) poetry.lock
+	rm -f uv.lock && $(MAKE) uv.lock
 
 .PHONY: deps
 deps: _HELP = Install project dependencies
