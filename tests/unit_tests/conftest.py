@@ -12,7 +12,7 @@ pytest_plugins = ("sphinx.testing.fixtures",)  # pylint: disable=invalid-name
 
 @pytest.fixture(scope="session")
 def rootdir() -> Path:
-    """Used by sphinx.testing, return the directory containing all test docs."""
+    """Return the directory containing all test docs (used by sphinx.testing)."""
     return Path(__file__).parent / "test_docs"
 
 

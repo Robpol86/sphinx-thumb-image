@@ -4,7 +4,7 @@ https://sphinx-thumb-image.readthedocs.io
 https://github.com/Robpol86/sphinx-thumb-image
 https://pypi.org/project/sphinx-thumb-image
 
-TODO:
+TODO::
 * Support pdf and non-html builders
 * If source image <= thumb size: noop
 * Support parallel resizing, use lock files (one image may be referenced by multiple pages)
@@ -45,7 +45,7 @@ class ThumbFigure(images.Figure):
 
 
 def setup(app: Sphinx) -> Dict[str, str]:
-    """Called by Sphinx during phase 0 (initialization).
+    """Register extension components with Sphinx (called by Sphinx during phase 0 [initialization]).
 
     :param app: Sphinx application object.
 
