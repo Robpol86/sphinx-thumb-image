@@ -7,21 +7,21 @@ from pathlib import Path
 def test_version():
     """Verify multi-sourced versions are synchronized."""
     # Get version from Poetry.
-    output = subprocess.check_output(["poetry", "version", "--no-interaction"]).strip()
-    version_poetry = output.split()[1].decode("utf8")
+    output = subprocess.check_output(["uv", "version", "--short"]).strip()
+    version_uv = output.decode("utf8")
 
     # Get version from project.
     output = subprocess.check_output(
-        ["poetry", "run", "python", "-c", "from sphinx_thumb_image import __version__; print(__version__)"]
+        ["uv", "run", "python", "-c", "from sphinx_thumb_image import __version__; print(__version__)"]
     ).strip()
     version_project = output.decode("utf8")
 
-    assert version_poetry == version_project
+    assert version_uv == version_project
 
 
 def test_changelog():
     """Verify current version is included in the changelog file."""
-    version = subprocess.check_output(["poetry", "version", "--no-interaction"]).strip().split()[1].decode("utf8")
+    version = subprocess.check_output(["uv", "version", "--short"]).strip().decode("utf8")
     changelog = Path(__file__).parent.parent.parent / "CHANGELOG.md"
 
     with changelog.open("r") as handle:
