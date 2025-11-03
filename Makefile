@@ -1,11 +1,12 @@
 .DEFAULT_GOAL = help
 PROJECT_NAME = sphinx_thumb_image
+export UV_FROZEN = true
 
 ## Dependencies
 
 uv.lock: _HELP = Lock dependency versions to file
 uv.lock:
-	uv lock
+	unset UV_FROZEN && uv lock
 
 .PHONY: relock
 relock: _HELP = Delete and recreate uv lock file
