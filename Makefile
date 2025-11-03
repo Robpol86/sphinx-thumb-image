@@ -1,54 +1,54 @@
 .DEFAULT_GOAL = help
 PROJECT_NAME = sphinx_thumb_image
+export UV_FROZEN = true
 
 ## Dependencies
 
-poetry.lock: _HELP = Lock dependency versions to file
-poetry.lock:
-	poetry lock
+uv.lock: _HELP = Lock dependency versions to file
+uv.lock:
+	unset UV_FROZEN && uv lock
 
 .PHONY: relock
-relock: _HELP = Delete and recreate poetry lock file
+relock: _HELP = Delete and recreate uv lock file
 relock:
-	rm -f poetry.lock && $(MAKE) poetry.lock
+	rm -f uv.lock && $(MAKE) uv.lock
 
 .PHONY: deps
 deps: _HELP = Install project dependencies
 deps:
-	poetry install --with dev
+	uv sync
 
 ## Testing
 
 .PHONY: lint
 lint: _HELP = Run linters
 lint:
-	poetry check
-	poetry run ruff check
+	uv run ruff check
 
 .PHONY: format
 format: _HELP = Apply format/lint fixes
 format:
-	poetry run ruff format
+	uv run ruff format
 
 .PHONY: test
 test: _HELP = Run unit tests
 test:
-	poetry run pytest --cov=$(PROJECT_NAME) --cov-report=html --cov-report=xml tests/unit_tests
+	uv run pytest --cov=$(PROJECT_NAME) --cov-report=html --cov-report=xml tests/unit_tests
 
 .PHONY: testpdb
 testpdb: _HELP = Run unit tests and drop into the debugger on failure
 testpdb:
-	poetry run pytest --pdb tests/unit_tests
+	uv run pytest --pdb tests/unit_tests
 
 .PHONY: it
 it: _HELP = Run integration tests
 it:
-	poetry run pytest tests/integration_tests
+	uv run pytest tests/integration_tests
 
 .PHONY: itpdb
 itpdb: _HELP = Run integration tests and drop into the debugger on failure
 itpdb:
-	poetry run pytest --pdb tests/integration_tests
+	uv run pytest --pdb tests/integration_tests
 
 .PHONY: all
 all: _HELP = Run linters, unit tests, integration tests, and builds
@@ -59,11 +59,11 @@ all: test it lint docs build
 .PHONY: build
 build: _HELP = Build Python package (sdist and wheel)
 build:
-	poetry build -n -vv
+	uv build
 	tar -tzf dist/*.tar.gz
 
 docs/_build/html/index.html::
-	poetry run sphinx-build -a -E -n -W docs $(@D)
+	uv run sphinx-build -a -E -n -W docs $(@D)
 	@echo Documentation available here: $@
 
 .PHONY: docs
