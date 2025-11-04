@@ -10,4 +10,4 @@ Index
     :target: https://google.com
 
 .. thumb-figure:: _images/tux.png
-    :target: https://google.com
+    :target: https://aol.com

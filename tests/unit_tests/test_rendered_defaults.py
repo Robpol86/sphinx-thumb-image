@@ -21,4 +21,4 @@ def assert_image(image: element.Tag, src: str, href: Optional[str]):
 def test_index_rst(img_tags: List[element.Tag]):
     """Test."""
     assert_image(img_tags[2], "_images/tux.png", "https://google.com")
-    assert_image(img_tags[3], "_images/tux.png", "https://google.com")
+    assert_image(img_tags[3], "_images/tux.png", "https://aol.com")
