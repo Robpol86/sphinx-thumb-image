@@ -6,7 +6,7 @@ https://pypi.org/project/sphinx-thumb-image
 
 TODO::
 * Support pdf and non-html builders
-* If source image <= thumb size: noop
+* If source image <= thumb size: still compress, unless 100% then noop and link to original
 * Support parallel resizing, use lock files (one image may be referenced by multiple pages)
 * Supported targets:
     * No target: just resize image, _build dir should not have source images, just thumbnails
@@ -25,6 +25,9 @@ TODO::
 * Overridable option for thumb jpeg compression (e.g. 0-100 numerical?)
 * Thumb file type (jpg, png, gif)
 * Support animated gif thumbnails
+* Thumb filename:
+    * image.jpg -> image-700x435-95pct.jpg
+    * image.gif -> image-700x435.gif
 """
 
 from typing import Dict
