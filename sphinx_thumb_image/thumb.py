@@ -22,6 +22,9 @@ TODO::
     * No new directive options for ..image/..figure
 * Remote/linked images unsupported
 * Supported image formats: jpg png bmp gif gif[animated] apng svg webp
+* Overridable option for thumb jpeg compression (e.g. 0-100 numerical?)
+* Thumb file type (jpg, png, gif)
+* Support animated gif thumbnails
 """
 
 from typing import Dict

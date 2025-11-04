@@ -5,20 +5,13 @@ from typing import List
 import pytest
 from bs4 import element
 
+from .utils import assert_image
+
 
 @pytest.mark.sphinx("html", testroot="defaults")
 def test_index_rst(img_tags: List[element.Tag]):
     """Test."""
-    image = img_tags[0]
-    assert image.get("src") == "_images/tux.png"
-    target = image.parent
-    assert target.name == "a"
-    assert target.get("href") == "https://google.com"
-
-    image = img_tags[1]
-    assert image.get("src") == "_images/tux.png"
-    target = image.parent
-    assert target.name == "a"
-    assert target.get("href") == "https://google.com"
-    caption = image.find_parent("figure").figcaption.text
-    assert "This is the caption." in caption
+    assert_image(img_tags[0], "_images/tux.png")
+    assert_image(img_tags[1], "_images/tux.png")
+    assert_image(img_tags[2], "_images/tux.png", "https://google.com")
+    assert_image(img_tags[3], "_images/tux.png", "https://aol.com")
