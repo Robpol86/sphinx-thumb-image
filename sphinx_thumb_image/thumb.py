@@ -32,7 +32,7 @@ TODO::
 
 from typing import Dict
 
-from docutils.parsers.rst.directives import images
+from docutils.parsers.rst.directives import flag, images
 from sphinx.application import Sphinx
 
 from sphinx_thumb_image import __version__
@@ -42,12 +42,14 @@ class ThumbImage(images.Image):
     """Thumbnail image directive."""
 
     option_spec = images.Image.option_spec.copy()
+    option_spec["no-target"] = flag
 
 
 class ThumbFigure(images.Figure):
     """Thumbnail figure directive."""
 
     option_spec = images.Figure.option_spec.copy()
+    option_spec["no-target"] = flag
 
 
 def setup(app: Sphinx) -> Dict[str, str]:
