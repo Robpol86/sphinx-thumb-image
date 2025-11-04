@@ -6,7 +6,7 @@ import pytest
 from bs4 import element
 
 
-def assert_image(image: element.Tag, src: str, href: Optional[str]):
+def assert_image(image: element.Tag, src: str, href: Optional[str] = None):
     """TODO."""
     assert image.get("src") == src
     target = image.parent
@@ -20,5 +20,7 @@ def assert_image(image: element.Tag, src: str, href: Optional[str]):
 @pytest.mark.sphinx("html", testroot="defaults")
 def test_index_rst(img_tags: List[element.Tag]):
     """Test."""
+    assert_image(img_tags[0], "_images/tux.png")
+    assert_image(img_tags[1], "_images/tux.png")
     assert_image(img_tags[2], "_images/tux.png", "https://google.com")
     assert_image(img_tags[3], "_images/tux.png", "https://aol.com")
