@@ -1,7 +1,3 @@
-=====
-Index
-=====
-
 .. thumb-image:: _images/tux.png
 
 .. thumb-figure:: _images/tux.png
