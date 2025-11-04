@@ -1,20 +1,11 @@
 """Tests."""
 
-from typing import List, Optional
+from typing import List
 
 import pytest
 from bs4 import element
 
-
-def assert_image(image: element.Tag, src: str, href: Optional[str] = None):
-    """TODO."""
-    assert image.get("src") == src
-    target = image.parent
-    if href is None:
-        assert target.name != "a"
-    else:
-        assert target.name == "a"
-        assert target.get("href") == href
+from .utils import assert_image
 
 
 @pytest.mark.sphinx("html", testroot="defaults")
