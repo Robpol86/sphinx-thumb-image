@@ -43,6 +43,7 @@ class ThumbImage(images.Image):
 
     option_spec = images.Image.option_spec.copy()
     option_spec["no-target"] = flag
+    option_spec["target-original"] = flag
 
 
 class ThumbFigure(images.Figure):
@@ -50,6 +51,7 @@ class ThumbFigure(images.Figure):
 
     option_spec = images.Figure.option_spec.copy()
     option_spec["no-target"] = flag
+    option_spec["target-original"] = flag
 
 
 def setup(app: Sphinx) -> Dict[str, str]:
@@ -59,6 +61,12 @@ def setup(app: Sphinx) -> Dict[str, str]:
 
     :returns: Extension version.
     """
+    # TODO thumb_image_default_target
+    #       original
+    #       None
+    #       https://github.com/User/Repo/blob/%(path)s
+    #       https://github.com/User/Repo/blob/docs/images/%(filename)s
+    app.add_config_value("thumb_image_default_target", "original", "env", ["original", None, str])
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)
     return {"version": __version__}
