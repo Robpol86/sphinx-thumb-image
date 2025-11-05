@@ -24,14 +24,14 @@ def _sphinx_app(app: SphinxTestApp):
     yield app
 
 
-@pytest.fixture(name="index_html")
-def _index_html(sphinx_app: SphinxTestApp) -> BeautifulSoup:
-    """Read and parse generated test index.html."""
-    text = (Path(sphinx_app.outdir) / "index.html").read_text(encoding="utf8")
+@pytest.fixture(name="master_html")
+def _master_html(sphinx_app: SphinxTestApp) -> BeautifulSoup:
+    """Read and parse generated html."""
+    text = (Path(sphinx_app.outdir) / f"{sphinx_app.config.master_doc}.html").read_text(encoding="utf8")
     return BeautifulSoup(text, "html.parser")
 
 
 @pytest.fixture()
-def img_tags(index_html: BeautifulSoup) -> List[element.Tag]:
-    """Return all <img> tags in index.html."""
-    return index_html.find_all("img")
+def img_tags(master_html: BeautifulSoup) -> List[element.Tag]:
+    """Return all <img> tags in html."""
+    return master_html.find_all("img")
