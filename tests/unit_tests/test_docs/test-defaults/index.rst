@@ -20,7 +20,7 @@
     :target: https://github.com/User/Repo/blob/%(path)s
 
 .. thumb-figure:: _images/tux.png
-    :target: https://github.com/User/Repo/blob/docs/images/%(filename)s
+    :target: https://cloudflare.com/cdn/%(filename)s
 
 .. thumb-image:: _images/tux.png
 
