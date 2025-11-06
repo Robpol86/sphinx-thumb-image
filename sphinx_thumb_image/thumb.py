@@ -28,6 +28,7 @@ TODO::
 * Thumb filename:
     * image.jpg -> image-700x435-95pct.jpg
     * image.gif -> image-700x435.gif
+* Space saving: don't write original image to _build if not referenced
 """
 
 from typing import Dict
@@ -61,11 +62,6 @@ def setup(app: Sphinx) -> Dict[str, str]:
 
     :returns: Extension version.
     """
-    # TODO thumb_image_default_target
-    #       original
-    #       None
-    #       https://github.com/User/Repo/blob/%(path)s
-    #       https://github.com/User/Repo/blob/docs/images/%(filename)s
     app.add_config_value("thumb_image_default_target", "original", "env", ["original", None, str])
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)
