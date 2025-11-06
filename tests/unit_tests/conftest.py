@@ -21,7 +21,8 @@ def _sphinx_app(app: SphinxTestApp, request: pytest.FixtureRequest):
     """Instantiate a new Sphinx app per test function."""
     if hasattr(request, "param"):
         for key, value in request.param.items():
-            app.config[key] = value
+            if value != "__omit__":
+                app.config[key] = value
     app.warningiserror = True
     app.build()
     yield app

@@ -8,7 +8,7 @@ from bs4 import element
 
 @pytest.mark.parametrize(
         "sphinx_app",
-        [{"thumb_image_default_target": v} for v in ["_omit", "original", "None", "pfx/%(path)s", "invalid"]],
+        [{"thumb_image_default_target": v} for v in ["__omit__", "original", "None", "pfx/%(path)s", "invalid"]],
         indirect=True,
         ids=lambda param: param["thumb_image_default_target"],
     )
@@ -39,6 +39,7 @@ def test_target(img_tags: List[element.Tag]):
     do_assert(img_tags[5], None)
     do_assert(img_tags[6], "https://github.com/User/Repo/blob/_images/tux.png")
     do_assert(img_tags[7], "https://github.com/User/Repo/blob/docs/images/tux.png")
+    # TODO if thumb_image_default_target
     do_assert(img_tags[8], "_images/tux.png")
     do_assert(img_tags[9], "_images/tux.png")
 
