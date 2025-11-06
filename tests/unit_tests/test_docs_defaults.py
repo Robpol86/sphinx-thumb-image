@@ -10,6 +10,7 @@ from bs4 import element
         "sphinx_app",
         [{"thumb_image_default_target": v} for v in ["_omit", "original", "None", "pfx/%(path)s", "invalid"]],
         indirect=True,
+        ids=lambda param: param["thumb_image_default_target"],
     )
 @pytest.mark.sphinx("html", testroot="defaults")
 def test_target(img_tags: List[element.Tag]):
