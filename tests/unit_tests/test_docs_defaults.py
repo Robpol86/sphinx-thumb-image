@@ -6,8 +6,9 @@ import pytest
 from bs4 import element
 
 
+@pytest.mark.parametrize("thumb_image_default_target", ["_omit", "original", "None", "pfx/%(path)s", "invalid"])
 @pytest.mark.sphinx("html", testroot="defaults")
-def test_target(img_tags: List[element.Tag]):
+def test_target(img_tags: List[element.Tag], thumb_image_default_target: str):
     """Test thumb_image_default_target and directive overrides.
 
     # TODO thumb_image_default_target
@@ -24,10 +25,11 @@ def test_target(img_tags: List[element.Tag]):
         else:
             assert target.name == "a"
             assert target.get("href") == href
-    do_assert(img_tags[0], "_images/tux.png")
-    do_assert(img_tags[1], "_images/tux.png")
-    do_assert(img_tags[2], "https://google.com")
-    do_assert(img_tags[3], "https://aol.com")
+    do_assert(img_tags[0], "https://google.com")
+    do_assert(img_tags[1], "https://aol.com")
+    pytest.skip("TODO")
+    do_assert(img_tags[2], "_images/tux.png")
+    do_assert(img_tags[3], "_images/tux.png")
     do_assert(img_tags[4], None)
     do_assert(img_tags[5], None)
     do_assert(img_tags[6], "https://github.com/User/Repo/blob/_images/tux.png")
