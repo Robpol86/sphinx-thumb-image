@@ -6,9 +6,13 @@ import pytest
 from bs4 import element
 
 
-@pytest.mark.parametrize("thumb_image_default_target", ["_omit", "original", "None", "pfx/%(path)s", "invalid"])
+@pytest.mark.parametrize(
+        "sphinx_app",
+        [{"thumb_image_default_target": v} for v in ["_omit", "original", "None", "pfx/%(path)s", "invalid"]],
+        indirect=True,
+    )
 @pytest.mark.sphinx("html", testroot="defaults")
-def test_target(img_tags: List[element.Tag], thumb_image_default_target: str):
+def test_target(img_tags: List[element.Tag]):
     """Test thumb_image_default_target and directive overrides.
 
     # TODO thumb_image_default_target
