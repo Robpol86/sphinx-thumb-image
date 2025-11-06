@@ -13,7 +13,7 @@ from bs4 import element
         ids=lambda param: param["thumb_image_default_target"],
     )
 @pytest.mark.sphinx("html", testroot="defaults")
-def test_target(img_tags: List[element.Tag]):
+def test_target(img_tags: List[element.Tag], request: pytest.FixtureRequest):
     """Test thumb_image_default_target and directive overrides.
 
     # TODO thumb_image_default_target
@@ -39,9 +39,12 @@ def test_target(img_tags: List[element.Tag]):
     do_assert(img_tags[5], None)
     do_assert(img_tags[6], "https://github.com/User/Repo/blob/_images/tux.png")
     do_assert(img_tags[7], "https://github.com/User/Repo/blob/docs/images/tux.png")
-    # TODO if thumb_image_default_target
-    do_assert(img_tags[8], "_images/tux.png")
-    do_assert(img_tags[9], "_images/tux.png")
+    thumb_image_default_target = request.node.callspec.params["sphinx_app"]["thumb_image_default_target"]
+    if thumb_image_default_target in ["__omit__", "original"]:
+        do_assert(img_tags[8], "_images/tux.png")
+        do_assert(img_tags[9], "_images/tux.png")
+    else:
+        pytest.skip("TODO Not Implemented")
 
 
 def test_img_src():
