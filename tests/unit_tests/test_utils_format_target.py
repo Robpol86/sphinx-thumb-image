@@ -2,7 +2,7 @@
 
 import pytest
 
-from sphinx_thumb_image.thumb import format_target
+from sphinx_thumb_image.utils import format_target
 
 
 @pytest.mark.parametrize(

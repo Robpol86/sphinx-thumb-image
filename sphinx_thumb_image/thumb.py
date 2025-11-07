@@ -39,19 +39,7 @@ from docutils.parsers.rst.directives import flag, images
 from sphinx.application import Sphinx
 
 from sphinx_thumb_image import __version__
-
-
-def format_target(fmt: str, **kv) -> str:
-    """Substitutes %(key)s formatted keys with their values.
-
-    :param fmt: Input string formatter.
-    :param kv: Key-value pairs of substitutions.
-
-    :return: The formatted string.
-    """
-    for key, value in kv.items():
-        fmt = fmt.replace(f"%({key})s", value)
-    return fmt
+from sphinx_thumb_image.utils import format_target
 
 
 class ThumbCommon(images.Image):
