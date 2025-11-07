@@ -31,28 +31,67 @@ TODO::
 * Space saving: don't write original image to _build if not referenced
 """
 
-from typing import Dict
+from typing import Dict, List
 
+from docutils.nodes import Element
 from docutils.parsers.rst.directives import flag, images
 from sphinx.application import Sphinx
 
 from sphinx_thumb_image import __version__
 
 
-class ThumbImage(images.Image):
+class ThumbCommon(images.Image):
+    """Common methods for both thumb image/figure subclassed directives."""
+
+    def __update_target(self):
+        """Update the image's link target."""
+        # Handle options specified in the directive first.
+        if "no-target" in self.options:
+            self.options.pop("target", None)
+            return
+        if "target-original" in self.options:
+            self.options["target"] = "todo-original"
+            return
+        if "target" in self.options:
+            # TODO self.options["target"] %= {"path": "path/todo.jpg", "filename": "todo.jpg"}
+            return
+        # Apply defaults from conf.py.
+        config = self.state.document.settings.env.config
+        if "thumb_image_default_target" not in config:
+            return
+        thumb_image_default_target = config["thumb_image_default_target"]
+        if thumb_image_default_target == "original":
+            self.options["target"] = "todo-original2"
+        elif thumb_image_default_target is None:
+            self.options.pop("target", None)
+        # else:
+        # TODO self.options["target"] = thumb_image_default_target % {"path": "path/todo.jpg", "filename": "todo.jpg"}
+
+
+class ThumbImage(ThumbCommon):
     """Thumbnail image directive."""
 
     option_spec = images.Image.option_spec.copy()
     option_spec["no-target"] = flag
     option_spec["target-original"] = flag
 
+    def run(self) -> List[Element]:
+        """Entrypoint."""
+        self._ThumbCommon__update_target()
+        return super().run()
 
-class ThumbFigure(images.Figure):
+
+class ThumbFigure(images.Figure, ThumbCommon):
     """Thumbnail figure directive."""
 
     option_spec = images.Figure.option_spec.copy()
     option_spec["no-target"] = flag
     option_spec["target-original"] = flag
+
+    def run(self) -> List[Element]:
+        """Entrypoint."""
+        self._ThumbCommon__update_target()
+        return super().run()
 
 
 def setup(app: Sphinx) -> Dict[str, str]:

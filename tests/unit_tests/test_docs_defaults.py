@@ -8,7 +8,16 @@ from bs4 import element
 
 @pytest.mark.parametrize(
         "sphinx_app",
-        [{"thumb_image_default_target": v} for v in ["__omit__", "original", None, "pfx/%(path)s", "invalid"]],
+        [{"thumb_image_default_target": v} for v in [
+            "__omit__",  # specially handled
+            "original",
+            "google.com",
+            "pfx/%s",
+            "pfx/%(ignore)s",
+            "pfx/%(path)s",
+            None,
+            "invalid",
+        ]],
         indirect=True,
         ids=lambda param: param["thumb_image_default_target"],
     )
@@ -35,7 +44,10 @@ def test_target(img_tags: List[element.Tag], request: pytest.FixtureRequest):
     if thumb_image_default_target in ["__omit__", "original"]:
         assert img_tags[8].parent.get("href") == "_images/tux.png"
         assert img_tags[9].parent.get("href") == "_images/tux.png"
-    elif thumb_image_default_target.startswith("pfx/%"):
+    elif thumb_image_default_target in ["google.com", "pfx/%s", "pfx/%(ignore)s"]:
+        assert img_tags[8].parent.get("href") == thumb_image_default_target
+        assert img_tags[9].parent.get("href") == thumb_image_default_target
+    elif thumb_image_default_target == "pfx/%(path)s":
         assert img_tags[8].parent.get("href") == "pfx/_images/tux.png"
         assert img_tags[9].parent.get("href") == "pfx/_images/tux.png"
     elif thumb_image_default_target is None:
