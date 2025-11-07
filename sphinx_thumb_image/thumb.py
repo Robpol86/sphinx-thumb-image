@@ -31,6 +31,7 @@ TODO::
 * Space saving: don't write original image to _build if not referenced
 """
 
+from pathlib import Path
 from typing import Dict, List
 
 from docutils.nodes import Element
@@ -40,6 +41,19 @@ from sphinx.application import Sphinx
 from sphinx_thumb_image import __version__
 
 
+def format_target(fmt: str, **kv) -> str:
+    """Substitutes %(key)s formatted keys with their values.
+
+    :param fmt: Input string formatter.
+    :param kv: Key-value pairs of substitutions.
+
+    :return: The formatted string.
+    """
+    for key, value in kv.items():
+        fmt = fmt.replace(f"%({key})s", value)
+    return fmt
+
+
 class ThumbCommon(images.Image):
     """Common methods for both thumb image/figure subclassed directives."""
 
@@ -47,6 +61,11 @@ class ThumbCommon(images.Image):
         """Update the image's link target."""
         # Handle options specified in the directive first.
         img_src = self.arguments[0]
+        format_kv = {
+            "original": img_src,
+            "basename": Path(img_src).name,
+            # TODO resolve "../"
+        }
         if "no-target" in self.options:
             self.options.pop("target", None)
             return
@@ -54,7 +73,7 @@ class ThumbCommon(images.Image):
             self.options["target"] = img_src
             return
         if "target" in self.options:
-            # TODO self.options["target"] %= {"path": "path/todo.jpg", "filename": "todo.jpg"}
+            self.options["target"] = format_target(self.options["target"], **format_kv)
             return
         # Apply defaults from conf.py.
         config = self.state.document.settings.env.config
@@ -65,8 +84,8 @@ class ThumbCommon(images.Image):
             self.options["target"] = img_src
         elif thumb_image_default_target is None:
             self.options.pop("target", None)
-        # else:
-        # TODO self.options["target"] = thumb_image_default_target % {"path": "path/todo.jpg", "filename": "todo.jpg"}
+        else:
+            self.options["target"] = format_target(thumb_image_default_target, **format_kv)
 
 
 class ThumbImage(ThumbCommon):

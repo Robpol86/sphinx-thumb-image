@@ -17,10 +17,10 @@
     :no-target:
 
 .. thumb-image:: _images/tux.png
-    :target: https://github.com/User/Repo/blob/%(path)s
+    :target: https://github.com/User/Repo/blob/%(original)s
 
 .. thumb-figure:: _images/tux.png
-    :target: https://cloudflare.com/cdn/%(filename)s
+    :target: https://cloudflare.com/cdn/%(basename)s
 
 .. thumb-image:: _images/tux.png
 

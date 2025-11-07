@@ -14,7 +14,7 @@ from bs4 import element
             "google.com",
             "pfx/%s",
             "pfx/%(ignore)s",
-            "pfx/%(path)s",
+            "pfx/%(original)s",
             None,
         ]],
         indirect=True,
@@ -27,8 +27,9 @@ def test_target(img_tags: List[element.Tag], request: pytest.FixtureRequest):
     # TODO thumb_image_default_target
     #       original
     #       None
-    #       https://github.com/User/Repo/blob/%(path)s
-    #       https://github.com/User/Repo/blob/docs/images/%(filename)s
+    #       https://github.com/User/Repo/blob/%(original)s
+    #       https://github.com/User/Repo/blob/docs/images/%(basename)s
+    #       ../outside/images/image.png
     """
     assert img_tags[0].parent.get("href") == "https://google.com"
     assert img_tags[1].parent.get("href") == "https://aol.com/?x=%sample"
@@ -36,9 +37,9 @@ def test_target(img_tags: List[element.Tag], request: pytest.FixtureRequest):
     assert img_tags[3].parent.get("href") == "_images/tux.png"
     assert img_tags[4].parent.name != "a"
     assert img_tags[5].parent.name != "a"
-    pytest.skip("TODO")
     assert img_tags[6].parent.get("href") == "https://github.com/User/Repo/blob/_images/tux.png"
     assert img_tags[7].parent.get("href") == "https://cloudflare.com/cdn/tux.png"
+    pytest.skip("TODO")
     thumb_image_default_target = request.node.callspec.params["sphinx_app"]["thumb_image_default_target"]
     if thumb_image_default_target in ["__omit__", "original"]:
         assert img_tags[8].parent.get("href") == "_images/tux.png"
@@ -46,7 +47,7 @@ def test_target(img_tags: List[element.Tag], request: pytest.FixtureRequest):
     elif thumb_image_default_target in ["google.com", "pfx/%s", "pfx/%(ignore)s"]:
         assert img_tags[8].parent.get("href") == thumb_image_default_target
         assert img_tags[9].parent.get("href") == thumb_image_default_target
-    elif thumb_image_default_target == "pfx/%(path)s":
+    elif thumb_image_default_target == "pfx/%(original)s":
         assert img_tags[8].parent.get("href") == "pfx/_images/tux.png"
         assert img_tags[9].parent.get("href") == "pfx/_images/tux.png"
     elif thumb_image_default_target is None:
