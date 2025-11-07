@@ -16,7 +16,6 @@ from bs4 import element
             "pfx/%(ignore)s",
             "pfx/%(path)s",
             None,
-            "invalid",
         ]],
         indirect=True,
         ids=lambda param: param["thumb_image_default_target"],
@@ -32,7 +31,7 @@ def test_target(img_tags: List[element.Tag], request: pytest.FixtureRequest):
     #       https://github.com/User/Repo/blob/docs/images/%(filename)s
     """
     assert img_tags[0].parent.get("href") == "https://google.com"
-    assert img_tags[1].parent.get("href") == "https://aol.com"
+    assert img_tags[1].parent.get("href") == "https://aol.com/?x=%sample"
     assert img_tags[2].parent.get("href") == "_images/tux.png"
     assert img_tags[3].parent.get("href") == "_images/tux.png"
     assert img_tags[4].parent.name != "a"
@@ -53,8 +52,6 @@ def test_target(img_tags: List[element.Tag], request: pytest.FixtureRequest):
     elif thumb_image_default_target is None:
         assert img_tags[8].parent.name != "a"
         assert img_tags[9].parent.name != "a"
-    elif thumb_image_default_target == "invalid":
-        pytest.skip("TODO")
     else:
         pytest.fail("Unhandled thumb_image_default_target value")
     # TODO assert files exist, don't assert files NOT exist in this test, that's in another test.

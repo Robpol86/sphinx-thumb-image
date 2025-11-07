@@ -2,7 +2,7 @@
     :target: https://google.com
 
 .. thumb-figure:: _images/tux.png
-    :target: https://aol.com
+    :target: https://aol.com/?x=%sample
 
 .. thumb-image:: _images/tux.png
     :target-original:
