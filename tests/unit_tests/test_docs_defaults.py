@@ -39,18 +39,21 @@ def test_target(img_tags: List[element.Tag], request: pytest.FixtureRequest):
     assert img_tags[5].parent.name != "a"
     assert img_tags[6].parent.get("href") == "https://github.com/User/Repo/blob/_images/tux.png"
     assert img_tags[7].parent.get("href") == "https://cloudflare.com/cdn/tux.png"
-    pytest.skip("TODO")
     thumb_image_default_target = request.node.callspec.params["sphinx_app"]["thumb_image_default_target"]
     if thumb_image_default_target in ["__omit__", "original"]:
+        pytest.skip("TODO")
         assert img_tags[8].parent.get("href") == "_images/tux.png"
         assert img_tags[9].parent.get("href") == "_images/tux.png"
     elif thumb_image_default_target in ["google.com", "pfx/%s", "pfx/%(ignore)s"]:
+        pytest.skip("TODO")
         assert img_tags[8].parent.get("href") == thumb_image_default_target
         assert img_tags[9].parent.get("href") == thumb_image_default_target
     elif thumb_image_default_target == "pfx/%(original)s":
+        pytest.skip("TODO")
         assert img_tags[8].parent.get("href") == "pfx/_images/tux.png"
         assert img_tags[9].parent.get("href") == "pfx/_images/tux.png"
     elif thumb_image_default_target is None:
+        pytest.skip("TODO")
         assert img_tags[8].parent.name != "a"
         assert img_tags[9].parent.name != "a"
     else:
