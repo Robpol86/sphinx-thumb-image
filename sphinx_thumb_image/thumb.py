@@ -102,7 +102,7 @@ def setup(app: Sphinx) -> Dict[str, str]:
 
     :returns: Extension version.
     """
-    app.add_config_value("thumb_image_default_target", "original", "env", ["original", None, str])
+    app.add_config_value("thumb_image_default_target", "original", "env", ["original", None, str])  # TODO enforce valid
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)
     return {"version": __version__}
