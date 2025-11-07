@@ -12,7 +12,7 @@ from bs4 import element
         indirect=True,
         ids=lambda param: param["thumb_image_default_target"],
     )
-@pytest.mark.sphinx("html", testroot="defaults")
+@pytest.mark.sphinx("html", testroot="defaults", confoverrides={"master_doc": "target"})
 def test_target(img_tags: List[element.Tag], request: pytest.FixtureRequest):
     """Test thumb_image_default_target and directive overrides.
 
