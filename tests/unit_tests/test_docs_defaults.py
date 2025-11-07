@@ -33,11 +33,11 @@ def test_target(img_tags: List[element.Tag], request: pytest.FixtureRequest):
     """
     assert img_tags[0].parent.get("href") == "https://google.com"
     assert img_tags[1].parent.get("href") == "https://aol.com"
-    pytest.skip("TODO")
     assert img_tags[2].parent.get("href") == "_images/tux.png"
     assert img_tags[3].parent.get("href") == "_images/tux.png"
     assert img_tags[4].parent.name != "a"
     assert img_tags[5].parent.name != "a"
+    pytest.skip("TODO")
     assert img_tags[6].parent.get("href") == "https://github.com/User/Repo/blob/_images/tux.png"
     assert img_tags[7].parent.get("href") == "https://cloudflare.com/cdn/tux.png"
     thumb_image_default_target = request.node.callspec.params["sphinx_app"]["thumb_image_default_target"]
@@ -57,6 +57,7 @@ def test_target(img_tags: List[element.Tag], request: pytest.FixtureRequest):
         pytest.skip("TODO")
     else:
         pytest.fail("Unhandled thumb_image_default_target value")
+    # TODO assert files exist, don't assert files NOT exist in this test, that's in another test.
 
 
 def test_img_src():

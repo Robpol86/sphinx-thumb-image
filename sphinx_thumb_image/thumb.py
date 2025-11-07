@@ -46,11 +46,12 @@ class ThumbCommon(images.Image):
     def __update_target(self):
         """Update the image's link target."""
         # Handle options specified in the directive first.
+        img_src = self.arguments[0]
         if "no-target" in self.options:
             self.options.pop("target", None)
             return
         if "target-original" in self.options:
-            self.options["target"] = "todo-original"
+            self.options["target"] = img_src
             return
         if "target" in self.options:
             # TODO self.options["target"] %= {"path": "path/todo.jpg", "filename": "todo.jpg"}
@@ -61,7 +62,7 @@ class ThumbCommon(images.Image):
             return
         thumb_image_default_target = config["thumb_image_default_target"]
         if thumb_image_default_target == "original":
-            self.options["target"] = "todo-original2"
+            self.options["target"] = img_src
         elif thumb_image_default_target is None:
             self.options.pop("target", None)
         # else:
