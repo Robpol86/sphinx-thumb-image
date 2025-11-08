@@ -9,7 +9,7 @@ from bs4 import element
 @pytest.mark.parametrize(
         "app_params",
         [{"thumb_image_default_target": v} for v in [
-            "__omit__",  # specially handled
+            "__omit__",  # specially handled in conftest.py
             "original",
             "google.com",
             "pfx/%s",
@@ -20,7 +20,7 @@ from bs4 import element
         indirect=True,
         ids=lambda param: param["thumb_image_default_target"],
     )
-@pytest.mark.sphinx("html", testroot="defaults", confoverrides={"master_doc": "target"}, freshenv=True)
+@pytest.mark.sphinx("html", testroot="defaults", confoverrides={"master_doc": "target"})
 def test_target(img_tags: List[element.Tag], request: pytest.FixtureRequest):
     """Test thumb_image_default_target and directive overrides.
 

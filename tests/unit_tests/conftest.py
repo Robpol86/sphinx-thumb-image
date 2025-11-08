@@ -19,6 +19,7 @@ def rootdir() -> Path:
 @pytest.fixture()
 def app_params(app_params, request: pytest.FixtureRequest):
     """TODO."""
+    app_params.kwargs["freshenv"] = True
     if hasattr(request, "param"):
         for key, value in request.param.items():
             if value != "__omit__":
