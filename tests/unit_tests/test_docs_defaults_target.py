@@ -48,13 +48,11 @@ def test_target(request: pytest.FixtureRequest, img_tags: list[element.Tag]):
 
 @pytest.mark.sphinx("html", testroot="defaults", confoverrides={"master_doc": "sub/target"})
 def test_sub_target(img_tags: list[element.Tag]):
-    """TODO."""
+    """Test with pages in subdirectories referencing images n directories up."""
     assert img_tags[0].parent.get("href") == "../_images/tux.png"
-    assert img_tags[1].parent.get("href") == "../_images/tux.png"
+    assert img_tags[1].parent.get("href") == "https://github.com/User/Repo/blob/_images/tux.png"
     assert img_tags[2].parent.get("href") == "/_images/tux.png"
-    assert img_tags[3].parent.get("href") == "/_images/tux.png"
-    assert img_tags[4].parent.get("href") == "https://github.com/User/Repo/blob/../_images/tux.png"  # TODO
-    assert img_tags[5].parent.get("href") == "https://github.com/User/Repo/blob/../_images/tux.png"  # TODO
+    assert img_tags[3].parent.get("href") == "https://github.com/User/Repo/blob/_images/tux.png"
 
 
 def test_img_src():

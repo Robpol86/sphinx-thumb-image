@@ -51,7 +51,7 @@ class ThumbCommon(images.Image):
         format_kv = {
             "original": img_src,
             "basename": Path(img_src).name,
-            # TODO resolve "../"
+            "path": self.state.document.settings.env.relfn2path(img_src)[0],
         }
         if "no-target" in self.options:
             self.options.pop("target", None)
