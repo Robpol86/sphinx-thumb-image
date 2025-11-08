@@ -20,7 +20,7 @@ from bs4 import element
         indirect=True,
         ids=lambda param: param["thumb_image_default_target"],
     )
-@pytest.mark.sphinx("html", testroot="defaults", confoverrides={"master_doc": "target"})
+@pytest.mark.sphinx("html", testroot="defaults", confoverrides={"master_doc": "target"}, freshenv=True)
 def test_target(img_tags: List[element.Tag], request: pytest.FixtureRequest):
     """Test thumb_image_default_target and directive overrides.
 
@@ -44,15 +44,12 @@ def test_target(img_tags: List[element.Tag], request: pytest.FixtureRequest):
         assert img_tags[8].parent.get("href") == "_images/tux.png"
         assert img_tags[9].parent.get("href") == "_images/tux.png"
     elif thumb_image_default_target in ["google.com", "pfx/%s", "pfx/%(ignore)s"]:
-        pytest.skip("TODO")
         assert img_tags[8].parent.get("href") == thumb_image_default_target
         assert img_tags[9].parent.get("href") == thumb_image_default_target
     elif thumb_image_default_target == "pfx/%(original)s":
-        pytest.skip("TODO")
         assert img_tags[8].parent.get("href") == "pfx/_images/tux.png"
         assert img_tags[9].parent.get("href") == "pfx/_images/tux.png"
     elif thumb_image_default_target is None:
-        pytest.skip("TODO")
         assert img_tags[8].parent.name != "a"
         assert img_tags[9].parent.name != "a"
     else:

@@ -5,7 +5,6 @@ from typing import List
 
 import pytest
 from bs4 import BeautifulSoup, element
-from sphinx.testing.fixtures import _app_params
 from sphinx.testing.util import SphinxTestApp
 
 pytest_plugins = ("sphinx.testing.fixtures",)  # pylint: disable=invalid-name
@@ -18,7 +17,7 @@ def rootdir() -> Path:
 
 
 @pytest.fixture()
-def app_params(app_params: _app_params, request: pytest.FixtureRequest):
+def app_params(app_params, request: pytest.FixtureRequest):
     """TODO."""
     if hasattr(request, "param"):
         for key, value in request.param.items():
