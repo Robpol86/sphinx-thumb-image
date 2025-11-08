@@ -5,6 +5,7 @@ from typing import List
 
 import pytest
 from bs4 import BeautifulSoup, element
+from sphinx.testing.fixtures import _app_params
 from sphinx.testing.util import SphinxTestApp
 
 pytest_plugins = ("sphinx.testing.fixtures",)  # pylint: disable=invalid-name
@@ -16,13 +17,19 @@ def rootdir() -> Path:
     return Path(__file__).parent / "test_docs"
 
 
-@pytest.fixture(name="sphinx_app")
-def _sphinx_app(app: SphinxTestApp, request: pytest.FixtureRequest):
-    """Instantiate a new Sphinx app per test function."""
+@pytest.fixture()
+def app_params(app_params: _app_params, request: pytest.FixtureRequest):
+    """TODO."""
     if hasattr(request, "param"):
         for key, value in request.param.items():
             if value != "__omit__":
-                app.config[key] = value
+                app_params.kwargs.setdefault("confoverrides", {})[key] = value
+    return app_params
+
+
+@pytest.fixture(name="sphinx_app")
+def _sphinx_app(app: SphinxTestApp):
+    """Instantiate a new Sphinx app per test function."""
     app.warningiserror = True
     app.build()
     yield app

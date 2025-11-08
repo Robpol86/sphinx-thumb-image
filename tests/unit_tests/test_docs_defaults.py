@@ -7,7 +7,7 @@ from bs4 import element
 
 
 @pytest.mark.parametrize(
-        "sphinx_app",
+        "app_params",
         [{"thumb_image_default_target": v} for v in [
             "__omit__",  # specially handled
             "original",
@@ -39,7 +39,7 @@ def test_target(img_tags: List[element.Tag], request: pytest.FixtureRequest):
     assert img_tags[5].parent.name != "a"
     assert img_tags[6].parent.get("href") == "https://github.com/User/Repo/blob/_images/tux.png"
     assert img_tags[7].parent.get("href") == "https://cloudflare.com/cdn/tux.png"
-    thumb_image_default_target = request.node.callspec.params["sphinx_app"]["thumb_image_default_target"]
+    thumb_image_default_target = request.node.callspec.params["app_params"]["thumb_image_default_target"]
     if thumb_image_default_target in ["__omit__", "original"]:
         assert img_tags[8].parent.get("href") == "_images/tux.png"
         assert img_tags[9].parent.get("href") == "_images/tux.png"
