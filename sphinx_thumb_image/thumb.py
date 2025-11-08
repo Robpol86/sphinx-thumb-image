@@ -56,24 +56,19 @@ class ThumbCommon(images.Image):
         }
         if "no-target" in self.options:
             self.options.pop("target", None)
-            return
-        if "target-original" in self.options:
+        elif "target-original" in self.options:
             self.options["target"] = img_src
-            return
-        if "target" in self.options:
+        elif "target" in self.options:
             self.options["target"] = format_target(self.options["target"], **format_kv)
-            return
-        # Apply defaults from conf.py.
-        config = self.state.document.settings.env.config
-        if "thumb_image_default_target" not in config:
-            return
-        thumb_image_default_target = config["thumb_image_default_target"]
-        if thumb_image_default_target == "original":
-            self.options["target"] = img_src
-        elif thumb_image_default_target is None:
-            self.options.pop("target", None)
         else:
-            self.options["target"] = format_target(thumb_image_default_target, **format_kv)
+            # Apply defaults from conf.py.
+            thumb_image_default_target = self.state.document.settings.env.config["thumb_image_default_target"]
+            if thumb_image_default_target == "original":
+                self.options["target"] = img_src
+            elif thumb_image_default_target is None:
+                self.options.pop("target", None)
+            else:
+                self.options["target"] = format_target(thumb_image_default_target, **format_kv)
 
 
 class ThumbImage(ThumbCommon):
