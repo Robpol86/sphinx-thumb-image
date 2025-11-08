@@ -62,7 +62,8 @@ class ThumbCommon(images.Image):
             self.options["target"] = format_target(self.options["target"], **format_kv)
         else:
             # Apply defaults from conf.py.
-            thumb_image_default_target = self.state.document.settings.env.config["thumb_image_default_target"]
+            config = self.state.document.settings.env.config
+            thumb_image_default_target = config["thumb_image_default_target"]
             if thumb_image_default_target == "original":
                 self.options["target"] = img_src
             elif thumb_image_default_target is None:
