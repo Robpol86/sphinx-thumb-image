@@ -19,6 +19,7 @@ def rootdir() -> Path:
 @pytest.fixture(name="sphinx_app")
 def _sphinx_app(app: SphinxTestApp):
     """Instantiate a new Sphinx app per test function."""
+    app.warningiserror = True
     app.build()
     yield app
 
