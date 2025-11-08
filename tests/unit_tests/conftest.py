@@ -18,7 +18,7 @@ def rootdir() -> Path:
 
 @pytest.fixture()
 def app_params(app_params, request: pytest.FixtureRequest):
-    """TODO."""
+    """Inject Sphinx test app config before each test, including conf overrides (enabled with indirect=True)."""
     app_params.kwargs["freshenv"] = True
     if hasattr(request, "param"):
         for key, value in request.param.items():
