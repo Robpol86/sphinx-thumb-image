@@ -32,7 +32,6 @@ TODO::
 """
 
 from pathlib import Path
-from typing import Dict, List
 
 from docutils.nodes import Element
 from docutils.parsers.rst.directives import flag, images
@@ -79,7 +78,7 @@ class ThumbImage(ThumbCommon):
     option_spec["no-target"] = flag
     option_spec["target-original"] = flag
 
-    def run(self) -> List[Element]:
+    def run(self) -> list[Element]:
         """Entrypoint."""
         self._ThumbCommon__update_target()
         return super().run()
@@ -92,13 +91,13 @@ class ThumbFigure(images.Figure, ThumbCommon):
     option_spec["no-target"] = flag
     option_spec["target-original"] = flag
 
-    def run(self) -> List[Element]:
+    def run(self) -> list[Element]:
         """Entrypoint."""
         self._ThumbCommon__update_target()
         return super().run()
 
 
-def setup(app: Sphinx) -> Dict[str, str]:
+def setup(app: Sphinx) -> dict[str, str]:
     """Register extension components with Sphinx (called by Sphinx during phase 0 [initialization]).
 
     :param app: Sphinx application object.
