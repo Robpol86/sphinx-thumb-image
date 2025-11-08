@@ -1,7 +1,5 @@
 """Tests."""
 
-from typing import List
-
 import pytest
 from bs4 import element
 
@@ -21,7 +19,7 @@ from bs4 import element
         ids=lambda param: param["thumb_image_default_target"],
     )
 @pytest.mark.sphinx("html", testroot="defaults", confoverrides={"master_doc": "target"})
-def test_target(img_tags: List[element.Tag], request: pytest.FixtureRequest):
+def test_target(request: pytest.FixtureRequest, img_tags: list[element.Tag]):
     """Test thumb_image_default_target and directive overrides."""
     assert img_tags[0].parent.get("href") == "https://google.com"
     assert img_tags[1].parent.get("href") == "https://aol.com/?x=%sample"
@@ -46,7 +44,15 @@ def test_target(img_tags: List[element.Tag], request: pytest.FixtureRequest):
         assert img_tags[9].parent.name != "a"
     else:
         pytest.fail("Unhandled thumb_image_default_target value")
-    # TODO assert files exist, don't assert files NOT exist in this test, that's in another test.
+
+
+@pytest.mark.sphinx("html", testroot="defaults", confoverrides={"master_doc": "sub/target"})
+def test_sub_target(img_tags: list[element.Tag]):
+    """Test with pages in subdirectories referencing images n directories up."""
+    assert img_tags[0].parent.get("href") == "../_images/tux.png"
+    assert img_tags[1].parent.get("href") == "https://github.com/User/Repo/blob/_images/tux.png"
+    assert img_tags[2].parent.get("href") == "/_images/tux.png"
+    assert img_tags[3].parent.get("href") == "https://github.com/User/Repo/blob/_images/tux.png"
 
 
 def test_img_src():

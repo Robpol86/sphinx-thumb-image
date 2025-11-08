@@ -1,7 +1,6 @@
 """pytest fixtures."""
 
 from pathlib import Path
-from typing import List
 
 import pytest
 from bs4 import BeautifulSoup, element
@@ -43,6 +42,6 @@ def _master_html(sphinx_app: SphinxTestApp) -> BeautifulSoup:
 
 
 @pytest.fixture()
-def img_tags(master_html: BeautifulSoup) -> List[element.Tag]:
+def img_tags(master_html: BeautifulSoup) -> list[element.Tag]:
     """Return all <img> tags in html."""
     return master_html.find_all("img")
