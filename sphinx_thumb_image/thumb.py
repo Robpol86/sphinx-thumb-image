@@ -8,23 +8,14 @@ TODO::
 * Support pdf and non-html builders
 * If source image <= thumb size: still compress, unless 100% then noop and link to original
 * Support parallel resizing, use lock files (one image may be referenced by multiple pages)
-* Supported targets:
-    * No target: just resize image, _build dir should not have source images, just thumbnails
-    * Link original (default): embedded image is thumb, but source image should be in _build and linked to
-    * Formatted link: Let user specify in config and/or directive a %s formatted link to original (e.g. GitHub blob)
-    * :target: override as user expects
 * thumb-image directive
     * Default scales down to default width
     * :thumb_width: 700px (unitless == px, no other units supported)
-    * :no_target:
-    * :target_fmt: https://localhost/images/%s
 * config option to thumbisize all images/figures (sphinx directives)
     * No new directive options for ..image/..figure
 * Remote/linked images unsupported
 * Supported image formats: jpg png bmp gif gif[animated] apng svg webp
 * Overridable option for thumb jpeg compression (e.g. 0-100 numerical?)
-* Thumb file type (jpg, png, gif)
-* Support animated gif thumbnails
 * Thumb filename:
     * image.jpg -> image-700x435-95pct.jpg
     * image.gif -> image-700x435.gif
