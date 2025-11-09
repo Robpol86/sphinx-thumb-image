@@ -20,6 +20,7 @@ TODO::
     * image.jpg -> image-700x435-95pct.jpg
     * image.gif -> image-700x435.gif
 * Space saving: don't write original image to _build if not referenced
+* config and option for resample algorithm (nearest, bilinear, bicubic, lanczos)
 """
 
 from pathlib import Path
