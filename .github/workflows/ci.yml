@@ -35,7 +35,7 @@ jobs:
 
       - name: Run Tests
         env:
-          COVERAGE_FAIL_UNDER: ${{ github.event_name == 'pull_request' && '85' || '' }}
+          COVERAGE_FAIL_UNDER: ${{ github.event_name == 'pull_request' && '85' || '0' }}
           PY_COLORS: 1
         run: make test
 
