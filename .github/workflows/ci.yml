@@ -35,6 +35,7 @@ jobs:
 
       - name: Run Tests
         env:
+          COVERAGE_FAIL_UNDER: 85
           PY_COLORS: 1
         run: make test
 

@@ -71,7 +71,7 @@ exclude_lines = [
     "^\\s*raise AssertionError",
     "^\\s*raise NotImplementedError",
 ]
-# TODO enable only in CI fail_under = 85
+fail_under = "${COVERAGE_FAIL_UNDER-0}"
 
 [tool.coverage.run]
 branch = true
