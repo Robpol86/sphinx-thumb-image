@@ -36,6 +36,8 @@ def get_new_dimensions(original_w_h, max_w_h) -> tuple[int, int]:
         return -1, -1  # No resizing needed.
 
     aspect_ratio = original_w / original_h
+    if original_w < max_w:
+        pass
     return aspect_ratio  # TODO
 
 

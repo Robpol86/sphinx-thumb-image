@@ -27,10 +27,11 @@ from pathlib import Path
 
 from docutils.nodes import Element
 from docutils.parsers.rst.directives import flag, images, nonnegative_int, percentage
+from PIL import Image
 from sphinx.application import Sphinx
 
 from sphinx_thumb_image import __version__
-from sphinx_thumb_image.utils import format_target
+from sphinx_thumb_image.utils import format_target, get_new_dimensions
 
 
 class ThumbCommon(images.Image):
@@ -59,11 +60,22 @@ class ThumbCommon(images.Image):
 
         :returns: Tuple of (original image and thumb image paths).
         """
-        # original_image = self.arguments[0]
-        # quality = self.__get_config("thumb-quality", "thumb_image_default_quality")
+        original_image = self.arguments[0]
+        quality = self.__get_config("thumb-quality", "thumb_image_default_quality")
+        thumb_width = self.__get_config("thumb-width", "thumb_image_default_width")
+        thumb_height = self.__get_config("thumb-height", "thumb_image_default_height")
 
-        # with Image.open(original_image) as image:  # self.state.document.settings.env.relfn2path(img_src)[0]
-        #     pass
+        with Image.open(original_image) as image:  # self.state.document.settings.env.relfn2path(img_src)[0]
+            (new_width, new_height) = get_new_dimensions((image.width, image.height), (thumb_width, thumb_height))
+            if new_width < 0 and quality >= 100:  # noqa: PLR2004
+                pass  # TODO use original image (aka just normal image directive)
+            elif new_width < 0:
+                pass  # TODO output filename same as thumb but dont use .thumbnail, just .save()
+            else:
+                pass  # TODO .thumbnail and .save()
+
+        # TODO set self.arguments[0] to thumb image path
+        # TODO return (original_image, thumb_image)
 
     def __update_target(self, original_image="todo", thumb_image="todo"):
         """Update the image's link target."""
@@ -107,7 +119,7 @@ class ThumbImage(ThumbCommon):
 
     def run(self) -> list[Element]:
         """Entrypoint."""
-        self._ThumbCommon__create_thumbnail_and_update_image()
+        #self._ThumbCommon__create_thumbnail_and_update_image()
         self._ThumbCommon__update_target()
         return super().run()
 
@@ -119,7 +131,7 @@ class ThumbFigure(images.Figure, ThumbCommon):
 
     def run(self) -> list[Element]:
         """Entrypoint."""
-        self._ThumbCommon__create_thumbnail_and_update_image()
+        #self._ThumbCommon__create_thumbnail_and_update_image()
         self._ThumbCommon__update_target()
         return super().run()
 
