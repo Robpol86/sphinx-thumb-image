@@ -36,6 +36,11 @@ from sphinx_thumb_image.utils import format_target
 class ThumbCommon(images.Image):
     """Common methods for both thumb image/figure subclassed directives."""
 
+    option_spec = {}
+    option_spec["no-target"] = flag
+    option_spec["target-original"] = flag
+    option_spec["target-thumb"] = flag
+
     def __update_target(self):
         """Update the image's link target."""
         # Handle options specified in the directive first.
@@ -70,10 +75,7 @@ class ThumbCommon(images.Image):
 class ThumbImage(ThumbCommon):
     """Thumbnail image directive."""
 
-    option_spec = images.Image.option_spec.copy()
-    option_spec["no-target"] = flag
-    option_spec["target-original"] = flag
-    option_spec["target-thumb"] = flag
+    option_spec = images.Image.option_spec | ThumbCommon.option_spec
 
     def run(self) -> list[Element]:
         """Entrypoint."""
@@ -84,10 +86,7 @@ class ThumbImage(ThumbCommon):
 class ThumbFigure(images.Figure, ThumbCommon):
     """Thumbnail figure directive."""
 
-    option_spec = images.Figure.option_spec.copy()
-    option_spec["no-target"] = flag
-    option_spec["target-original"] = flag
-    option_spec["target-thumb"] = flag
+    option_spec = images.Figure.option_spec | ThumbCommon.option_spec
 
     def run(self) -> list[Element]:
         """Entrypoint."""
