@@ -66,7 +66,7 @@ class ThumbCommon(images.Image):
         thumb_height = self.__get_config("thumb-height", "thumb_image_default_height")
 
         with Image.open(original_image) as image:  # self.state.document.settings.env.relfn2path(img_src)[0]
-            (new_width, new_height) = get_new_dimensions((image.width, image.height), (thumb_width, thumb_height))
+            new_width, new_height = get_new_dimensions((image.width, image.height), (thumb_width, thumb_height))
             if new_width < 0 and quality >= 100:  # noqa: PLR2004
                 pass  # TODO use original image (aka just normal image directive)
             elif new_width < 0:

@@ -24,6 +24,8 @@ def format_target(fmt: str, **kv) -> str:
 def get_new_dimensions(original_w_h, max_w_h) -> tuple[int, int]:
     """Return the scaled down size of the image, to be the thumbnail size.
 
+    TODO finish implementation.
+
     :param original_w_h: Tuple of (width, height) of the original image.
     :param max_w_h: Tuple of (max width, max height) for the thumbnail.
 
@@ -52,6 +54,8 @@ def create_thumbnail(
     """TODO.
 
     Caller handles lock and target path determination.
+
+    # TODO remove this function.
 
     # TODO param resample, param reducing_gap
 
