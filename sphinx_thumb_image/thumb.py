@@ -26,7 +26,7 @@ TODO::
 from pathlib import Path
 
 from docutils.nodes import Element
-from docutils.parsers.rst.directives import flag, images
+from docutils.parsers.rst.directives import flag, images, nonnegative_int
 from sphinx.application import Sphinx
 
 from sphinx_thumb_image import __version__
@@ -40,6 +40,9 @@ class ThumbCommon(images.Image):
     option_spec["no-target"] = flag
     option_spec["target-original"] = flag
     option_spec["target-thumb"] = flag
+    option_spec["thumb-width"] = nonnegative_int
+    option_spec["thumb-height"] = nonnegative_int
+    option_spec["enforce-aspect"] = flag
 
     def __update_target(self):
         """Update the image's link target."""
