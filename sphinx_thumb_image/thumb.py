@@ -44,12 +44,19 @@ class ThumbCommon(images.Image):
     __option_spec["thumb-height"] = nonnegative_int
     __option_spec["enforce-aspect-ratio"] = flag
 
-    def __create_thumbnail_and_update_image(self):
-        """Create the thumbnail image and set the image node's URI to it."""
+    def __create_thumbnail_and_update_image(self) -> list[str, str]:
+        """Create the thumbnail image and set the image node to it.
+
+        :returns: Tuple of (original image and thumb image paths).
+        """
         pass  # TODO implement
 
-    def __update_target(self):
+    def __update_target(self, original_image="todo", thumb_image="todo"):
         """Update the image's link target."""
+        if original_image != "todo":
+            raise NotImplementedError
+        if thumb_image != "todo":
+            raise NotImplementedError
         # Handle options specified in the directive first.
         img_src = self.arguments[0]
         format_kv = {
