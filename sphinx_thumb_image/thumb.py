@@ -36,13 +36,13 @@ from sphinx_thumb_image.utils import format_target
 class ThumbCommon(images.Image):
     """Common methods for both thumb image/figure subclassed directives."""
 
-    option_spec = {}
-    option_spec["no-target"] = flag
-    option_spec["target-original"] = flag
-    option_spec["target-thumb"] = flag
-    option_spec["thumb-width"] = nonnegative_int
-    option_spec["thumb-height"] = nonnegative_int
-    option_spec["enforce-aspect-ratio"] = flag
+    __option_spec = {}
+    __option_spec["no-target"] = flag
+    __option_spec["target-original"] = flag
+    __option_spec["target-thumb"] = flag
+    __option_spec["thumb-width"] = nonnegative_int
+    __option_spec["thumb-height"] = nonnegative_int
+    __option_spec["enforce-aspect-ratio"] = flag
 
     def __create_thumbnail_and_update_image(self):
         """Create the thumbnail image and set the image node's URI to it."""
@@ -82,7 +82,7 @@ class ThumbCommon(images.Image):
 class ThumbImage(ThumbCommon):
     """Thumbnail image directive."""
 
-    option_spec = images.Image.option_spec | ThumbCommon.option_spec
+    option_spec = images.Image.option_spec | ThumbCommon._ThumbCommon__option_spec
 
     def run(self) -> list[Element]:
         """Entrypoint."""
@@ -94,7 +94,7 @@ class ThumbImage(ThumbCommon):
 class ThumbFigure(images.Figure, ThumbCommon):
     """Thumbnail figure directive."""
 
-    option_spec = images.Figure.option_spec | ThumbCommon.option_spec
+    option_spec = images.Image.option_spec | ThumbCommon._ThumbCommon__option_spec
 
     def run(self) -> list[Element]:
         """Entrypoint."""
