@@ -49,6 +49,8 @@ class ThumbCommon(images.Image):
             self.options.pop("target", None)
         elif "target-original" in self.options:
             self.options["target"] = img_src
+        elif "target-thumb" in self.options:
+            raise NotImplementedError("TOOD get thumb path")
         elif "target" in self.options:
             self.options["target"] = format_target(self.options["target"], **format_kv)
         else:
@@ -57,6 +59,8 @@ class ThumbCommon(images.Image):
             thumb_image_default_target = config["thumb_image_default_target"]
             if thumb_image_default_target == "original":
                 self.options["target"] = img_src
+            elif thumb_image_default_target == "thumb":
+                raise NotImplementedError("TOOD get thumb path!")
             elif thumb_image_default_target is None:
                 self.options.pop("target", None)
             else:
@@ -69,6 +73,7 @@ class ThumbImage(ThumbCommon):
     option_spec = images.Image.option_spec.copy()
     option_spec["no-target"] = flag
     option_spec["target-original"] = flag
+    option_spec["target-thumb"] = flag
 
     def run(self) -> list[Element]:
         """Entrypoint."""
@@ -82,6 +87,7 @@ class ThumbFigure(images.Figure, ThumbCommon):
     option_spec = images.Figure.option_spec.copy()
     option_spec["no-target"] = flag
     option_spec["target-original"] = flag
+    option_spec["target-thumb"] = flag
 
     def run(self) -> list[Element]:
         """Entrypoint."""
@@ -97,6 +103,9 @@ def setup(app: Sphinx) -> dict[str, str]:
     :returns: Extension version.
     """
     app.add_config_value("thumb_image_default_target", "original", "html")
+    app.add_config_value("thumb_image_default_width", 700, "html")  # TODO tune
+    app.add_config_value("thumb_image_default_height", 700, "html")  # TODO tune
+    app.add_config_value("thumb_image_enforce_aspect", True, "html")
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)
     return {"version": __version__}
