@@ -26,7 +26,7 @@ TODO::
 from pathlib import Path
 
 from docutils.nodes import Element
-from docutils.parsers.rst.directives import flag, images, nonnegative_int
+from docutils.parsers.rst.directives import flag, images, nonnegative_int, percentage
 from sphinx.application import Sphinx
 
 from sphinx_thumb_image import __version__
@@ -37,19 +37,34 @@ class ThumbCommon(images.Image):
     """Common methods for both thumb image/figure subclassed directives."""
 
     __option_spec = {}
+    # Target options.
     __option_spec["no-target"] = flag
     __option_spec["target-original"] = flag
     __option_spec["target-thumb"] = flag
+    # Dimension options.
     __option_spec["thumb-width"] = nonnegative_int
     __option_spec["thumb-height"] = nonnegative_int
     __option_spec["enforce-aspect-ratio"] = flag
+    # Other options.
+    __option_spec["thumb-quality"] = percentage
 
-    def __create_thumbnail_and_update_image(self) -> list[str, str]:
+    def __get_config(self, key_options: str, key_config: str):
+        """TODO."""
+        if key_options in self.options:
+            return self.options[key_options]
+        config = self.state.document.settings.env.config
+        return config[key_config]
+
+    def __create_thumbnail_and_update_image(self) -> tuple[str, str]:
         """Create the thumbnail image and set the image node to it.
 
         :returns: Tuple of (original image and thumb image paths).
         """
-        pass  # TODO implement
+        # original_image = self.arguments[0]
+        # quality = self.__get_config("thumb-quality", "thumb_image_default_quality")
+
+        # with Image.open(original_image) as image:  # self.state.document.settings.env.relfn2path(img_src)[0]
+        #     pass
 
     def __update_target(self, original_image="todo", thumb_image="todo"):
         """Update the image's link target."""
@@ -121,6 +136,7 @@ def setup(app: Sphinx) -> dict[str, str]:
     app.add_config_value("thumb_image_default_width", 700, "html")  # TODO tune
     app.add_config_value("thumb_image_default_height", 700, "html")  # TODO tune
     app.add_config_value("thumb_image_enforce_aspect_ratio", True, "html")
+    app.add_config_value("thumb_image_default_quality", 100, "html")
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)
     return {"version": __version__}

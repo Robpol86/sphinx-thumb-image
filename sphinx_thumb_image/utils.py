@@ -21,6 +21,10 @@ def format_target(fmt: str, **kv) -> str:
     return fmt
 
 
+def get_new_dimensions(self, original_w_h, max_w_h, enforce_aspect) -> tuple[int, int]:
+    """TODO."""
+
+
 def create_thumbnail(
     source_original_image: Path,
     target_thumb_image: Path,
