@@ -42,7 +42,11 @@ class ThumbCommon(images.Image):
     option_spec["target-thumb"] = flag
     option_spec["thumb-width"] = nonnegative_int
     option_spec["thumb-height"] = nonnegative_int
-    option_spec["enforce-aspect"] = flag
+    option_spec["enforce-aspect-ratio"] = flag
+
+    def __create_thumbnail_and_update_image(self):
+        """Create the thumbnail image and set the image node's URI to it."""
+        pass  # TODO implement
 
     def __update_target(self):
         """Update the image's link target."""
@@ -82,6 +86,7 @@ class ThumbImage(ThumbCommon):
 
     def run(self) -> list[Element]:
         """Entrypoint."""
+        self._ThumbCommon__create_thumbnail_and_update_image()
         self._ThumbCommon__update_target()
         return super().run()
 
@@ -93,6 +98,7 @@ class ThumbFigure(images.Figure, ThumbCommon):
 
     def run(self) -> list[Element]:
         """Entrypoint."""
+        self._ThumbCommon__create_thumbnail_and_update_image()
         self._ThumbCommon__update_target()
         return super().run()
 
@@ -107,7 +113,7 @@ def setup(app: Sphinx) -> dict[str, str]:
     app.add_config_value("thumb_image_default_target", "original", "html")
     app.add_config_value("thumb_image_default_width", 700, "html")  # TODO tune
     app.add_config_value("thumb_image_default_height", 700, "html")  # TODO tune
-    app.add_config_value("thumb_image_enforce_aspect", True, "html")
+    app.add_config_value("thumb_image_enforce_aspect_ratio", True, "html")
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)
     return {"version": __version__}
