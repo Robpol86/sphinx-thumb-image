@@ -44,7 +44,6 @@ class ThumbCommon(images.Image):
     # Dimension options.
     __option_spec["thumb-width"] = nonnegative_int
     __option_spec["thumb-height"] = nonnegative_int
-    __option_spec["enforce-aspect-ratio"] = flag
     # Other options.
     __option_spec["thumb-quality"] = percentage
 
@@ -135,7 +134,6 @@ def setup(app: Sphinx) -> dict[str, str]:
     app.add_config_value("thumb_image_default_target", "original", "html")
     app.add_config_value("thumb_image_default_width", 700, "html")  # TODO tune
     app.add_config_value("thumb_image_default_height", 700, "html")  # TODO tune
-    app.add_config_value("thumb_image_enforce_aspect_ratio", True, "html")
     app.add_config_value("thumb_image_default_quality", 100, "html")
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)

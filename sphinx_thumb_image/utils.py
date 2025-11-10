@@ -21,8 +21,22 @@ def format_target(fmt: str, **kv) -> str:
     return fmt
 
 
-def get_new_dimensions(self, original_w_h, max_w_h, enforce_aspect) -> tuple[int, int]:
-    """TODO."""
+def get_new_dimensions(original_w_h, max_w_h) -> tuple[int, int]:
+    """Return the scaled down size of the image, to be the thumbnail size.
+
+    :param original_w_h: Tuple of (width, height) of the original image.
+    :param max_w_h: Tuple of (max width, max height) for the thumbnail.
+
+    :return: Tuple of (new width, new height) or (-1, -1) if no resizing needed.
+    """
+    original_w, original_h = original_w_h
+    max_w, max_h = max_w_h
+
+    if original_w <= max_w and original_h <= max_h:
+        return -1, -1  # No resizing needed.
+
+    aspect_ratio = original_w / original_h
+    return aspect_ratio  # TODO
 
 
 def create_thumbnail(
