@@ -75,10 +75,10 @@ class ThumbCommon(images.Image):
 
     def __update_image_nodes(self, returned_nodes: list[Element]):
         """TODO."""
-        for node in returned_nodes:
-            for image_node in node.findall(image):
+        for _node in returned_nodes:
+            for _image_node in _node.findall(image):
                 # TODO: get width and height and save as attribute for transform to use
-                if image_node:  # TODO remove
+                if _image_node:  # TODO remove
                     pass
 
 
