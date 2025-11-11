@@ -82,7 +82,8 @@ class ThumbImage(ThumbCommon):
     def run(self) -> list[Element]:
         """Entrypoint."""
         self._ThumbCommon__update_target()
-        return super().run()
+        nodes = super().run()
+        return nodes
 
 
 class ThumbFigure(images.Figure, ThumbCommon):
@@ -93,7 +94,8 @@ class ThumbFigure(images.Figure, ThumbCommon):
     def run(self) -> list[Element]:
         """Entrypoint."""
         self._ThumbCommon__update_target()
-        return super().run()
+        nodes = super().run()
+        return nodes
 
 
 def setup(app: Sphinx) -> dict[str, str]:
