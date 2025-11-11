@@ -25,6 +25,7 @@ TODO::
 
 from pathlib import Path
 
+# import PIL  # TODO docutils.parsers.rst.directives.images does weird stuff with PIL import
 from docutils.nodes import Element, image
 from docutils.parsers.rst.directives import flag, images
 from sphinx.application import Sphinx
@@ -77,9 +78,11 @@ class ThumbCommon(images.Image):
         """TODO."""
         for _node in returned_nodes:
             for _image_node in _node.findall(image):
-                # TODO: get width and height and save as attribute for transform to use
-                if _image_node:  # TODO remove
-                    pass
+                image_path = self.state.document.settings.env.relfn2path(_image_node["uri"])[0]
+                # TODO
+                # with PIL.Image.open(image_path) as img:
+                #     _image_node["original-width"], _image_node["original-height"] = img.size
+                _image_node["original-width"], _image_node["original-height"] = f"TODO {image_path}", f"TODO {image_path}"
 
 
 class ThumbImage(ThumbCommon):
