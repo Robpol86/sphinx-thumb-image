@@ -4,4 +4,4 @@ Sphinx Thumb Image
 
 Sphinx extension that resizes images into thumbnails on the fly.
 
-.. image:: _images/tux.png
+.. thumb-image:: _images/tux.png
