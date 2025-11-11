@@ -25,7 +25,7 @@ TODO::
 
 from pathlib import Path
 
-from docutils.nodes import Element
+from docutils.nodes import Element, image
 from docutils.parsers.rst.directives import flag, images
 from sphinx.application import Sphinx
 
@@ -48,7 +48,7 @@ class ThumbCommon(images.Image):
         # Handle options specified in the directive first.
         img_src = self.arguments[0]
         format_kv = {
-            "original": img_src,
+            "original": img_src,  # TODO s/original/fullsize/
             "basename": Path(img_src).name,
             "path": self.state.document.settings.env.relfn2path(img_src)[0],
         }
@@ -73,6 +73,14 @@ class ThumbCommon(images.Image):
             else:
                 self.options["target"] = format_target(thumb_image_default_target, **format_kv)
 
+    def __update_image_nodes(self, returned_nodes: list[Element]):
+        """TODO."""
+        for node in returned_nodes:
+            for image_node in node.findall(image):
+                # TODO: get width and height and save as attribute for transform to use
+                if image_node:  # TODO remove
+                    pass
+
 
 class ThumbImage(ThumbCommon):
     """Thumbnail image directive."""
@@ -82,8 +90,9 @@ class ThumbImage(ThumbCommon):
     def run(self) -> list[Element]:
         """Entrypoint."""
         self._ThumbCommon__update_target()
-        nodes = super().run()
-        return nodes
+        returned_nodes = super().run()
+        self._ThumbCommon__update_image_nodes(returned_nodes)
+        return returned_nodes
 
 
 class ThumbFigure(images.Figure, ThumbCommon):
@@ -94,8 +103,9 @@ class ThumbFigure(images.Figure, ThumbCommon):
     def run(self) -> list[Element]:
         """Entrypoint."""
         self._ThumbCommon__update_target()
-        nodes = super().run()
-        return nodes
+        returned_nodes = super().run()
+        self._ThumbCommon__update_image_nodes(returned_nodes)
+        return returned_nodes
 
 
 def setup(app: Sphinx) -> dict[str, str]:
