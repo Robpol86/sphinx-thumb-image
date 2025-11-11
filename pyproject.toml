@@ -68,8 +68,6 @@ dev = [
 exclude_lines = [
     "^\\s*from",
     "^\\s*import",
-    "^\\s*raise AssertionError",
-    "^\\s*raise NotImplementedError",
 ]
 fail_under = "${COVERAGE_FAIL_UNDER-0}"
 

@@ -40,6 +40,7 @@ class ThumbCommon(images.Image):
     # Target options.
     __option_spec["no-target"] = flag
     __option_spec["target-original"] = flag
+    __option_spec["target-thumb"] = flag
 
     def __update_target(self):
         """Update the image's link target."""
@@ -54,6 +55,8 @@ class ThumbCommon(images.Image):
             self.options.pop("target", None)
         elif "target-original" in self.options:
             self.options["target"] = img_src
+        elif "target-thumb" in self.options:
+            raise NotImplementedError("TOOD get thumb path")
         elif "target" in self.options:
             self.options["target"] = format_target(self.options["target"], **format_kv)
         else:
@@ -62,6 +65,8 @@ class ThumbCommon(images.Image):
             thumb_image_default_target = config["thumb_image_default_target"]
             if thumb_image_default_target == "original":
                 self.options["target"] = img_src
+            elif thumb_image_default_target == "thumb":
+                raise NotImplementedError("TOOD get thumb path")
             elif thumb_image_default_target is None:
                 self.options.pop("target", None)
             else:
