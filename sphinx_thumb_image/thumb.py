@@ -20,6 +20,7 @@ TODO::
     * image.jpg -> image-700x435-95pct.jpg
     * image.gif -> image-700x435.gif
 * Space saving: don't write original image to _build if not referenced
+* config and option for resample algorithm (nearest, bilinear, bicubic, lanczos)
 """
 
 from pathlib import Path
@@ -34,6 +35,11 @@ from sphinx_thumb_image.utils import format_target
 
 class ThumbCommon(images.Image):
     """Common methods for both thumb image/figure subclassed directives."""
+
+    __option_spec = {}
+    # Target options.
+    __option_spec["no-target"] = flag
+    __option_spec["target-original"] = flag
 
     def __update_target(self):
         """Update the image's link target."""
@@ -65,9 +71,7 @@ class ThumbCommon(images.Image):
 class ThumbImage(ThumbCommon):
     """Thumbnail image directive."""
 
-    option_spec = images.Image.option_spec.copy()
-    option_spec["no-target"] = flag
-    option_spec["target-original"] = flag
+    option_spec = images.Image.option_spec | ThumbCommon._ThumbCommon__option_spec
 
     def run(self) -> list[Element]:
         """Entrypoint."""
@@ -78,9 +82,7 @@ class ThumbImage(ThumbCommon):
 class ThumbFigure(images.Figure, ThumbCommon):
     """Thumbnail figure directive."""
 
-    option_spec = images.Figure.option_spec.copy()
-    option_spec["no-target"] = flag
-    option_spec["target-original"] = flag
+    option_spec = images.Figure.option_spec | ThumbCommon._ThumbCommon__option_spec
 
     def run(self) -> list[Element]:
         """Entrypoint."""
