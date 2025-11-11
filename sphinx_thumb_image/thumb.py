@@ -98,4 +98,8 @@ def setup(app: Sphinx) -> dict[str, str]:
     app.add_config_value("thumb_image_default_target", "original", "html")
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)
-    return {"version": __version__}
+    return {
+        "parallel_read_safe": False,  # TODO
+        "parallel_write_safe": False,  # TODO
+        "version": __version__,
+    }
