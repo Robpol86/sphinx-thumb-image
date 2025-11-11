@@ -30,6 +30,7 @@ from docutils.parsers.rst.directives import flag, images
 from sphinx.application import Sphinx
 
 from sphinx_thumb_image import __version__
+from sphinx_thumb_image.transforms import PostTransformThumbImages
 from sphinx_thumb_image.utils import format_target
 
 
@@ -105,6 +106,7 @@ def setup(app: Sphinx) -> dict[str, str]:
     app.add_config_value("thumb_image_default_target", "original", "html")
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)
+    app.add_post_transform(PostTransformThumbImages)
     return {
         "parallel_read_safe": False,  # TODO
         "parallel_write_safe": False,  # TODO
