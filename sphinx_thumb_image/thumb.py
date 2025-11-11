@@ -105,7 +105,7 @@ class ThumbCommon(images.Image):
             if thumb_image_default_target == "original":
                 self.options["target"] = img_src
             elif thumb_image_default_target == "thumb":
-                raise NotImplementedError("TOOD get thumb path!")
+                raise NotImplementedError("TOOD get thumb path")
             elif thumb_image_default_target is None:
                 self.options.pop("target", None)
             else:
@@ -127,7 +127,7 @@ class ThumbImage(ThumbCommon):
 class ThumbFigure(images.Figure, ThumbCommon):
     """Thumbnail figure directive."""
 
-    option_spec = images.Image.option_spec | ThumbCommon._ThumbCommon__option_spec
+    option_spec = images.Figure.option_spec | ThumbCommon._ThumbCommon__option_spec
 
     def run(self) -> list[Element]:
         """Entrypoint."""
