@@ -19,6 +19,7 @@ extensions = [
     "notfound.extension",  # https://sphinx-notfound-page.readthedocs.io
     "sphinx_copybutton",  # https://sphinx-copybutton.readthedocs.io
     "sphinx_design",  # https://sphinx-design.readthedocs.io
+    "sphinx_thumb_image.thumb",
 ]
 project = PYPROJECT["project"]["name"]
 pygments_style = "sphinx"
