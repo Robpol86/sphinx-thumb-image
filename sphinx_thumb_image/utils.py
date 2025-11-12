@@ -2,7 +2,13 @@
 
 import PIL.Image
 
-PREFIX = "sti-"
+
+class Keys:
+    """TODO."""
+
+    KEY_THUMB_WIDTH = "sti-thumb-width"
+    KEY_THUMB_HEIGHT = "sti-thumb-height"
+    KEY_THUMB_URI = "sti-thumb-uri"
 
 
 def format_target(fmt: str, **kv) -> str:

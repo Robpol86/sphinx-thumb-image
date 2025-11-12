@@ -16,24 +16,28 @@ TODO::
 * Remote/linked images unsupported
 * Supported image formats: jpg png bmp gif gif[animated] apng svg webp
 * Overridable option for thumb jpeg compression (e.g. 0-100 numerical?)
+* Quality only set globally in conf.py. Not in directive options.
 * Thumb filename:
-    * image.jpg -> image-700x435-95pct.jpg
+    * image.jpg -> image-700x435-95pct.jpg (NO)
     * image.gif -> image-700x435.gif
 * Space saving: don't write original image to _build if not referenced
 * config and option for resample algorithm (nearest, bilinear, bicubic, lanczos)
+* Should bmp file thumbs be bmp or jpg? Support apng? svg?
+* What if source image is smaller than thumb size? What about quality == and != 100%?
+* Support px unit suffix
 """
 
 from pathlib import Path
 
 from docutils.nodes import Element
 from docutils.nodes import image as ImageNode  # noqa: N812
-from docutils.parsers.rst.directives import flag
+from docutils.parsers.rst.directives import flag, nonnegative_int
 from docutils.parsers.rst.directives.images import Figure, Image
 from sphinx.application import Sphinx
 
 from sphinx_thumb_image import __version__
 from sphinx_thumb_image.transforms import PostTransformThumbImages
-from sphinx_thumb_image.utils import PREFIX, format_target, get_image_size
+from sphinx_thumb_image.utils import format_target, get_image_size, Keys
 
 
 class ThumbCommon(Image):
@@ -44,6 +48,9 @@ class ThumbCommon(Image):
     __option_spec["no-target"] = flag
     __option_spec["target-original"] = flag
     __option_spec["target-thumb"] = flag
+    # Dimension options.
+    __option_spec["thumb-width"] = nonnegative_int
+    __option_spec["thumb-height"] = nonnegative_int
 
     def __update_target(self):
         """Update the image's link target."""
@@ -77,13 +84,48 @@ class ThumbCommon(Image):
 
     def __mark_image_nodes(self, nodes: list[Element]):
         """TODO."""
+        config = self.state.document.settings.env.config
+        thumb_image_default_width = config["thumb_image_default_width"]
+        thumb_image_default_height = config["thumb_image_default_height"]
+        fixed_size_in_options = "thumb-width" in self.options and "thumb-height" in self.options
+        fixed_size_in_config = thumb_image_default_width is not None and thumb_image_default_height is not None
+        one_size_in_options = "thumb-width" in self.options or "thumb-height" in self.options
+        one_size_in_config = thumb_image_default_width is not None or thumb_image_default_height is not None
+        if not one_size_in_options and not one_size_in_config:
+            raise ValueError("TODO No thumb size specified in options or config.")
         for node in nodes:
             for image_node in node.findall(ImageNode):
+                if fixed_size_in_options:
+                    # User specifying custom thumb size, no need to worry about aspect ratio or original size.
+                    image_node["set-thumb-width"] = int(self.options["thumb-width"])
+                    image_node["set-thumb-height"] = int(self.options["thumb-height"])
+                elif not one_size_in_options and fixed_size_in_config:
+                    # No size in options, but both sizes in config.
+                    image_node["set-thumb-width"] = int(thumb_image_default_width)
+                    image_node["set-thumb-height"] = int(thumb_image_default_height)
+                else:
+                    
+
+
+                elif ("thumb-width" not in self.options and "thumb-height" not in self.options) and :
+                    pass  # TODO
+                elif "thumb-width" in self.options or "thumb-height" in self.options:
+                    pass  # TODO
+                elif thumb_image_default_width is not None and thumb_image_default_height is not None:
+                    pass  # TODO
+                elif thumb_image_default_width is not None or thumb_image_default_height is not None:
+                    pass
+                else:
+                    raise ValueError("TODO No thumb size specified in options or config.")
+
                 image_path = self.state.document.settings.env.relfn2path(image_node["uri"])[1]
-                size = get_image_size(image_path)
-                image_node["original-width"], image_node["original-height"] = size
+                width, height = get_image_size(image_path)
+
+                image_node[f"{PREFIX}original-width"] = width
                 # TODO if quality/size satisfies: _image_node["make-thumb"] = True
                 image_node[f"{PREFIX}make-thumb"] = True
+                # TODO image_node[thumb-uri] = _images/image-thumb
+                # TODO option/conf default thumb fname: "{fileSansExt}..."
 
 
 class ThumbImage(ThumbCommon):
@@ -120,6 +162,8 @@ def setup(app: Sphinx) -> dict[str, str]:
     :returns: Extension version.
     """
     app.add_config_value("thumb_image_default_target", "original", "html")
+    app.add_config_value("thumb_image_default_width", None, "html")
+    app.add_config_value("thumb_image_default_height", None, "html")
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)
     app.add_post_transform(PostTransformThumbImages)
