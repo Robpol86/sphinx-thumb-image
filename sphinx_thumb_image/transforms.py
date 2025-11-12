@@ -11,3 +11,4 @@ class PostTransformThumbImages(SphinxPostTransform):
     def run(self, **kwargs):
         """TODO."""
         # import pdb; pdb.set_trace()  # TODO remove
+        # TODO if make-thumb

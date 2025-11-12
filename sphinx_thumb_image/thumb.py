@@ -26,8 +26,10 @@ TODO::
 from pathlib import Path
 
 # import PIL  # TODO docutils.parsers.rst.directives.images does weird stuff with PIL import
-from docutils.nodes import Element, image
-from docutils.parsers.rst.directives import flag, images
+from docutils.nodes import Element
+from docutils.nodes import image as ImageNode  # noqa: N812
+from docutils.parsers.rst.directives import flag
+from docutils.parsers.rst.directives.images import Figure, Image
 from sphinx.application import Sphinx
 
 from sphinx_thumb_image import __version__
@@ -35,7 +37,7 @@ from sphinx_thumb_image.transforms import PostTransformThumbImages
 from sphinx_thumb_image.utils import format_target
 
 
-class ThumbCommon(images.Image):
+class ThumbCommon(Image):
     """Common methods for both thumb image/figure subclassed directives."""
 
     __option_spec = {}
@@ -74,41 +76,42 @@ class ThumbCommon(images.Image):
             else:
                 self.options["target"] = format_target(thumb_image_default_target, **format_kv)
 
-    def __update_image_nodes(self, returned_nodes: list[Element]):
+    def __mark_image_nodes(self, nodes: list[Element]):
         """TODO."""
-        for _node in returned_nodes:
-            for _image_node in _node.findall(image):
-                image_path = self.state.document.settings.env.relfn2path(_image_node["uri"])[0]
+        for node in nodes:
+            for image_node in node.findall(ImageNode):
+                image_path = self.state.document.settings.env.relfn2path(image_node["uri"])[0]
                 # TODO
                 # with PIL.Image.open(image_path) as img:
                 #     _image_node["original-width"], _image_node["original-height"] = img.size
-                _image_node["original-width"], _image_node["original-height"] = f"TODO {image_path}", f"TODO {image_path}"
+                image_node["original-width"], image_node["original-height"] = f"TODO {image_path}", f"TODO {image_path}"
+                # TODO if quality/size satisfies: _image_node["make-thumb"] = True
 
 
 class ThumbImage(ThumbCommon):
     """Thumbnail image directive."""
 
-    option_spec = images.Image.option_spec | ThumbCommon._ThumbCommon__option_spec
+    option_spec = Image.option_spec | ThumbCommon._ThumbCommon__option_spec
 
     def run(self) -> list[Element]:
         """Entrypoint."""
         self._ThumbCommon__update_target()
-        returned_nodes = super().run()
-        self._ThumbCommon__update_image_nodes(returned_nodes)
-        return returned_nodes
+        nodes = super().run()
+        self._ThumbCommon__mark_image_nodes(nodes)
+        return nodes
 
 
-class ThumbFigure(images.Figure, ThumbCommon):
+class ThumbFigure(Figure, ThumbCommon):
     """Thumbnail figure directive."""
 
-    option_spec = images.Figure.option_spec | ThumbCommon._ThumbCommon__option_spec
+    option_spec = Figure.option_spec | ThumbCommon._ThumbCommon__option_spec
 
     def run(self) -> list[Element]:
         """Entrypoint."""
         self._ThumbCommon__update_target()
-        returned_nodes = super().run()
-        self._ThumbCommon__update_image_nodes(returned_nodes)
-        return returned_nodes
+        nodes = super().run()
+        self._ThumbCommon__mark_image_nodes(nodes)
+        return nodes
 
 
 def setup(app: Sphinx) -> dict[str, str]:
