@@ -25,7 +25,6 @@ TODO::
 
 from pathlib import Path
 
-# import PIL  # TODO docutils.parsers.rst.directives.images does weird stuff with PIL import
 from docutils.nodes import Element
 from docutils.nodes import image as ImageNode  # noqa: N812
 from docutils.parsers.rst.directives import flag
@@ -34,7 +33,7 @@ from sphinx.application import Sphinx
 
 from sphinx_thumb_image import __version__
 from sphinx_thumb_image.transforms import PostTransformThumbImages
-from sphinx_thumb_image.utils import format_target
+from sphinx_thumb_image.utils import PREFIX, format_target, get_image_size
 
 
 class ThumbCommon(Image):
@@ -80,12 +79,11 @@ class ThumbCommon(Image):
         """TODO."""
         for node in nodes:
             for image_node in node.findall(ImageNode):
-                image_path = self.state.document.settings.env.relfn2path(image_node["uri"])[0]
-                # TODO
-                # with PIL.Image.open(image_path) as img:
-                #     _image_node["original-width"], _image_node["original-height"] = img.size
-                image_node["original-width"], image_node["original-height"] = f"TODO {image_path}", f"TODO {image_path}"
+                image_path = self.state.document.settings.env.relfn2path(image_node["uri"])[1]
+                size = get_image_size(image_path)
+                image_node["original-width"], image_node["original-height"] = size
                 # TODO if quality/size satisfies: _image_node["make-thumb"] = True
+                image_node[f"{PREFIX}make-thumb"] = True
 
 
 class ThumbImage(ThumbCommon):
