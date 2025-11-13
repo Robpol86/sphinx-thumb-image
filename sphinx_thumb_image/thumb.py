@@ -35,7 +35,7 @@ from sphinx.application import Sphinx
 
 from sphinx_thumb_image import __version__
 from sphinx_thumb_image.transforms import PostTransformThumbImages
-from sphinx_thumb_image.utils import format_target
+from sphinx_thumb_image.utils import THUMB_REQUEST_KEY, format_target
 
 
 class ThumbCommon(Image):
@@ -87,7 +87,7 @@ class ThumbCommon(Image):
         """TODO."""
         for node in nodes:
             for image_node in node.findall(ImageNode):
-                image_node["thumb-request"] = {
+                image_node[THUMB_REQUEST_KEY] = {
                     "width": self.options.get("thumb-width", None),
                     "height": self.options.get("thumb-height", None),
                     "quality": self.options.get("thumb-quality", None),

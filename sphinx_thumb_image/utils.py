@@ -1,5 +1,7 @@
 """Helpers."""
 
+THUMB_REQUEST_KEY = "thumb-request"
+
 
 def format_target(fmt: str, **kv) -> str:
     """Substitutes %(key)s formatted keys with their values.
