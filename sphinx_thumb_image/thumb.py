@@ -17,8 +17,8 @@ TODO::
 * Supported image formats: jpg png bmp gif gif[animated] apng svg webp
 * Overridable option for thumb jpeg compression (e.g. 0-100 numerical?)
 * Thumb filename:
-    * image.jpg -> image-700x435-95pct.jpg
-    * image.gif -> image-700x435.gif
+    * /_images/dog.jpg -> /_images/dog.th700.jpg [quality collision: dog.th700.2.jpg]
+    * /posts/2025-11-23/cat.jpg -> /posts/2025-11-23/cat.th700.jpg
 * Space saving: don't write fullsize image to _build if not referenced
 * config and option for resample algorithm (nearest, bilinear, bicubic, lanczos)
 """
@@ -41,6 +41,13 @@ class ThumbCommon(images.Image):
     __option_spec["no-target"] = flag
     __option_spec["target-fullsize"] = flag
     __option_spec["target-thumb"] = flag
+    # Thumb options.
+    # __option_spec["thumb-width"] = nonnegative_int
+    # __option_spec["thumb-height"] = nonnegative_int
+    # __option_spec["thumb-quality"] = percentage
+    # __option_spec["thumb-file-ext"] = str
+    # __option_spec["thumb-format"] = str
+
 
     def __update_target(self):
         """Update the image's link target."""
