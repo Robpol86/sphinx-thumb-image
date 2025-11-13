@@ -27,27 +27,28 @@ TODO::
 from pathlib import Path
 
 from docutils.nodes import Element
-from docutils.parsers.rst.directives import flag, images, nonnegative_int, percentage, unchanged
+from docutils.parsers.rst import directives
+from docutils.parsers.rst.directives.images import Figure, Image
 from sphinx.application import Sphinx
 
 from sphinx_thumb_image import __version__
 from sphinx_thumb_image.utils import format_target
 
 
-class ThumbCommon(images.Image):
+class ThumbCommon(Image):
     """Common methods for both thumb image/figure subclassed directives."""
 
     __option_spec = {}
     # Target options.
-    __option_spec["no-target"] = flag
-    __option_spec["target-fullsize"] = flag
-    __option_spec["target-thumb"] = flag
+    __option_spec["no-target"] = directives.flag
+    __option_spec["target-fullsize"] = directives.flag
+    __option_spec["target-thumb"] = directives.flag
     # Thumb options.
-    __option_spec["thumb-width"] = nonnegative_int  # TODO better validator? Use same as Figur?
-    __option_spec["thumb-height"] = nonnegative_int
-    __option_spec["thumb-quality"] = percentage
-    __option_spec["thumb-file-ext"] = unchanged
-    __option_spec["thumb-format"] = unchanged
+    __option_spec["thumb-width"] = directives.nonnegative_int  # TODO better validator? Use same as Figur?
+    __option_spec["thumb-height"] = directives.nonnegative_int
+    __option_spec["thumb-quality"] = directives.percentage
+    __option_spec["thumb-file-ext"] = directives.unchanged
+    __option_spec["thumb-format"] = directives.unchanged
 
 
     def __update_target(self):
@@ -84,7 +85,7 @@ class ThumbCommon(images.Image):
 class ThumbImage(ThumbCommon):
     """Thumbnail image directive."""
 
-    option_spec = images.Image.option_spec | ThumbCommon._ThumbCommon__option_spec
+    option_spec = Image.option_spec | ThumbCommon._ThumbCommon__option_spec
 
     def run(self) -> list[Element]:
         """Entrypoint."""
@@ -92,10 +93,10 @@ class ThumbImage(ThumbCommon):
         return super().run()
 
 
-class ThumbFigure(images.Figure, ThumbCommon):
+class ThumbFigure(Figure, ThumbCommon):
     """Thumbnail figure directive."""
 
-    option_spec = images.Figure.option_spec | ThumbCommon._ThumbCommon__option_spec
+    option_spec = Figure.option_spec | ThumbCommon._ThumbCommon__option_spec
 
     def run(self) -> list[Element]:
         """Entrypoint."""
