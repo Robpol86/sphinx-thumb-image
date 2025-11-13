@@ -34,7 +34,7 @@ from docutils.parsers.rst.directives.images import Figure, Image
 from sphinx.application import Sphinx
 
 from sphinx_thumb_image import __version__
-from sphinx_thumb_image.transforms import PostTransformThumbImages
+from sphinx_thumb_image.transforms import PostTransformThumbImages, determine_thumb_file_names
 from sphinx_thumb_image.utils import THUMB_REQUEST_KEY, format_target
 
 
@@ -138,6 +138,7 @@ def setup(app: Sphinx) -> dict[str, str]:
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)
     app.add_post_transform(PostTransformThumbImages)
+    app.connect("doctree-read", determine_thumb_file_names)
     return {
         "parallel_read_safe": False,  # TODO
         "parallel_write_safe": False,  # TODO
