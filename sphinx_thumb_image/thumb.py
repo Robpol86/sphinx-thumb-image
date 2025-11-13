@@ -87,7 +87,13 @@ class ThumbCommon(Image):
         """TODO."""
         for node in nodes:
             for image_node in node.findall(ImageNode):
-                image_node["thumb-todo"] = None
+                image_node["thumb-request"] = {
+                    "width": self.options.get("thumb-width", None),
+                    "height": self.options.get("thumb-height", None),
+                    "quality": self.options.get("thumb-quality", None),
+                    "file-ext": self.options.get("thumb-file-ext", None),
+                    "format": self.options.get("thumb-format", None),
+                }
 
 
 class ThumbImage(ThumbCommon):
@@ -101,7 +107,6 @@ class ThumbImage(ThumbCommon):
         nodes = super().run()
         self._ThumbCommon__mark_image_nodes(nodes)
         return nodes
-
 
 
 class ThumbFigure(Figure, ThumbCommon):
