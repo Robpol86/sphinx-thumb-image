@@ -6,7 +6,7 @@ https://pypi.org/project/sphinx-thumb-image
 
 TODO::
 * Support pdf and non-html builders
-* If source image <= thumb size: still compress, unless 100% then noop and link to original
+* If source image <= thumb size: still compress, unless 100% then noop and link to fullsize
 * Support parallel resizing, use lock files (one image may be referenced by multiple pages)
 * thumb-image directive
     * Default scales down to default width
@@ -20,7 +20,7 @@ TODO::
 * Thumb filename:
     * image.jpg -> image-700x435-95pct.jpg (NO)
     * image.gif -> image-700x435.gif
-* Space saving: don't write original image to _build if not referenced
+* Space saving: don't write fullsize image to _build if not referenced
 * config and option for resample algorithm (nearest, bilinear, bicubic, lanczos)
 * Should bmp file thumbs be bmp or jpg? Support apng? svg?
 * What if source image is smaller than thumb size? What about quality == and != 100%?
@@ -46,7 +46,7 @@ class ThumbCommon(Image):
     __option_spec = {}
     # Target options.
     __option_spec["no-target"] = flag
-    __option_spec["target-original"] = flag
+    __option_spec["target-fullsize"] = flag
     __option_spec["target-thumb"] = flag
     # Dimension options.
     __option_spec["thumb-width"] = nonnegative_int
@@ -57,13 +57,13 @@ class ThumbCommon(Image):
         # Handle options specified in the directive first.
         img_src = self.arguments[0]
         format_kv = {
-            "original": img_src,  # TODO s/original/fullsize/
+            "fullsize": img_src,
             "basename": Path(img_src).name,
             "path": self.state.document.settings.env.relfn2path(img_src)[0],
         }
         if "no-target" in self.options:
             self.options.pop("target", None)
-        elif "target-original" in self.options:
+        elif "target-fullsize" in self.options:
             self.options["target"] = img_src
         elif "target-thumb" in self.options:
             raise NotImplementedError("TOOD get thumb path")
@@ -73,7 +73,7 @@ class ThumbCommon(Image):
             # Apply defaults from conf.py.
             config = self.state.document.settings.env.config
             thumb_image_default_target = config["thumb_image_default_target"]
-            if thumb_image_default_target == "original":
+            if thumb_image_default_target == "fullsize":
                 self.options["target"] = img_src
             elif thumb_image_default_target == "thumb":
                 raise NotImplementedError("TOOD get thumb path")
@@ -96,7 +96,7 @@ class ThumbCommon(Image):
         for node in nodes:
             for image_node in node.findall(ImageNode):
                 if fixed_size_in_options:
-                    # User specifying custom thumb size, no need to worry about aspect ratio or original size.
+                    # User specifying custom thumb size, no need to worry about aspect ratio or fullsize size.
                     image_node["set-thumb-width"] = int(self.options["thumb-width"])
                     image_node["set-thumb-height"] = int(self.options["thumb-height"])
                 elif not one_size_in_options and fixed_size_in_config:
@@ -121,7 +121,7 @@ class ThumbCommon(Image):
                 image_path = self.state.document.settings.env.relfn2path(image_node["uri"])[1]
                 width, height = get_image_size(image_path)
 
-                image_node[f"{PREFIX}original-width"] = width
+                image_node[f"{PREFIX}fullsize-width"] = width
                 # TODO if quality/size satisfies: _image_node["make-thumb"] = True
                 image_node[f"{PREFIX}make-thumb"] = True
                 # TODO image_node[thumb-uri] = _images/image-thumb
@@ -161,7 +161,7 @@ def setup(app: Sphinx) -> dict[str, str]:
 
     :returns: Extension version.
     """
-    app.add_config_value("thumb_image_default_target", "original", "html")
+    app.add_config_value("thumb_image_default_target", "fullsize", "html")
     app.add_config_value("thumb_image_default_width", None, "html")
     app.add_config_value("thumb_image_default_height", None, "html")
     app.add_directive("thumb-image", ThumbImage)
