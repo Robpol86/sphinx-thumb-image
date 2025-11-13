@@ -21,6 +21,7 @@ TODO::
     * /posts/2025-11-23/cat.jpg -> /posts/2025-11-23/cat.th700.jpg
 * Space saving: don't write fullsize image to _build if not referenced
 * config and option for resample algorithm (nearest, bilinear, bicubic, lanczos)
+* Handle smaller than thumb images.
 """
 
 from pathlib import Path
@@ -42,7 +43,7 @@ class ThumbCommon(images.Image):
     __option_spec["target-fullsize"] = flag
     __option_spec["target-thumb"] = flag
     # Thumb options.
-    __option_spec["thumb-width"] = nonnegative_int
+    __option_spec["thumb-width"] = nonnegative_int  # TODO better validator? Use same as Figur?
     __option_spec["thumb-height"] = nonnegative_int
     __option_spec["thumb-quality"] = percentage
     __option_spec["thumb-file-ext"] = unchanged
