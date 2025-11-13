@@ -28,11 +28,13 @@ TODO::
 from pathlib import Path
 
 from docutils.nodes import Element
+from docutils.nodes import image as ImageNode  # noqa: N812
 from docutils.parsers.rst import directives
 from docutils.parsers.rst.directives.images import Figure, Image
 from sphinx.application import Sphinx
 
 from sphinx_thumb_image import __version__
+from sphinx_thumb_image.transforms import PostTransformThumbImages
 from sphinx_thumb_image.utils import format_target
 
 
@@ -81,6 +83,12 @@ class ThumbCommon(Image):
             else:
                 self.options["target"] = format_target(thumb_image_default_target, **format_kv)
 
+    def __mark_image_nodes(self, nodes: list[Element]):
+        """TODO."""
+        for node in nodes:
+            for image_node in node.findall(ImageNode):
+                image_node["thumb-todo"] = None
+
 
 class ThumbImage(ThumbCommon):
     """Thumbnail image directive."""
@@ -90,7 +98,10 @@ class ThumbImage(ThumbCommon):
     def run(self) -> list[Element]:
         """Entrypoint."""
         self._ThumbCommon__update_target()
-        return super().run()
+        nodes = super().run()
+        self._ThumbCommon__mark_image_nodes(nodes)
+        return nodes
+
 
 
 class ThumbFigure(Figure, ThumbCommon):
@@ -101,7 +112,9 @@ class ThumbFigure(Figure, ThumbCommon):
     def run(self) -> list[Element]:
         """Entrypoint."""
         self._ThumbCommon__update_target()
-        return super().run()
+        nodes = super().run()
+        self._ThumbCommon__mark_image_nodes(nodes)
+        return nodes
 
 
 def setup(app: Sphinx) -> dict[str, str]:
@@ -119,6 +132,7 @@ def setup(app: Sphinx) -> dict[str, str]:
     app.add_config_value("thumb_image_default_width", None, "html")
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)
+    app.add_post_transform(PostTransformThumbImages)
     return {
         "parallel_read_safe": False,  # TODO
         "parallel_write_safe": False,  # TODO
