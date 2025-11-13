@@ -60,7 +60,7 @@ class ThumbCommon(Image):
         elif "target-fullsize" in self.options:
             self.options["target"] = img_src
         elif "target-thumb" in self.options:
-            raise NotImplementedError("TOOD get thumb path")
+            raise NotImplementedError("TOOD signal __mark_image_nodes to keep thumb path")
         elif "target" in self.options:
             self.options["target"] = format_target(self.options["target"], **format_kv)
         else:
@@ -70,7 +70,7 @@ class ThumbCommon(Image):
             if thumb_image_default_target == "fullsize":
                 self.options["target"] = img_src
             elif thumb_image_default_target == "thumb":
-                raise NotImplementedError("TOOD get thumb path")
+                raise NotImplementedError("TOOD signal __mark_image_nodes to keep thumb path")
             elif thumb_image_default_target is None:
                 self.options.pop("target", None)
             else:
