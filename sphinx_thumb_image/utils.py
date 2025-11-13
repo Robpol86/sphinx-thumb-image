@@ -19,8 +19,7 @@ def format_target(fmt: str, **kv) -> str:
 
 
 def get_thumb_size(
-    fullsize_width: int,
-    fullsize_height: int,
+    fullsize_size: tuple[int, int],
     option_width: Optional[int],
     option_height: Optional[int],
     config_default_width: Optional[int],
@@ -31,7 +30,7 @@ def get_thumb_size(
     Return -1,-1 if source image is too small.
     """
     if not any([option_width, option_height, config_default_width, config_default_height]):
-        raise ValueError("At least one of width or height must be specified in option or config.")
-    if fullsize_width and fullsize_height:
+        pass  # TODO raise ValueError("At least one of width or height must be specified in option or config.")
+    if fullsize_size:
         return 0, 0  # TODO
     return -1, -1  # TODO

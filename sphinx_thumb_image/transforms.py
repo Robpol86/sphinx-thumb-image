@@ -26,17 +26,15 @@ def determine_thumb_file_names(app: Sphinx, doctree: document):
         option_width = node[THUMB_REQUEST_KEY]["width"]
         option_height = node[THUMB_REQUEST_KEY]["height"]
         # Get fullsize image size.
-        image_path = app.env.relfn2path(node["uri"])[1]  # TODO fix path
+        image_path = node[THUMB_REQUEST_KEY]["fullsize-path"]
         with PIL.Image.open(image_path) as image:
-            fullsize_width, fullsize_height = image.size
-        thumb_width, thumb_height = get_thumb_size(
-            fullsize_width,
-            fullsize_height,
-            option_width,
-            option_height,
-            thumb_image_default_width,
-            thumb_image_default_height,
-        )
+            thumb_width, thumb_height = get_thumb_size(
+                image.size,
+                option_width,
+                option_height,
+                thumb_image_default_width,
+                thumb_image_default_height,
+            )
         # TODO
         if thumb_width and thumb_height:
             pass  # TODO

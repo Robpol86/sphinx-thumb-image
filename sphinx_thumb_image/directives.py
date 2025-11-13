@@ -86,6 +86,8 @@ class ThumbCommon(Image):
                     "quality": self.options.get("thumb-quality", None),
                     "file-ext": self.options.get("thumb-file-ext", None),
                     "format": self.options.get("thumb-format", None),
+                    # TODO move relfn2path to determine_thumb_file_names
+                    "fullsize-path": self.state.document.settings.env.relfn2path(image_node["uri"])[1],
                 }
 
 
