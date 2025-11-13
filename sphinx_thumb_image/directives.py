@@ -1,7 +1,7 @@
 """TODO.
 
 TODO::
-* Support pdf and non-html builders
+* Support pdf and non-html builders such as pdf, epub, etc.
 * If source image <= thumb size: still compress, unless 100% then noop and link to fullsize
 * Support parallel resizing, use lock files (one image may be referenced by multiple pages)
 * thumb-image directive
