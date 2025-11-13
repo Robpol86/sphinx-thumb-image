@@ -22,6 +22,7 @@ TODO::
 * Space saving: don't write fullsize image to _build if not referenced
 * config and option for resample algorithm (nearest, bilinear, bicubic, lanczos)
 * Handle smaller than thumb images.
+* Investigate transformer approach. Can all thumb file paths be determined before multiprocessed resampling?
 """
 
 from pathlib import Path
