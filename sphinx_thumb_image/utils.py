@@ -21,30 +21,30 @@ def format_target(fmt: str, **kv) -> str:
     return fmt
 
 
-def get_new_dimensions(original_w_h, max_w_h) -> tuple[int, int]:
+def get_new_dimensions(fullsize_w_h, max_w_h) -> tuple[int, int]:
     """Return the scaled down size of the image, to be the thumbnail size.
 
     TODO finish implementation.
 
-    :param original_w_h: Tuple of (width, height) of the original image.
+    :param fullsize_w_h: Tuple of (width, height) of the fullsize image.
     :param max_w_h: Tuple of (max width, max height) for the thumbnail.
 
     :return: Tuple of (new width, new height) or (-1, -1) if no resizing needed.
     """
-    original_w, original_h = original_w_h
+    fullsize_w, fullsize_h = fullsize_w_h
     max_w, max_h = max_w_h
 
-    if original_w <= max_w and original_h <= max_h:
+    if fullsize_w <= max_w and fullsize_h <= max_h:
         return -1, -1  # No resizing needed.
 
-    aspect_ratio = original_w / original_h
-    if original_w < max_w:
+    aspect_ratio = fullsize_w / fullsize_h
+    if fullsize_w < max_w:
         pass
     return aspect_ratio  # TODO
 
 
 def create_thumbnail(
-    source_original_image: Path,
+    source_fullsize_image: Path,
     target_thumb_image: Path,
     width: Optional[int] = None,
     height: Optional[int] = None,
@@ -64,7 +64,7 @@ def create_thumbnail(
     if width is None and height is None:
         raise ValueError("At least one of width or height must be specified.")
 
-    with Image.open(source_original_image) as image:
+    with Image.open(source_fullsize_image) as image:
         # If keeping full quality and source image is smaller than or equal to target size then don't create a thumbnail.
         if quality == MAX_QUALITY:
             if (width is not None and height is not None) and image.width <= width and image.height <= height:

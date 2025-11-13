@@ -6,7 +6,7 @@ https://pypi.org/project/sphinx-thumb-image
 
 TODO::
 * Support pdf and non-html builders
-* If source image <= thumb size: still compress, unless 100% then noop and link to original
+* If source image <= thumb size: still compress, unless 100% then noop and link to fullsize
 * Support parallel resizing, use lock files (one image may be referenced by multiple pages)
 * thumb-image directive
     * Default scales down to default width
@@ -19,7 +19,7 @@ TODO::
 * Thumb filename:
     * image.jpg -> image-700x435-95pct.jpg
     * image.gif -> image-700x435.gif
-* Space saving: don't write original image to _build if not referenced
+* Space saving: don't write fullsize image to _build if not referenced
 * config and option for resample algorithm (nearest, bilinear, bicubic, lanczos)
 """
 
@@ -40,7 +40,7 @@ class ThumbCommon(images.Image):
     __option_spec = {}
     # Target options.
     __option_spec["no-target"] = flag
-    __option_spec["target-original"] = flag
+    __option_spec["target-fullsize"] = flag
     __option_spec["target-thumb"] = flag
     # Dimension options.
     __option_spec["thumb-width"] = nonnegative_int
@@ -58,41 +58,41 @@ class ThumbCommon(images.Image):
     def __create_thumbnail_and_update_image(self) -> tuple[str, str]:
         """Create the thumbnail image and set the image node to it.
 
-        :returns: Tuple of (original image and thumb image paths).
+        :returns: Tuple of (fullsize image and thumb image paths).
         """
-        original_image = self.arguments[0]
+        fullsize_image = self.arguments[0]
         quality = self.__get_config("thumb-quality", "thumb_image_default_quality")
         thumb_width = self.__get_config("thumb-width", "thumb_image_default_width")
         thumb_height = self.__get_config("thumb-height", "thumb_image_default_height")
 
-        with Image.open(original_image) as image:  # self.state.document.settings.env.relfn2path(img_src)[0]
+        with Image.open(fullsize_image) as image:  # self.state.document.settings.env.relfn2path(img_src)[0]
             new_width, new_height = get_new_dimensions((image.width, image.height), (thumb_width, thumb_height))
             if new_width < 0 and quality >= 100:  # noqa: PLR2004
-                pass  # TODO use original image (aka just normal image directive)
+                pass  # TODO use fullsize image (aka just normal image directive)
             elif new_width < 0:
                 pass  # TODO output filename same as thumb but dont use .thumbnail, just .save()
             else:
                 pass  # TODO .thumbnail and .save()
 
         # TODO set self.arguments[0] to thumb image path
-        # TODO return (original_image, thumb_image)
+        # TODO return (fullsize_image, thumb_image)
 
-    def __update_target(self, original_image="todo", thumb_image="todo"):
+    def __update_target(self, fullsize_image="todo", thumb_image="todo"):
         """Update the image's link target."""
-        if original_image != "todo":
+        if fullsize_image != "todo":
             raise NotImplementedError
         if thumb_image != "todo":
             raise NotImplementedError
         # Handle options specified in the directive first.
         img_src = self.arguments[0]
         format_kv = {
-            "original": img_src,
+            "fullsize": img_src,
             "basename": Path(img_src).name,
             "path": self.state.document.settings.env.relfn2path(img_src)[0],
         }
         if "no-target" in self.options:
             self.options.pop("target", None)
-        elif "target-original" in self.options:
+        elif "target-fullsize" in self.options:
             self.options["target"] = img_src
         elif "target-thumb" in self.options:
             raise NotImplementedError("TOOD get thumb path")
@@ -102,7 +102,7 @@ class ThumbCommon(images.Image):
             # Apply defaults from conf.py.
             config = self.state.document.settings.env.config
             thumb_image_default_target = config["thumb_image_default_target"]
-            if thumb_image_default_target == "original":
+            if thumb_image_default_target == "fullsize":
                 self.options["target"] = img_src
             elif thumb_image_default_target == "thumb":
                 raise NotImplementedError("TOOD get thumb path")
@@ -143,7 +143,7 @@ def setup(app: Sphinx) -> dict[str, str]:
 
     :returns: Extension version.
     """
-    app.add_config_value("thumb_image_default_target", "original", "html")
+    app.add_config_value("thumb_image_default_target", "fullsize", "html")
     app.add_config_value("thumb_image_default_width", 700, "html")  # TODO tune
     app.add_config_value("thumb_image_default_height", 700, "html")  # TODO tune
     app.add_config_value("thumb_image_default_quality", 100, "html")

@@ -6,7 +6,7 @@ from sphinx_thumb_image.utils import get_new_dimensions
 
 
 @pytest.mark.parametrize(
-    "original_w_h,max_w_h,expected",
+    "fullsize_w_h,max_w_h,expected",
     [
         # Original larger than max.
         [(400, 200), (100, 100), (100, 50)],
@@ -18,8 +18,8 @@ from sphinx_thumb_image.utils import get_new_dimensions
         [(200, 200), (200, 200), (-1, -1)],
     ],
 )
-def test(original_w_h: tuple[int, int], max_w_h: tuple[int, int], expected: tuple[int, int]):
+def test(fullsize_w_h: tuple[int, int], max_w_h: tuple[int, int], expected: tuple[int, int]):
     """Test."""
     pytest.skip("TODO")
-    actual = get_new_dimensions(original_w_h, max_w_h)
+    actual = get_new_dimensions(fullsize_w_h, max_w_h)
     assert actual == expected
