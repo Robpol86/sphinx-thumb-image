@@ -26,7 +26,7 @@ TODO::
 from pathlib import Path
 
 from docutils.nodes import Element
-from docutils.parsers.rst.directives import flag, images
+from docutils.parsers.rst.directives import flag, images, nonnegative_int, percentage, unchanged
 from sphinx.application import Sphinx
 
 from sphinx_thumb_image import __version__
@@ -42,11 +42,11 @@ class ThumbCommon(images.Image):
     __option_spec["target-fullsize"] = flag
     __option_spec["target-thumb"] = flag
     # Thumb options.
-    # __option_spec["thumb-width"] = nonnegative_int
-    # __option_spec["thumb-height"] = nonnegative_int
-    # __option_spec["thumb-quality"] = percentage
-    # __option_spec["thumb-file-ext"] = str
-    # __option_spec["thumb-format"] = str
+    __option_spec["thumb-width"] = nonnegative_int
+    __option_spec["thumb-height"] = nonnegative_int
+    __option_spec["thumb-quality"] = percentage
+    __option_spec["thumb-file-ext"] = unchanged
+    __option_spec["thumb-format"] = unchanged
 
 
     def __update_target(self):
@@ -109,7 +109,12 @@ def setup(app: Sphinx) -> dict[str, str]:
 
     :returns: Extension version.
     """
+    app.add_config_value("thumb_image_default_ext", "jpg", "html")
+    app.add_config_value("thumb_image_default_format", None, "html")
+    app.add_config_value("thumb_image_default_height", None, "html")
+    app.add_config_value("thumb_image_default_quality", 100, "html")
     app.add_config_value("thumb_image_default_target", "fullsize", "html")
+    app.add_config_value("thumb_image_default_width", None, "html")
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)
     return {
