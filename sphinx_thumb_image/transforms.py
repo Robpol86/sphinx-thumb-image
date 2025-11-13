@@ -10,5 +10,6 @@ class PostTransformThumbImages(SphinxPostTransform):
 
     def run(self, **kwargs):
         """TODO."""
-        # import pdb; pdb.set_trace()  # TODO remove
-        # TODO if make-thumb
+        for node in self.document.findall(lambda n: "thumb-request" in n):
+            if node:
+                pass  # TODO
