@@ -6,7 +6,7 @@ https://pypi.org/project/sphinx-thumb-image
 
 TODO::
 * Support pdf and non-html builders
-* If source image <= thumb size: still compress, unless 100% then noop and link to original
+* If source image <= thumb size: still compress, unless 100% then noop and link to fullsize
 * Support parallel resizing, use lock files (one image may be referenced by multiple pages)
 * thumb-image directive
     * Default scales down to default width
@@ -19,7 +19,7 @@ TODO::
 * Thumb filename:
     * image.jpg -> image-700x435-95pct.jpg
     * image.gif -> image-700x435.gif
-* Space saving: don't write original image to _build if not referenced
+* Space saving: don't write fullsize image to _build if not referenced
 * config and option for resample algorithm (nearest, bilinear, bicubic, lanczos)
 """
 
@@ -39,7 +39,7 @@ class ThumbCommon(images.Image):
     __option_spec = {}
     # Target options.
     __option_spec["no-target"] = flag
-    __option_spec["target-original"] = flag
+    __option_spec["target-fullsize"] = flag
     __option_spec["target-thumb"] = flag
 
     def __update_target(self):
@@ -47,13 +47,13 @@ class ThumbCommon(images.Image):
         # Handle options specified in the directive first.
         img_src = self.arguments[0]
         format_kv = {
-            "original": img_src,
+            "fullsize": img_src,
             "basename": Path(img_src).name,
             "path": self.state.document.settings.env.relfn2path(img_src)[0],
         }
         if "no-target" in self.options:
             self.options.pop("target", None)
-        elif "target-original" in self.options:
+        elif "target-fullsize" in self.options:
             self.options["target"] = img_src
         elif "target-thumb" in self.options:
             raise NotImplementedError("TOOD get thumb path")
@@ -63,7 +63,7 @@ class ThumbCommon(images.Image):
             # Apply defaults from conf.py.
             config = self.state.document.settings.env.config
             thumb_image_default_target = config["thumb_image_default_target"]
-            if thumb_image_default_target == "original":
+            if thumb_image_default_target == "fullsize":
                 self.options["target"] = img_src
             elif thumb_image_default_target == "thumb":
                 raise NotImplementedError("TOOD get thumb path")
@@ -102,7 +102,7 @@ def setup(app: Sphinx) -> dict[str, str]:
 
     :returns: Extension version.
     """
-    app.add_config_value("thumb_image_default_target", "original", "html")
+    app.add_config_value("thumb_image_default_target", "fullsize", "html")
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)
     return {

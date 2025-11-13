@@ -10,11 +10,11 @@ from bs4 import element
         {"thumb_image_default_target": v}
         for v in [
             "__omit__",  # Handled in conftest.py.
-            "original",
+            "fullsize",
             "google.com",
             "pfx/%s",
             "pfx/%(ignore)s",
-            "pfx/%(original)s",
+            "pfx/%(fullsize)s",
             None,
         ]
     ],
@@ -33,13 +33,13 @@ def test_target(request: pytest.FixtureRequest, img_tags: list[element.Tag]):
     assert img_tags[6].parent.get("href") == "https://github.com/User/Repo/blob/_images/tux.png"
     assert img_tags[7].parent.get("href") == "https://cloudflare.com/cdn/tux.png"
     thumb_image_default_target = request.node.callspec.params["app_params"]["thumb_image_default_target"]
-    if thumb_image_default_target in ["__omit__", "original"]:
+    if thumb_image_default_target in ["__omit__", "fullsize"]:
         assert img_tags[8].parent.get("href") == "_images/tux.png"
         assert img_tags[9].parent.get("href") == "_images/tux.png"
     elif thumb_image_default_target in ["google.com", "pfx/%s", "pfx/%(ignore)s"]:
         assert img_tags[8].parent.get("href") == thumb_image_default_target
         assert img_tags[9].parent.get("href") == thumb_image_default_target
-    elif thumb_image_default_target == "pfx/%(original)s":
+    elif thumb_image_default_target == "pfx/%(fullsize)s":
         assert img_tags[8].parent.get("href") == "pfx/_images/tux.png"
         assert img_tags[9].parent.get("href") == "pfx/_images/tux.png"
     elif thumb_image_default_target is None:
@@ -62,7 +62,7 @@ def test_img_src():
     """Test.
 
     TODO::
-    * If original not linked by any directive then it should not be in the _build dir.
+    * If fullsize not linked by any directive then it should not be in the _build dir.
     * If no thumbs are used (low res) then _thumbs shouldn't exist.
     * REMEMBER: not all images in _images, can be in arbitrary locations.
     * Test two thumb-image:: using the same image but different resolutions.
