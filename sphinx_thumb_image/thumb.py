@@ -51,7 +51,6 @@ class ThumbCommon(Image):
     __option_spec["thumb-file-ext"] = directives.unchanged
     __option_spec["thumb-format"] = directives.unchanged
 
-
     def __update_target(self):
         """Update the image's link target."""
         # Handle options specified in the directive first.
