@@ -6,7 +6,7 @@ https://pypi.org/project/sphinx-thumb-image
 
 TODO::
 * Support pdf and non-html builders
-* If source image <= thumb size: still compress, unless 100% then noop and link to original
+* If source image <= thumb size: still compress, unless 100% then noop and link to fullsize
 * Support parallel resizing, use lock files (one image may be referenced by multiple pages)
 * thumb-image directive
     * Default scales down to default width
@@ -17,43 +17,53 @@ TODO::
 * Supported image formats: jpg png bmp gif gif[animated] apng svg webp
 * Overridable option for thumb jpeg compression (e.g. 0-100 numerical?)
 * Thumb filename:
-    * image.jpg -> image-700x435-95pct.jpg
-    * image.gif -> image-700x435.gif
-* Space saving: don't write original image to _build if not referenced
+    * /_images/dog.jpg -> /_images/dog.th700.jpg [quality collision: dog.th700.2.jpg]
+    * /posts/2025-11-23/cat.jpg -> /posts/2025-11-23/cat.th700.jpg
+* Space saving: don't write fullsize image to _build if not referenced
 * config and option for resample algorithm (nearest, bilinear, bicubic, lanczos)
+* Handle smaller than thumb images.
+* Investigate transformer approach. Can all thumb file paths be determined before multiprocessed resampling?
 """
 
 from pathlib import Path
 
 from docutils.nodes import Element
-from docutils.parsers.rst.directives import flag, images
+from docutils.parsers.rst import directives
+from docutils.parsers.rst.directives.images import Figure, Image
 from sphinx.application import Sphinx
 
 from sphinx_thumb_image import __version__
 from sphinx_thumb_image.utils import format_target
 
 
-class ThumbCommon(images.Image):
+class ThumbCommon(Image):
     """Common methods for both thumb image/figure subclassed directives."""
 
     __option_spec = {}
     # Target options.
-    __option_spec["no-target"] = flag
-    __option_spec["target-original"] = flag
-    __option_spec["target-thumb"] = flag
+    __option_spec["no-target"] = directives.flag
+    __option_spec["target-fullsize"] = directives.flag
+    __option_spec["target-thumb"] = directives.flag
+    # Thumb options.
+    __option_spec["thumb-width"] = directives.nonnegative_int  # TODO better validator? Use same as Figur?
+    __option_spec["thumb-height"] = directives.nonnegative_int
+    __option_spec["thumb-quality"] = directives.percentage
+    __option_spec["thumb-file-ext"] = directives.unchanged
+    __option_spec["thumb-format"] = directives.unchanged
+
 
     def __update_target(self):
         """Update the image's link target."""
         # Handle options specified in the directive first.
         img_src = self.arguments[0]
         format_kv = {
-            "original": img_src,
+            "fullsize": img_src,
             "basename": Path(img_src).name,
             "path": self.state.document.settings.env.relfn2path(img_src)[0],
         }
         if "no-target" in self.options:
             self.options.pop("target", None)
-        elif "target-original" in self.options:
+        elif "target-fullsize" in self.options:
             self.options["target"] = img_src
         elif "target-thumb" in self.options:
             raise NotImplementedError("TOOD get thumb path")
@@ -63,7 +73,7 @@ class ThumbCommon(images.Image):
             # Apply defaults from conf.py.
             config = self.state.document.settings.env.config
             thumb_image_default_target = config["thumb_image_default_target"]
-            if thumb_image_default_target == "original":
+            if thumb_image_default_target == "fullsize":
                 self.options["target"] = img_src
             elif thumb_image_default_target == "thumb":
                 raise NotImplementedError("TOOD get thumb path")
@@ -76,7 +86,7 @@ class ThumbCommon(images.Image):
 class ThumbImage(ThumbCommon):
     """Thumbnail image directive."""
 
-    option_spec = images.Image.option_spec | ThumbCommon._ThumbCommon__option_spec
+    option_spec = Image.option_spec | ThumbCommon._ThumbCommon__option_spec
 
     def run(self) -> list[Element]:
         """Entrypoint."""
@@ -84,10 +94,10 @@ class ThumbImage(ThumbCommon):
         return super().run()
 
 
-class ThumbFigure(images.Figure, ThumbCommon):
+class ThumbFigure(Figure, ThumbCommon):
     """Thumbnail figure directive."""
 
-    option_spec = images.Figure.option_spec | ThumbCommon._ThumbCommon__option_spec
+    option_spec = Figure.option_spec | ThumbCommon._ThumbCommon__option_spec
 
     def run(self) -> list[Element]:
         """Entrypoint."""
@@ -102,7 +112,12 @@ def setup(app: Sphinx) -> dict[str, str]:
 
     :returns: Extension version.
     """
-    app.add_config_value("thumb_image_default_target", "original", "html")
+    app.add_config_value("thumb_image_default_ext", "jpg", "html")
+    app.add_config_value("thumb_image_default_format", None, "html")
+    app.add_config_value("thumb_image_default_height", None, "html")
+    app.add_config_value("thumb_image_default_quality", 100, "html")
+    app.add_config_value("thumb_image_default_target", "fullsize", "html")
+    app.add_config_value("thumb_image_default_width", None, "html")
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)
     return {

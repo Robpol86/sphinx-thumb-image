@@ -7,10 +7,10 @@
     :target: https://aol.com/?x=%sample
 
 .. thumb-image:: _images/tux.png
-    :target-original:
+    :target-fullsize:
 
 .. thumb-figure:: _images/tux.png
-    :target-original:
+    :target-fullsize:
 
 .. thumb-image:: _images/tux.png
     :no-target:
@@ -19,7 +19,7 @@
     :no-target:
 
 .. thumb-image:: _images/tux.png
-    :target: https://github.com/User/Repo/blob/%(original)s
+    :target: https://github.com/User/Repo/blob/%(fullsize)s
 
 .. thumb-figure:: _images/tux.png
     :target: https://cloudflare.com/cdn/%(basename)s
