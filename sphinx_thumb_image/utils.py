@@ -24,10 +24,13 @@ def get_thumb_size(
     option_height: Optional[int],
     config_default_width: Optional[int],
     config_default_height: Optional[int],
-):
-    """TODO.
+) -> tuple[int, int]:
+    """Determine the thumbnail image's width and height.
 
-    Return -1,-1 if source image is too small.
+    Return (-1, -1) if source image is too small. If with and height are specified then scale the thunbnail to fit within
+    those dimensions (preserving aspect ratio).
+
+    TODO params/returns/raises
     """
     if not any([option_width, option_height, config_default_width, config_default_height]):
         pass  # TODO raise ValueError("At least one of width or height must be specified in option or config.")
