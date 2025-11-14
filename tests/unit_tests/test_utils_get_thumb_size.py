@@ -18,7 +18,6 @@ TYPE_SIZE_OPT = tuple[Optional[int], Optional[int]]
         [(200, 100), (None, 50), (None, None), (100, 50)],
         [(200, 100), (None, None), (100, None), (100, 50)],
         [(200, 100), (None, None), (None, 50), (100, 50)],
-
         # Both options specified.
         [(200, 100), (100, 50), (None, None), (100, 50)],
         [(200, 100), (100, 25), (None, None), (50, 25)],
@@ -26,21 +25,17 @@ TYPE_SIZE_OPT = tuple[Optional[int], Optional[int]]
         [(200, 100), (None, None), (100, 50), (100, 50)],
         [(200, 100), (None, None), (100, 25), (50, 25)],
         [(200, 100), (None, None), (50, 50), (50, 25)],
-
         # Config fallback.
         [(400, 200), (200, None), (50, 50), (200, 100)],
         [(400, 200), (None, 100), (50, 50), (200, 100)],
         [(400, 200), (None, None), (50, 50), (50, 25)],
-
         # Too small.
         [(200, 100), (999, None), (None, None), (-1, -1)],
         [(200, 100), (200, None), (None, None), (-1, -1)],
         [(200, 100), (None, None), (999, None), (-1, -1)],
         [(200, 100), (None, None), (200, None), (-1, -1)],
-
         # Round down.
         [(200, 100), (25, None), (None, None), (25, 12)],
-
         # No options.
         [(200, 100), (None, None), (None, None), (None, None)],
     ],
