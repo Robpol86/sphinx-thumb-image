@@ -32,8 +32,40 @@ def get_thumb_size(
 
     TODO params/returns/raises
     """
-    if not any([option_width, option_height, config_default_width, config_default_height]):
-        pass  # TODO raise ValueError("At least one of width or height must be specified in option or config.")
-    if fullsize_size:
-        return 0, 0  # TODO
-    return -1, -1  # TODO
+    # TODO reimplement, this was AI
+    fullsize_width, fullsize_height = fullsize_size
+
+    if option_width is not None:
+        thumb_width = option_width
+    elif config_default_width is not None:
+        thumb_width = config_default_width
+    else:
+        thumb_width = None
+
+    if option_height is not None:
+        thumb_height = option_height
+    elif config_default_height is not None:
+        thumb_height = config_default_height
+    else:
+        thumb_height = None
+
+    if thumb_width is None and thumb_height is None:
+        return -1, -1  # TODO raise ValueError("At least one of width or height must be specified.")
+
+    if thumb_width is not None and thumb_height is not None:
+        scale_w = thumb_width / fullsize_width
+        scale_h = thumb_height / fullsize_height
+        scale = min(scale_w, scale_h)
+        thumb_width = int(fullsize_width * scale)
+        thumb_height = int(fullsize_height * scale)
+    elif thumb_width is not None:
+        scale = thumb_width / fullsize_width
+        thumb_height = int(fullsize_height * scale)
+    elif thumb_height is not None:
+        scale = thumb_height / fullsize_height
+        thumb_width = int(fullsize_width * scale)
+
+    if fullsize_width <= thumb_width or fullsize_height <= thumb_height:
+        return -1, -1
+
+    return thumb_width, thumb_height

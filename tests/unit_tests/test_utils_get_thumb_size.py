@@ -42,11 +42,25 @@ TYPE_SIZE_OPT = tuple[Optional[int], Optional[int]]
 )
 def test(fullsize_size: TYPE_SIZE, option_size: TYPE_SIZE_OPT, config_size: TYPE_SIZE_OPT, expected: TYPE_SIZE_OPT):
     """Test."""
-    pytest.skip("TODO")
-    if expected[0] is None:
+    expected_w = expected[0]
+    expected_h = expected[1]
+    if expected_w is None:
+        pytest.skip("TODO")
         with pytest.raises(ValueError):
             get_thumb_size(fullsize_size, *option_size, *config_size)
         return
 
-    actual = get_thumb_size(fullsize_size, *option_size, *config_size)
-    assert actual == expected
+    pytest.skip("TODO")
+    actual_w, actual_h = get_thumb_size(fullsize_size, *option_size, *config_size)
+    assert actual_w == expected_w
+    assert actual_h == expected_h
+
+    expected_w_i = expected[1]
+    expected_h_i = expected[0]
+    actual_w_i, actual_h_i = get_thumb_size(
+        (fullsize_size[1], fullsize_size[0]),
+        *(option_size[1], option_size[0]),
+        *(config_size[1], config_size[0]),
+    )
+    assert actual_w_i == expected_w_i
+    assert actual_h_i == expected_h_i
