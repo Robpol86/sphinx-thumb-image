@@ -36,8 +36,8 @@ TYPE_SIZE_OPT = tuple[Optional[int], Optional[int]]
         # [(200, 100), (None, None), (200, None), (-1, -1)],
         # # Round down.
         # [(200, 100), (25, None), (None, None), (25, 12)],
-        # # No options.
-        # [(200, 100), (None, None), (None, None), (None, None)],
+        # Neither.
+        [(200, 100), None, None, (None, None)],
     ],
 )
 def test(fullsize_size: TYPE_SIZE, thumb_width: Optional[int], thumb_height: Optional[int], expected: TYPE_SIZE_OPT):
