@@ -78,11 +78,24 @@ class ThumbCommon(Image):
 
     def __mark_image_nodes(self, nodes: list[Element]):
         """TODO."""
+        width = None
+        height = None
+        if "thumb-width" not in self.options and "thumb-height" not in self.options:
+            # No dimensions specified in directive as options. Checking config for defaults.
+            config = self.state.document.settings.env.config
+            if config["thumb_image_default_width"] is None and config["thumb_image_default_height"] is None:
+                raise ValueError("At least one of thumb-width or thumb-height must be specified.")
+            else:
+                width = config["thumb_image_default_width"]
+                height = config["thumb_image_default_height"]
+        else:
+            width = self.options.get("thumb-width", None)
+            height = self.options.get("thumb-height", None)
         for node in nodes:
             for image_node in node.findall(ImageNode):
                 image_node[THUMB_REQUEST_KEY] = {
-                    "width": self.options.get("thumb-width", None),
-                    "height": self.options.get("thumb-height", None),
+                    "width": width,
+                    "height": height,
                     "quality": self.options.get("thumb-quality", None),
                     "file-ext": self.options.get("thumb-file-ext", None),
                     "format": self.options.get("thumb-format", None),
