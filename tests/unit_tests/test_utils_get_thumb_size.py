@@ -33,10 +33,13 @@ TYPE_SIZE_OPT = tuple[Optional[int], Optional[int]]
         [(400, 200), (None, None), (50, 50), (50, 25)],
 
         # Too small.
-        # TODO
+        [(200, 100), (999, None), (None, None), (-1, -1)],
+        [(200, 100), (200, None), (None, None), (-1, -1)],
+        [(200, 100), (None, None), (999, None), (-1, -1)],
+        [(200, 100), (None, None), (200, None), (-1, -1)],
 
         # Round down.
-        # TODO
+        [(200, 100), (25, None), (None, None), (25, 12)],
 
         # No options.
         [(200, 100), (None, None), (None, None), (None, None)],
