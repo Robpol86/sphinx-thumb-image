@@ -34,7 +34,7 @@ pip install sphinx-thumb-image
 To use in Sphinx simply add to your `conf.py`:
 
 ```python
-extensions = ["sphinx_thumb_image.extension"]
+extensions = ["sphinx_thumb_image"]
 ```
 
 TODO work on extension still in progress.
