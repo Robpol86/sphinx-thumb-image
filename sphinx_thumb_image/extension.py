@@ -8,7 +8,7 @@ https://pypi.org/project/sphinx-thumb-image
 from sphinx.application import Sphinx
 
 from sphinx_thumb_image import __version__
-from sphinx_thumb_image.thumb import ThumbFigure, ThumbImage
+from sphinx_thumb_image.directives import ThumbFigure, ThumbImage
 
 
 def setup(app: Sphinx) -> dict[str, str]:
