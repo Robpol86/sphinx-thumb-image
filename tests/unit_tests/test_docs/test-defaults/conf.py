@@ -5,3 +5,5 @@ extensions = ["sphinx_thumb_image"]
 html_theme = "basic"
 # master_doc = "index"  # Set via confoverrides
 nitpicky = True
+
+thumb_image_default_width = 100
