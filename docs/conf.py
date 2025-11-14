@@ -28,3 +28,7 @@ pygments_style = "sphinx"
 # Options for HTML output.
 html_copy_source = False
 html_theme = "sphinx_rtd_theme"
+
+
+# TODO
+thumb_image_default_width = 100
