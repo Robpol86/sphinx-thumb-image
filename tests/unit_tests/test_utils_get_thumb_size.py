@@ -45,7 +45,6 @@ def test(fullsize_size: TYPE_SIZE, thumb_width: Optional[int], thumb_height: Opt
     expected_w = expected[0]
     expected_h = expected[1]
     if expected_w is None:
-        pytest.skip("TODO")
         with pytest.raises(ValueError):
             get_thumb_size(fullsize_size, thumb_width, thumb_height)
         return

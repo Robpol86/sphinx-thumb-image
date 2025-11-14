@@ -30,6 +30,8 @@ def get_thumb_size(
 
     TODO params/returns/raises
     """
+    if thumb_width is None and thumb_height is None:
+        raise ValueError("TODO")
     if fullsize_size and thumb_width and thumb_height:
         return -1, -1
     return 0, 0
