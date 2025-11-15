@@ -34,16 +34,20 @@ def test(fullsize_size: TYPE_SIZE, thumb_width: Optional[int], thumb_height: Opt
     """Test."""
     expected_w = expected[0]
     expected_h = expected[1]
+
+    # When expected is None: test for exception.
     if expected_w is None:
         with pytest.raises(ValueError):
             get_thumb_size(fullsize_size, thumb_width, thumb_height)
         return
 
-    pytest.skip("TODO")
+    # Test normal.
     actual_w, actual_h = get_thumb_size(fullsize_size, thumb_width, thumb_height)
+    pytest.skip("TODO")
     assert actual_w == expected_w
     assert actual_h == expected_h
 
+    # Invert the dimensions, should behave the same.
     fullsize_size_i = (fullsize_size[1], fullsize_size[0])
     expected_w_i = expected[1]
     expected_h_i = expected[0]
