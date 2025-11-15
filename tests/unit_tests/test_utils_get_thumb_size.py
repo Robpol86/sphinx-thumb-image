@@ -13,29 +13,19 @@ TYPE_SIZE_OPT = tuple[Optional[int], Optional[int]]
 @pytest.mark.parametrize(
     "fullsize_size,thumb_width,thumb_height,expected",
     [
-        # # Only one specified at a time.
-        # [(200, 100), (100, None), (None, None), (100, 50)],
-        # [(200, 100), (None, 50), (None, None), (100, 50)],
-        # [(200, 100), (None, None), (100, None), (100, 50)],
-        # [(200, 100), (None, None), (None, 50), (100, 50)],
-        # # Both options specified.
-        # [(200, 100), (100, 50), (None, None), (100, 50)],
-        # [(200, 100), (100, 25), (None, None), (50, 25)],
-        # [(200, 100), (50, 50), (None, None), (50, 25)],
-        # [(200, 100), (None, None), (100, 50), (100, 50)],
-        # [(200, 100), (None, None), (100, 25), (50, 25)],
-        # [(200, 100), (None, None), (50, 50), (50, 25)],
-        # # Config fallback.
-        # [(400, 200), (200, None), (50, 50), (200, 100)],
-        # [(400, 200), (None, 100), (50, 50), (200, 100)],
-        # [(400, 200), (None, None), (50, 50), (50, 25)],
-        # # Too small.
-        # [(200, 100), (999, None), (None, None), (-1, -1)],
-        # [(200, 100), (200, None), (None, None), (-1, -1)],
-        # [(200, 100), (None, None), (999, None), (-1, -1)],
-        # [(200, 100), (None, None), (200, None), (-1, -1)],
-        # # Round down.
-        # [(200, 100), (25, None), (None, None), (25, 12)],
+        # Only one dimension specified at a time.
+        [(200, 100), 100, None, (100, 50)],
+        [(200, 100), None, 50, (100, 50)],
+        # Both dimensions specified.
+        [(200, 100), 100, 50, (100, 50)],
+        [(200, 100), 100, 25, (50, 25)],
+        [(200, 100), 50, 50, (50, 25)],
+        # Too small.
+        [(200, 100), 999, None, (-1, -1)],
+        [(200, 100), None, 200, (-1, -1)],
+        [(200, 100), 200, 100, (-1, -1)],
+        # Round down.
+        [(200, 100), 25, None, (25, 12)],
         # Neither.
         [(200, 100), None, None, (None, None)],
     ],
