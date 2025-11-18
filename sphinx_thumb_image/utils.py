@@ -32,6 +32,20 @@ def get_thumb_size(
     """
     if thumb_width is None and thumb_height is None:
         raise ValueError("TODO")
-    if fullsize_size and thumb_width and thumb_height:
-        return -1, -1
-    return 0, 0
+
+    if thumb_width is not None and thumb_height is not None:
+        raise NotImplementedError  # TODO
+
+    width, height = fullsize_size
+
+    if thumb_height is None:
+        if thumb_width >= width:
+            return -1, -1
+        thumb_height = height // (width / thumb_width)
+
+    if thumb_width is None:
+        if thumb_height >= height:
+            return -1, -1
+        thumb_width = width // (height / thumb_height)
+
+    return thumb_width, thumb_height
