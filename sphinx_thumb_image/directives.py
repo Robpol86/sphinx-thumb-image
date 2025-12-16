@@ -1,7 +1,7 @@
 """TODO.
 
 TODO::
-* Support pdf and non-html builders
+* Support pdf and non-html builders such as pdf, epub, etc.
 * If source image <= thumb size: still compress, unless 100% then noop and link to fullsize
 * Support parallel resizing, use lock files (one image may be referenced by multiple pages)
 * thumb-image directive
@@ -21,60 +21,18 @@ TODO::
 * Investigate transformer approach. Can all thumb file paths be determined before multiprocessed resampling?
 """
 
-from pathlib import Path
-
-from docutils.nodes import Element
 from docutils.parsers.rst import directives
 from docutils.parsers.rst.directives.images import Figure, Image
-
-from sphinx_thumb_image.utils import format_target
 
 
 class ThumbCommon(Image):
     """Common methods for both thumb image/figure subclassed directives."""
 
     __option_spec = {}
-    # Target options.
-    __option_spec["no-target"] = directives.flag
-    __option_spec["target-fullsize"] = directives.flag
-    __option_spec["target-thumb"] = directives.flag
     # Thumb options.
     __option_spec["thumb-width"] = directives.nonnegative_int  # TODO better validator? Use same as Figur?
     __option_spec["thumb-height"] = directives.nonnegative_int
     __option_spec["thumb-quality"] = directives.percentage
-    __option_spec["thumb-file-ext"] = directives.unchanged
-    __option_spec["thumb-format"] = directives.unchanged
-
-
-    def __update_target(self):
-        """Update the image's link target."""
-        # Handle options specified in the directive first.
-        img_src = self.arguments[0]
-        format_kv = {
-            "fullsize": img_src,
-            "basename": Path(img_src).name,
-            "path": self.state.document.settings.env.relfn2path(img_src)[0],
-        }
-        if "no-target" in self.options:
-            self.options.pop("target", None)
-        elif "target-fullsize" in self.options:
-            self.options["target"] = img_src
-        elif "target-thumb" in self.options:
-            raise NotImplementedError("TOOD get thumb path")
-        elif "target" in self.options:
-            self.options["target"] = format_target(self.options["target"], **format_kv)
-        else:
-            # Apply defaults from conf.py.
-            config = self.state.document.settings.env.config
-            thumb_image_default_target = config["thumb_image_default_target"]
-            if thumb_image_default_target == "fullsize":
-                self.options["target"] = img_src
-            elif thumb_image_default_target == "thumb":
-                raise NotImplementedError("TOOD get thumb path")
-            elif thumb_image_default_target is None:
-                self.options.pop("target", None)
-            else:
-                self.options["target"] = format_target(thumb_image_default_target, **format_kv)
 
 
 class ThumbImage(ThumbCommon):
@@ -82,18 +40,8 @@ class ThumbImage(ThumbCommon):
 
     option_spec = Image.option_spec | ThumbCommon._ThumbCommon__option_spec
 
-    def run(self) -> list[Element]:
-        """Entrypoint."""
-        self._ThumbCommon__update_target()
-        return super().run()
-
 
 class ThumbFigure(Figure, ThumbCommon):
     """Thumbnail figure directive."""
 
     option_spec = Figure.option_spec | ThumbCommon._ThumbCommon__option_spec
-
-    def run(self) -> list[Element]:
-        """Entrypoint."""
-        self._ThumbCommon__update_target()
-        return super().run()
