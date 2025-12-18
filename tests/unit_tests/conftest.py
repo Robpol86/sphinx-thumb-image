@@ -15,8 +15,8 @@ def rootdir() -> Path:
     return Path(__file__).parent / "test_docs"
 
 
-@pytest.fixture()
-def app_params(app_params, request: pytest.FixtureRequest):
+@pytest.fixture(name="app_params")
+def _app_params(app_params, request: pytest.FixtureRequest):
     """Inject Sphinx test app config before each test, including conf overrides (enabled with indirect=True)."""
     app_params.kwargs["freshenv"] = True
     if hasattr(request, "param"):

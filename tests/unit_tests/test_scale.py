@@ -23,7 +23,7 @@ def test(outdir: Path):
 
 
 @pytest.mark.sphinx("html", testroot="defaults")
-def test_missing_config(app: SphinxTestApp):
+def test_missing_width(app: SphinxTestApp):
     """Test."""
     pytest.skip("TODO")
     app.warningiserror = True
