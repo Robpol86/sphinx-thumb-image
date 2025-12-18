@@ -34,10 +34,16 @@ def _sphinx_app(app: SphinxTestApp):
     yield app
 
 
+@pytest.fixture(name="outdir")
+def _outdir(sphinx_app: SphinxTestApp) -> Path:
+    """Return the Sphinx build output directory."""
+    return Path(sphinx_app.outdir)
+
+
 @pytest.fixture(name="master_html")
-def _master_html(sphinx_app: SphinxTestApp) -> BeautifulSoup:
+def _master_html(sphinx_app: SphinxTestApp, outdir: Path) -> BeautifulSoup:
     """Read and parse generated html."""
-    text = (Path(sphinx_app.outdir) / f"{sphinx_app.config.master_doc}.html").read_text(encoding="utf8")
+    text = (outdir / f"{sphinx_app.config.master_doc}.html").read_text(encoding="utf8")
     return BeautifulSoup(text, "html.parser")
 
 

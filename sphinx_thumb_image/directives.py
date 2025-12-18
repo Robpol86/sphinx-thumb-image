@@ -29,10 +29,8 @@ class ThumbCommon(Image):
     """Common methods for both thumb image/figure subclassed directives."""
 
     __option_spec = {}
-    # Thumb options.
-    __option_spec["thumb-width"] = directives.nonnegative_int  # TODO better validator? Use same as Figur?
-    __option_spec["thumb-height"] = directives.nonnegative_int
-    __option_spec["thumb-quality"] = directives.percentage
+    __option_spec["scale-width"] = directives.nonnegative_int  # TODO better validator? Use same as Figur?
+    __option_spec["scale-height"] = directives.nonnegative_int
 
 
 class ThumbImage(ThumbCommon):

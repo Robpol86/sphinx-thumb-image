@@ -25,7 +25,6 @@ def setup(app: Sphinx) -> dict[str, str]:
     """
     app.add_config_value("thumb_image_default_width", None, "html")
     app.add_config_value("thumb_image_default_height", None, "html")
-    app.add_config_value("thumb_image_default_quality", 100, "html")
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)
     return {
