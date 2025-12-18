@@ -26,6 +26,7 @@ def test(outdir: Path):
 def test_missing_width(app: SphinxTestApp):
     """Test."""
     pytest.skip("TODO")
+    # TODO specify index.rst and conf.py here. The latter already implemented with conf_overrides.
     app.warningiserror = True
     with pytest.raises(ValueError) as exc:
         app.build()
