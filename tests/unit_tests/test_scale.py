@@ -1,6 +1,6 @@
 """Test image scaling in the directive with dimensions specified in directive options and Sphinx configs.
 
-TODO:
+TODO::
 * If fullsize not linked by any directive then it should not be in the _build dir.
 * If no thumbs are used (low res) then _thumbs shouldn't exist.
 * REMEMBER: not all images in _images, can be in arbitrary locations.
@@ -11,12 +11,12 @@ from pathlib import Path
 
 import PIL.Image
 import pytest
-from sphinx.testing.util import SphinxTestApp
 
 
 @pytest.mark.sphinx("html", testroot="defaults")
-def test(outdir: Path):
+def test(sphinx_errors: list[Exception], outdir: Path):
     """Test."""
+    assert not sphinx_errors
     image_path = outdir / "_images" / "tux.png"
     with PIL.Image.open(image_path) as image:
         assert image.size == (265, 314)  # TODO

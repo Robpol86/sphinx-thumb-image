@@ -26,11 +26,20 @@ def app_params(app_params, request: pytest.FixtureRequest):
     return app_params
 
 
+@pytest.fixture(name="sphinx_errors")
+def _sphinx_errors() -> list:
+    """Aggregate Sphinx exceptions during build."""
+    return []
+
+
 @pytest.fixture(name="sphinx_app")
-def _sphinx_app(app: SphinxTestApp):
+def _sphinx_app(app: SphinxTestApp, sphinx_errors: list[Exception]):
     """Instantiate a new Sphinx app per test function."""
     app.warningiserror = True
-    app.build()
+    try:
+        app.build()
+    except Exception as exc:
+        sphinx_errors.append(exc)
     yield app
 
 
