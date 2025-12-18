@@ -29,4 +29,4 @@ def test_missing_config(app: SphinxTestApp):
     app.warningiserror = True
     with pytest.raises(ValueError) as exc:
         app.build()
-    assert exc.value.args[0] == "TODO no width specified anywhere"
+    assert exc.value.args[0] == "Missing option 'scale-width'"

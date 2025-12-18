@@ -21,6 +21,7 @@ TODO::
 * Investigate transformer approach. Can all thumb file paths be determined before multiprocessed resampling?
 """
 
+from docutils.nodes import Element
 from docutils.parsers.rst import directives
 from docutils.parsers.rst.directives.images import Figure, Image
 
@@ -32,14 +33,37 @@ class ThumbCommon(Image):
     __option_spec["scale-width"] = directives.nonnegative_int  # TODO better validator? Use same as Figur?
     __option_spec["scale-height"] = directives.nonnegative_int
 
+    def __get_scale_size(self):
+        """TODO."""
+        config = self.state.document.settings.env.config
+        thumb_image_scale_width = config["thumb_image_scale_width"]
+        thumb_image_scale_height = config["thumb_image_scale_height"]
+
+        if "scale-width" not in self.options and "scale-height" not in self.options:
+            # No dimensions specified in directive as options. Checking config for defaults.
+            if thumb_image_scale_width is None and thumb_image_scale_height is None:
+                raise ValueError("Missing option 'scale-width'")
+
+        # TODO return
+
 
 class ThumbImage(ThumbCommon):
     """Thumbnail image directive."""
 
     option_spec = Image.option_spec | ThumbCommon._ThumbCommon__option_spec
 
+    def run(self) -> list[Element]:
+        """Entrypoint."""
+        self._ThumbCommon__get_scale_size()
+        return super().run()
+
 
 class ThumbFigure(Figure, ThumbCommon):
     """Thumbnail figure directive."""
 
     option_spec = Figure.option_spec | ThumbCommon._ThumbCommon__option_spec
+
+    def run(self) -> list[Element]:
+        """Entrypoint."""
+        self._ThumbCommon__get_scale_size()
+        return super().run()
