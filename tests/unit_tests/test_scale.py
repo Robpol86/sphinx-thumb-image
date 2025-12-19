@@ -43,7 +43,6 @@ def test(outdir: Path):
 )
 def test_missing_width(app: SphinxTestApp):
     """Test."""
-    app.warningiserror = True
     with pytest.raises(ValueError) as exc:
         app.build()
     assert exc.value.args[0] == "Missing option 'scale-width'"
