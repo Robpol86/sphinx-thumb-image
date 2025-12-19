@@ -8,13 +8,23 @@ TODO::
 """
 
 from pathlib import Path
+from textwrap import dedent
 
 import PIL.Image
 import pytest
 from sphinx.testing.util import SphinxTestApp
 
 
-@pytest.mark.sphinx("html", testroot="defaults")
+@pytest.mark.sphinx(
+    "html",
+    testroot="defaults",
+    write_docs={
+        "index.rst": dedent("""
+            .. thumb-image:: _images/tux.png
+                :scale-width: 100
+        """),
+    },
+)
 def test(outdir: Path):
     """Test."""
     image_path = outdir / "_images" / "tux.png"
@@ -22,11 +32,17 @@ def test(outdir: Path):
         assert image.size == (265, 314)  # TODO
 
 
-@pytest.mark.sphinx("html", testroot="defaults")
+@pytest.mark.sphinx(
+    "html",
+    testroot="defaults",
+    write_docs={
+        "index.rst": dedent("""
+            .. thumb-image:: _images/tux.png
+        """),
+    },
+)
 def test_missing_width(app: SphinxTestApp):
     """Test."""
-    pytest.skip("TODO")
-    # TODO specify index.rst and conf.py here. The latter already implemented with conf_overrides.
     app.warningiserror = True
     with pytest.raises(ValueError) as exc:
         app.build()

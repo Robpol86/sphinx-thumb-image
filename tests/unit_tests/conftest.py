@@ -19,6 +19,12 @@ def rootdir() -> Path:
 def _app_params(app_params, request: pytest.FixtureRequest):
     """Inject Sphinx test app config before each test, including conf overrides (enabled with indirect=True)."""
     app_params.kwargs["freshenv"] = True
+    # Implement write_docs.
+    if "write_docs" in app_params.kwargs:
+        srcdir = app_params.kwargs["srcdir"]
+        for path, contents in app_params.kwargs["write_docs"].items():
+            (srcdir / path).write_text(contents, encoding="utf8")
+    # Implement parametrized conf overrides.
     if hasattr(request, "param"):
         for key, value in request.param.items():
             if value != "__omit__":
