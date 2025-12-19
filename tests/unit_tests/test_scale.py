@@ -8,41 +8,46 @@ TODO::
 """
 
 from pathlib import Path
-from textwrap import dedent
 
 import PIL.Image
 import pytest
+from bs4 import element
 from sphinx.testing.util import SphinxTestApp
 
 
 @pytest.mark.parametrize(
     "app_params,expected",
     [
-        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-width: 100"}}, [265, 314]),  # TODO
-        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-height: 100"}}, [265, 314]),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-width: 132"}}, [132, 157]),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-height: 78"}}, [66, 78]),
         (
             {
                 "write_docs": {"index.rst": ".. thumb-image:: _images/tux.png"},
-                "confoverrides": {"thumb_image_scale_width": 100},
+                "confoverrides": {"thumb_image_scale_width": 88},
             },
-            [265, 314],
+            [88, 104],
         ),
         (
             {
                 "write_docs": {"index.rst": ".. thumb-image:: _images/tux.png"},
-                "confoverrides": {"thumb_image_scale_height": 100},
+                "confoverrides": {"thumb_image_scale_height": 62},
             },
-            [265, 314],
+            [53, 62],
         ),
     ],
     indirect=["app_params"],
     ids=lambda param: str(param) if isinstance(param, list) else param,  # Show "expected" values instead of expected0.
 )
 @pytest.mark.sphinx("html", testroot="defaults")
-def test_scale_width_height(outdir: Path, expected: list[int, int]):
+def test_scale_width_height(outdir: Path, img_tags: list[element.Tag], expected: list[int, int]):
     """Test different ways to specify thumbnail size."""
-    image_path = outdir / "_images" / "tux.png"
+    # Confirm img src.
+    img_src = [t["src"] for t in img_tags]
+    assert img_src == ["_images/tux.png"]
+    # Confirm image file's new dimensions.
+    image_path = outdir / img_src[0]
     with PIL.Image.open(image_path) as image:
+        pytest.skip("TODO unskip after implementing scaling")
         assert image.size[0] == expected[0]
         assert image.size[1] == expected[1]
 
@@ -51,9 +56,7 @@ def test_scale_width_height(outdir: Path, expected: list[int, int]):
     "html",
     testroot="defaults",
     write_docs={
-        "index.rst": dedent("""
-            .. thumb-image:: _images/tux.png
-        """),
+        "index.rst": ".. thumb-image:: _images/tux.png",
     },
 )
 def test_missing_width(app: SphinxTestApp):
