@@ -15,21 +15,23 @@ import pytest
 from sphinx.testing.util import SphinxTestApp
 
 
-@pytest.mark.sphinx(
-    "html",
-    testroot="defaults",
-    write_docs={
-        "index.rst": dedent("""
-            .. thumb-image:: _images/tux.png
-                :scale-width: 100
-        """),
-    },
+@pytest.mark.parametrize(
+    "app_params,expected",
+    [
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-width: 100"}}, [265, 314]),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-height: 100"}}, [265, 314]),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png"}, "confoverrides": {"thumb_image_scale_width": 100}}, [265, 314]),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png"}, "confoverrides": {"thumb_image_scale_height": 100}}, [265, 314]),
+    ],
+    indirect=["app_params"],
 )
-def test(outdir: Path):
-    """Test."""
+@pytest.mark.sphinx("html", testroot="defaults")
+def test_scale_width_height(outdir: Path, expected: list[int, int]):
+    """Test different ways to specify thumbnail size."""
     image_path = outdir / "_images" / "tux.png"
     with PIL.Image.open(image_path) as image:
-        assert image.size == (265, 314)  # TODO
+        assert image.size[0] == expected[0]
+        assert image.size[1] == expected[1]
 
 
 @pytest.mark.sphinx(
