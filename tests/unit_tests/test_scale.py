@@ -18,12 +18,25 @@ from sphinx.testing.util import SphinxTestApp
 @pytest.mark.parametrize(
     "app_params,expected",
     [
-        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-width: 100"}}, [265, 314]),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-width: 100"}}, [265, 314]),  # TODO
         ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-height: 100"}}, [265, 314]),
-        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png"}, "confoverrides": {"thumb_image_scale_width": 100}}, [265, 314]),
-        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png"}, "confoverrides": {"thumb_image_scale_height": 100}}, [265, 314]),
+        (
+            {
+                "write_docs": {"index.rst": ".. thumb-image:: _images/tux.png"},
+                "confoverrides": {"thumb_image_scale_width": 100},
+            },
+            [265, 314],
+        ),
+        (
+            {
+                "write_docs": {"index.rst": ".. thumb-image:: _images/tux.png"},
+                "confoverrides": {"thumb_image_scale_height": 100},
+            },
+            [265, 314],
+        ),
     ],
     indirect=["app_params"],
+    ids=lambda param: str(param) if isinstance(param, list) else param,  # Show "expected" values instead of expected0.
 )
 @pytest.mark.sphinx("html", testroot="defaults")
 def test_scale_width_height(outdir: Path, expected: list[int, int]):
