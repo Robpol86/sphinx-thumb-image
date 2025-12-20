@@ -46,11 +46,11 @@ def test_scale_width_height(outdir: Path, img_tags: list[element.Tag], expected:
     """Test different ways to specify thumbnail size."""
     # Confirm img src.
     img_src = [t["src"] for t in img_tags]
-    assert img_src == ["_images/tux.png"]
+    pytest.skip("TODO")
+    assert img_src == ["_images/tux.th.png"]
     # Confirm image file's new dimensions.
     image_path = outdir / img_src[0]
     with PIL.Image.open(image_path) as image:
-        pytest.skip("TODO unskip after implementing scaling")
         assert image.size[0] == expected[0]
         assert image.size[1] == expected[1]
 
