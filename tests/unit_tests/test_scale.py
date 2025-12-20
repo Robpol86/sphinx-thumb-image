@@ -61,13 +61,8 @@ def test_scale_width_height(outdir: Path, img_tags: list[element.Tag], expected:
     },
 )
 def test_missing_width(app: SphinxTestApp):
-    """Test."""
+    """Confirm error is raised if user does not specify any dimensions."""
     app.warningiserror = True
     with pytest.raises(SphinxWarning) as exc:
         app.build()
     assert '"scale-width" option is missing' in exc.value.args[0]
-
-
-def test_bad_unit():
-    """Test."""
-    pytest.skip("TODO")
