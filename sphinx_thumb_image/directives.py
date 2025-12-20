@@ -42,7 +42,7 @@ class ThumbCommon(Image):
         if "scale-width" not in self.options and "scale-height" not in self.options:
             # No dimensions specified in directive as options. Checking config for defaults.
             if thumb_image_scale_width is None and thumb_image_scale_height is None:
-                raise ValueError("Missing option 'scale-width'")
+                raise self.error('Error in %r directive: "scale-width" option is missing.' % self.name)
 
         # TODO return
 

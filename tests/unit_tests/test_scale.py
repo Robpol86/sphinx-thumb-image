@@ -12,6 +12,7 @@ from pathlib import Path
 import PIL.Image
 import pytest
 from bs4 import element
+from sphinx.errors import SphinxWarning
 from sphinx.testing.util import SphinxTestApp
 
 
@@ -61,6 +62,12 @@ def test_scale_width_height(outdir: Path, img_tags: list[element.Tag], expected:
 )
 def test_missing_width(app: SphinxTestApp):
     """Test."""
-    with pytest.raises(ValueError) as exc:
+    app.warningiserror = True
+    with pytest.raises(SphinxWarning) as exc:
         app.build()
-    assert exc.value.args[0] == "Missing option 'scale-width'"
+    assert '"scale-width" option is missing' in exc.value.args[0]
+
+
+def test_bad_unit():
+    """Test."""
+    pytest.skip("TODO")
