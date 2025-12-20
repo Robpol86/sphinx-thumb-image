@@ -18,6 +18,8 @@ def rootdir() -> Path:
 @pytest.fixture(name="app_params")
 def _app_params(app_params, request: pytest.FixtureRequest):
     """Inject Sphinx test app config before each test, including conf overrides (enabled with indirect=True)."""
+    app_params.kwargs["exception_on_warning"] = True
+    app_params.kwargs["warningiserror"] = True
     app_params.kwargs["freshenv"] = True
     # Implement write_docs.
     if "write_docs" in app_params.kwargs:
@@ -39,7 +41,6 @@ def _app_params(app_params, request: pytest.FixtureRequest):
 @pytest.fixture(name="sphinx_app")
 def _sphinx_app(app: SphinxTestApp):
     """Instantiate a new Sphinx app per test function. Capture exceptions if sphinx_errors fixture used."""
-    app.warningiserror = True
     app.build()
     yield app
 
