@@ -16,6 +16,11 @@ __license__ = "BSD-2-Clause"
 __version__ = "0.0.1"
 
 
+def todo(app, doctree, docname):
+    """TODO."""
+    import pdb; pdb.set_trace()
+
+
 def setup(app: Sphinx) -> dict[str, str]:
     """Register extension components with Sphinx (called by Sphinx during phase 0 [initialization]).
 
@@ -27,6 +32,8 @@ def setup(app: Sphinx) -> dict[str, str]:
     app.add_config_value("thumb_image_scale_height", None, "html")
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)
+    # app.connect("write-started", todo)  # builder.images == {}
+    # app.connect("doctree-resolved", todo)  # app.builder.images == {}
     return {
         "parallel_read_safe": False,  # TODO
         "parallel_write_safe": False,  # TODO

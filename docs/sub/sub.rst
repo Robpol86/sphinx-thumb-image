@@ -1,8 +1,6 @@
-==================
-Sphinx Thumb Image
-==================
+:orphan:
 
-Sphinx extension that resizes images into thumbnails on the fly.
+Test
 
 .. thumb-image:: pictures/tux.png
     :scale-width: 100
