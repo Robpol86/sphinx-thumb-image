@@ -16,8 +16,10 @@ __license__ = "BSD-2-Clause"
 __version__ = "0.0.1"
 
 
-def todo(app, doctree, docname):
+def todo(app, builder):
     """TODO."""
+    # TODO Builder.post_process_images() is what determines final image file names
+    # TODO node["candidates"]?
     import pdb; pdb.set_trace()
 
 
@@ -33,7 +35,6 @@ def setup(app: Sphinx) -> dict[str, str]:
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)
     # app.connect("write-started", todo)  # builder.images == {}
-    # app.connect("doctree-resolved", todo)  # app.builder.images == {}
     return {
         "parallel_read_safe": False,  # TODO
         "parallel_write_safe": False,  # TODO
