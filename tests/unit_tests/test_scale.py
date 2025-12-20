@@ -39,7 +39,7 @@ from sphinx.testing.util import SphinxTestApp
         ),
     ],
     indirect=["app_params"],
-    ids=lambda param: str(param) if isinstance(param, list) else param,  # Show "expected" values instead of expected0.
+    ids=lambda param: str(param) if isinstance(param, list) else param,
 )
 @pytest.mark.sphinx("html", testroot="defaults")
 def test_scale_width_height(outdir: Path, img_tags: list[element.Tag], expected: list[int, int]):
