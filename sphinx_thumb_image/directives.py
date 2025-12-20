@@ -30,8 +30,8 @@ class ThumbCommon(Image):
     """Common methods for both thumb image/figure subclassed directives."""
 
     __option_spec = {}
-    __option_spec["scale-width"] = directives.nonnegative_int  # TODO better validator? Use same as Figur?
-    __option_spec["scale-height"] = directives.nonnegative_int
+    __option_spec["scale-width"] = lambda arg: directives.nonnegative_int(arg.replace("px", ""))
+    __option_spec["scale-height"] = __option_spec["scale-width"]
 
     def __get_scale_size(self):
         """TODO."""

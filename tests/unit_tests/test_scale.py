@@ -7,7 +7,9 @@ TODO::
 * Test two thumb-image:: using the same image but different quality.
 """
 
+import re
 from pathlib import Path
+from typing import Optional
 
 import PIL.Image
 import pytest
@@ -66,3 +68,30 @@ def test_missing_width(app: SphinxTestApp):
     with pytest.raises(SphinxWarning) as exc:
         app.build()
     assert '"scale-width" option is missing' in exc.value.args[0]
+
+
+@pytest.mark.parametrize(
+    "app_params,expected",
+    [
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-width: 100"}}, None),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-width: 100px"}}, None),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-width: 100%"}}, SphinxWarning),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-width: 100in"}}, SphinxWarning),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-width: 100.2"}}, SphinxWarning),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-width: -100"}}, SphinxWarning),
+    ],
+    indirect=["app_params"],
+    ids=lambda param: m[0] if (m := re.findall(r':scale-width:\s*[^\'"]+', str(param))) else param,
+)
+@pytest.mark.sphinx("html", testroot="defaults")
+def test_units(app: SphinxTestApp, expected: Optional[Exception]):
+    """Test supported and unsupported scaling units."""
+    app.warningiserror = True
+
+    if expected is None:
+        app.build()
+        return
+
+    with pytest.raises(expected) as exc:
+        app.build()
+    assert "invalid option value" in exc.value.args[0]
