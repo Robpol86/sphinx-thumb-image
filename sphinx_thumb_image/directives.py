@@ -22,8 +22,11 @@ TODO::
 """
 
 from docutils.nodes import Element
+from docutils.nodes import image as ImageNode  # noqa: N812
 from docutils.parsers.rst import directives
 from docutils.parsers.rst.directives.images import Figure, Image
+
+from sphinx_thumb_image.lib import ThumbRequest
 
 
 class ThumbCommon(Image):
@@ -33,18 +36,35 @@ class ThumbCommon(Image):
     __option_spec["scale-width"] = lambda arg: directives.nonnegative_int(arg.replace("px", ""))
     __option_spec["scale-height"] = __option_spec["scale-width"]
 
-    def __get_scale_size(self):
-        """TODO."""
+    def __add_request(self, nodes) -> list[Element]:
+        """Build and add a ThumbRequest to the image node."""
         config = self.state.document.settings.env.config
-        thumb_image_scale_width = config["thumb_image_scale_width"]
-        thumb_image_scale_height = config["thumb_image_scale_height"]
 
-        if "scale-width" not in self.options and "scale-height" not in self.options:
-            # No dimensions specified in directive as options. Checking config for defaults.
-            if thumb_image_scale_width is None and thumb_image_scale_height is None:
+        # Read width/height from directive options first.
+        if "scale-width" in self.options or "scale-height" in self.options:
+            request = ThumbRequest(
+                width=self.options.get("scale-width", None),
+                height=self.options.get("scale-height", None),
+            )
+        else:
+            # Read width/height from Sphinx config.
+            thumb_image_scale_width = config["thumb_image_scale_width"]
+            thumb_image_scale_height = config["thumb_image_scale_height"]
+            if thumb_image_scale_width is not None or thumb_image_scale_height is not None:
+                request = ThumbRequest(
+                    width=thumb_image_scale_width,
+                    height=thumb_image_scale_height,
+                )
+            else:
+                # User has not provided the width/height.
                 raise self.error('Error in %r directive: "scale-width" option is missing.' % self.name)
 
-        # TODO return
+        # Add request to the node.
+        for node in nodes:
+            for image_node in node.findall(ImageNode):
+                image_node[request.KEY] = request
+
+        return nodes
 
 
 class ThumbImage(ThumbCommon):
@@ -54,8 +74,7 @@ class ThumbImage(ThumbCommon):
 
     def run(self) -> list[Element]:
         """Entrypoint."""
-        self._ThumbCommon__get_scale_size()
-        return super().run()
+        return self._ThumbCommon__add_request(super().run())
 
 
 class ThumbFigure(Figure, ThumbCommon):
@@ -65,5 +84,4 @@ class ThumbFigure(Figure, ThumbCommon):
 
     def run(self) -> list[Element]:
         """Entrypoint."""
-        self._ThumbCommon__get_scale_size()
-        return super().run()
+        return self._ThumbCommon__add_request(super().run())
