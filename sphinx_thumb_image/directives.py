@@ -21,6 +21,7 @@ TODO::
 * Investigate transformer approach. Can all thumb file paths be determined before multiprocessed resampling?
 """
 
+from docutils.nodes import Element
 from docutils.parsers.rst import directives
 from docutils.parsers.rst.directives.images import Figure, Image
 
@@ -29,10 +30,21 @@ class ThumbCommon(Image):
     """Common methods for both thumb image/figure subclassed directives."""
 
     __option_spec = {}
-    # Thumb options.
-    __option_spec["thumb-width"] = directives.nonnegative_int  # TODO better validator? Use same as Figur?
-    __option_spec["thumb-height"] = directives.nonnegative_int
-    __option_spec["thumb-quality"] = directives.percentage
+    __option_spec["scale-width"] = lambda arg: directives.nonnegative_int(arg.replace("px", ""))
+    __option_spec["scale-height"] = __option_spec["scale-width"]
+
+    def __get_scale_size(self):
+        """TODO."""
+        config = self.state.document.settings.env.config
+        thumb_image_scale_width = config["thumb_image_scale_width"]
+        thumb_image_scale_height = config["thumb_image_scale_height"]
+
+        if "scale-width" not in self.options and "scale-height" not in self.options:
+            # No dimensions specified in directive as options. Checking config for defaults.
+            if thumb_image_scale_width is None and thumb_image_scale_height is None:
+                raise self.error('Error in %r directive: "scale-width" option is missing.' % self.name)
+
+        # TODO return
 
 
 class ThumbImage(ThumbCommon):
@@ -40,8 +52,18 @@ class ThumbImage(ThumbCommon):
 
     option_spec = Image.option_spec | ThumbCommon._ThumbCommon__option_spec
 
+    def run(self) -> list[Element]:
+        """Entrypoint."""
+        self._ThumbCommon__get_scale_size()
+        return super().run()
+
 
 class ThumbFigure(Figure, ThumbCommon):
     """Thumbnail figure directive."""
 
     option_spec = Figure.option_spec | ThumbCommon._ThumbCommon__option_spec
+
+    def run(self) -> list[Element]:
+        """Entrypoint."""
+        self._ThumbCommon__get_scale_size()
+        return super().run()
