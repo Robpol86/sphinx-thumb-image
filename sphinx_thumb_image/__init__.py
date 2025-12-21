@@ -46,6 +46,7 @@ class TodoPostTransform(SphinxPostTransform):
                 image.thumbnail((request.width or image.size[0], request.height or image.size[1]))
                 image.save(target)
                 mimetype = image.get_format_mimetype()
+            self.env.images.add_file(self.env.docname, str(target))
             node["candidates"][mimetype] = node["uri"] = str(target)
             if os.environ.get("RP_PDB", ""):
                 pdb.set_trace()
