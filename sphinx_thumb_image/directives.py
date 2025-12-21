@@ -34,7 +34,7 @@ class ThumbCommon(Image):
 
     __option_spec = {}
     __option_spec["scale-width"] = lambda arg: directives.nonnegative_int(arg.replace("px", ""))
-    __option_spec["scale-height"] = __option_spec["scale-width"]
+    __option_spec["scale-height"] = __option_spec["scale-width"]  # TODO s/scale/resize/
 
     def __add_request(self, nodes) -> list[Element]:
         """Build and add a ThumbRequest to the image node."""
