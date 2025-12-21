@@ -7,7 +7,10 @@ https://github.com/Robpol86/sphinx-thumb-image
 https://pypi.org/project/sphinx-thumb-image
 """
 
+import os
+
 from sphinx.application import Sphinx
+from sphinx.transforms.post_transforms import SphinxPostTransform
 
 from sphinx_thumb_image.directives import ThumbFigure, ThumbImage
 
@@ -16,11 +19,27 @@ __license__ = "BSD-2-Clause"
 __version__ = "0.0.1"
 
 
-def todo(app, builder):
+def todo_write_started(app, builder):
     """TODO."""
     # TODO Builder.post_process_images() is what determines final image file names
     # TODO node["candidates"]?
-    import pdb; pdb.set_trace()
+    if os.environ.get("RP_PDB", ""):
+        import pdb
+
+        pdb.set_trace()
+
+
+class TodoPostTransform(SphinxPostTransform):
+    """TODO."""
+
+    default_priority = 523
+
+    def run(self, **kwargs):
+        """TODO."""
+        if os.environ.get("RP_PDB", ""):
+            import pdb
+
+            pdb.set_trace()
 
 
 def setup(app: Sphinx) -> dict[str, str]:
@@ -34,7 +53,8 @@ def setup(app: Sphinx) -> dict[str, str]:
     app.add_config_value("thumb_image_scale_height", None, "html")
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)
-    # app.connect("write-started", todo)  # builder.images == {}
+    app.connect("write-started", todo_write_started)
+    app.add_post_transform(TodoPostTransform)
     return {
         "parallel_read_safe": False,  # TODO
         "parallel_write_safe": False,  # TODO
