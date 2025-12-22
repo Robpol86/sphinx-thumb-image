@@ -33,7 +33,8 @@ class TodoPostTransform(SphinxPostTransform):
             target = self.env.doctreedir / "_thumbs" / f"{source.stem}.th{source.suffix}"  # TODO collisions
             target.parent.mkdir(exist_ok=True)
             with PIL.Image.open(source) as image:
-                image.thumbnail((request.width or image.size[0], request.height or image.size[1]))
+                new_size = (request.width or image.size[0], request.height or image.size[1])
+                image.thumbnail(new_size)
                 image.save(target)
                 mimetype = image.get_format_mimetype()
             self.env.images.add_file(self.env.docname, str(target))

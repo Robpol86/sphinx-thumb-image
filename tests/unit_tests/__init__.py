@@ -8,4 +8,5 @@ TODO::
 - Test file with no extension?
 - Test different images with the same name in same doc/different doc/different dirs
 - Test using relative and absolute paths in directives
+- Test with requested size bigger than original image
 """
