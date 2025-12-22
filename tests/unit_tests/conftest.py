@@ -23,17 +23,13 @@ def _app_params(app_params, request: pytest.FixtureRequest):
     app_params.kwargs["freshenv"] = True
     srcdir = app_params.kwargs["srcdir"]
     # Implement write_docs.
-    if "write_docs" in app_params.kwargs:
-        for path, contents in app_params.kwargs["write_docs"].items():
+    for write_docs in (app_params.kwargs.get("write_docs", {}), getattr(request, "param", {}).get("write_docs", {})):
+        for path, contents in write_docs.items():
             (srcdir / path).write_text(contents, encoding="utf8")
-    # Implement parametrized confoverrides/write_docs.
-    if hasattr(request, "param"):
-        if "write_docs" in request.param:
-            for path, contents in request.param["write_docs"].items():
-                (srcdir / path).write_text(contents, encoding="utf8")
-        if "confoverrides" in request.param:
-            for key, value in request.param["confoverrides"].items():
-                app_params.kwargs.setdefault("confoverrides", {})[key] = value
+    # Implement confoverrides.
+    if hasattr(request, "param") and "confoverrides" in request.param:
+        for key, value in request.param["confoverrides"].items():
+            app_params.kwargs.setdefault("confoverrides", {})[key] = value
     return app_params
 
 
