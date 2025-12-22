@@ -12,10 +12,10 @@ from bs4 import element
     testroot="defaults",
     write_docs={
         "index.rst": dedent("""
-            .. image:: _images/tux.png
-            .. thumb-image:: _images/tux.png
+            .. image:: pictures/tux.png
+            .. thumb-image:: pictures/tux.png
                 :scale-width: 100
-            .. thumb-image:: _images/tux.png
+            .. thumb-image:: pictures/tux.png
                 :scale-width: 50
         """),
     },
@@ -43,9 +43,9 @@ def test_no_collisions(outdir: Path, img_tags: list[element.Tag]):
     testroot="defaults",
     write_docs={
         "index.rst": dedent("""
-            .. thumb-image:: _images/tux.png
+            .. thumb-image:: pictures/tux.png
                 :scale-width: 100
-            .. thumb-image:: _images/tux.png
+            .. thumb-image:: pictures/tux.png
                 :scale-width: 50
         """),
     },

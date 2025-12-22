@@ -21,21 +21,21 @@ from sphinx.testing.util import SphinxTestApp
 @pytest.mark.parametrize(
     "app_params,expected",
     [
-        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-width: 132"}}, [132, 157]),
-        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-height: 78"}}, [66, 78]),
+        ({"write_docs": {"index.rst": ".. thumb-image:: pictures/tux.png\n  :scale-width: 132"}}, [132, 156]),
+        ({"write_docs": {"index.rst": ".. thumb-image:: pictures/tux.png\n  :scale-height: 78"}}, [66, 78]),
         (
             {
-                "write_docs": {"index.rst": ".. thumb-image:: _images/tux.png"},
+                "write_docs": {"index.rst": ".. thumb-image:: pictures/tux.png"},
                 "confoverrides": {"thumb_image_scale_width": 88},
             },
             [88, 104],
         ),
         (
             {
-                "write_docs": {"index.rst": ".. thumb-image:: _images/tux.png"},
+                "write_docs": {"index.rst": ".. thumb-image:: pictures/tux.png"},
                 "confoverrides": {"thumb_image_scale_height": 62},
             },
-            [53, 62],
+            [52, 62],
         ),
     ],
     indirect=["app_params"],
@@ -46,7 +46,6 @@ def test_scale_width_height(outdir: Path, img_tags: list[element.Tag], expected:
     """Test different ways to specify thumbnail size."""
     # Confirm img src.
     img_src = [t["src"] for t in img_tags]
-    pytest.skip("TODO")
     assert img_src == ["_images/tux.th.png"]
     # Confirm image file's new dimensions.
     image_path = outdir / img_src[0]
@@ -59,7 +58,7 @@ def test_scale_width_height(outdir: Path, img_tags: list[element.Tag], expected:
     "html",
     testroot="defaults",
     write_docs={
-        "index.rst": ".. thumb-image:: _images/tux.png",
+        "index.rst": ".. thumb-image:: pictures/tux.png",
     },
 )
 def test_missing_width(app: SphinxTestApp):
@@ -72,12 +71,12 @@ def test_missing_width(app: SphinxTestApp):
 @pytest.mark.parametrize(
     "app_params,expected",
     [
-        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-width: 100"}}, None),
-        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-width: 100px"}}, None),
-        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-width: 100%"}}, SphinxWarning),
-        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-width: 100in"}}, SphinxWarning),
-        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-width: 100.2"}}, SphinxWarning),
-        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-width: -100"}}, SphinxWarning),
+        ({"write_docs": {"index.rst": ".. thumb-image:: pictures/tux.png\n  :scale-width: 100"}}, None),
+        ({"write_docs": {"index.rst": ".. thumb-image:: pictures/tux.png\n  :scale-width: 100px"}}, None),
+        ({"write_docs": {"index.rst": ".. thumb-image:: pictures/tux.png\n  :scale-width: 100%"}}, SphinxWarning),
+        ({"write_docs": {"index.rst": ".. thumb-image:: pictures/tux.png\n  :scale-width: 100in"}}, SphinxWarning),
+        ({"write_docs": {"index.rst": ".. thumb-image:: pictures/tux.png\n  :scale-width: 100.2"}}, SphinxWarning),
+        ({"write_docs": {"index.rst": ".. thumb-image:: pictures/tux.png\n  :scale-width: -100"}}, SphinxWarning),
     ],
     indirect=["app_params"],
     ids=lambda param: m[0] if (m := re.findall(r':scale-width:\s*[^\'"]+', str(param))) else param,
