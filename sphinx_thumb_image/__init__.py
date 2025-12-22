@@ -22,6 +22,7 @@ __version__ = "0.0.1"
 class TodoPostTransform(SphinxPostTransform):
     """TODO."""
 
+    builders = ("html",)  # TODO more builders
     default_priority = 523
 
     def run(self, **kwargs):
