@@ -23,18 +23,17 @@ from bs4 import element
 def test_no_collisions(outdir: Path, img_tags: list[element.Tag]):
     """Confirm extension does not clobber non-thumbed image files."""
     # Confirm img src.
-    img_src = [t["src"] for t in img_tags]
-    pytest.skip("TODO")
+    img_src = sorted(t["src"] for t in img_tags)
     assert img_src == [
+        "_images/tux.100x118.png",
+        "_images/tux.50x59.png",
         "_images/tux.png",
-        "_images/tux.th.png",
-        "_images/tux.th2.png",
     ]
     # Confirm files on disk.
-    assert sorted((outdir / "_images").listdir()) == [
+    assert sorted(f.name for f in (outdir / "_images").iterdir()) == [
+        "tux.100x118.png",
+        "tux.50x59.png",
         "tux.png",
-        "tux.th.png",
-        "tux.th2.png",
     ]
 
 
