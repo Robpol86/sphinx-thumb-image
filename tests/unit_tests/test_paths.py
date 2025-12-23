@@ -1,4 +1,10 @@
-"""Test thumbnail image file paths in HTML and on disk."""
+"""Test thumbnail image file paths in HTML and on disk.
+
+TODO::
+- Test multiple directives same file same and different resizes.
+    - Different size == different file e.g. tux2.png
+- Also test in sub.
+"""
 
 from pathlib import Path
 from textwrap import dedent
@@ -53,13 +59,13 @@ def test_efficient(outdir: Path, img_tags: list[element.Tag]):
     """Confirm original image files not in output directory if not needed."""
     # Confirm img src.
     img_src = [t["src"] for t in img_tags]
-    pytest.skip("TODO")
     assert img_src == [
-        "_images/tux.th.png",
-        "_images/tux.th2.png",
+        "_images/tux.100x118.png",
+        "_images/tux.50x59.png",
     ]
     # Confirm files on disk.
-    assert sorted((outdir / "_images").listdir()) == [
-        "tux.th.png",
-        "tux.th2.png",
+    pytest.skip("TODO")
+    assert sorted(f.name for f in (outdir / "_images").iterdir()) == [
+        "tux.100x118.png",
+        "tux.50x59.png",
     ]
