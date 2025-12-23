@@ -64,7 +64,7 @@ def test_efficient(outdir: Path, img_tags: list[element.Tag]):
         "_images/tux.50x59.png",
     ]
     # Confirm files on disk.
-    pytest.skip("TODO")
+    pytest.skip("TODO")  # TESTS ARE LEAKING
     assert sorted(f.name for f in (outdir / "_images").iterdir()) == [
         "tux.100x118.png",
         "tux.50x59.png",
