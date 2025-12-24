@@ -16,6 +16,7 @@ from bs4 import element
 @pytest.mark.sphinx(
     "html",
     testroot="defaults",
+    srcdir="test_no_collisions",
     write_docs={
         "index.rst": dedent("""
             .. image:: pictures/tux.png
@@ -46,6 +47,7 @@ def test_no_collisions(outdir: Path, img_tags: list[element.Tag]):
 @pytest.mark.sphinx(
     "html",
     testroot="defaults",
+    srcdir="test_efficient",
     write_docs={
         "index.rst": dedent("""
             .. thumb-image:: pictures/tux.png
@@ -64,7 +66,6 @@ def test_efficient(outdir: Path, img_tags: list[element.Tag]):
         "_images/tux.50x59.png",
     ]
     # Confirm files on disk.
-    pytest.skip("TODO")  # TESTS ARE LEAKING
     assert sorted(f.name for f in (outdir / "_images").iterdir()) == [
         "tux.100x118.png",
         "tux.50x59.png",
