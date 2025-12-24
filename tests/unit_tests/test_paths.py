@@ -21,9 +21,9 @@ from bs4 import element
         "index.rst": dedent("""
             .. image:: pictures/tux.png
             .. thumb-image:: pictures/tux.png
-                :scale-width: 100
+                :resize-width: 100
             .. thumb-image:: pictures/tux.png
-                :scale-width: 50
+                :resize-width: 50
         """),
     },
 )
@@ -51,9 +51,9 @@ def test_no_collisions(outdir: Path, img_tags: list[element.Tag]):
     write_docs={
         "index.rst": dedent("""
             .. thumb-image:: pictures/tux.png
-                :scale-width: 100
+                :resize-width: 100
             .. thumb-image:: pictures/tux.png
-                :scale-width: 50
+                :resize-width: 50
         """),
     },
 )

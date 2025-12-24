@@ -33,31 +33,31 @@ class ThumbCommon(Image):
     """Common methods for both thumb image/figure subclassed directives."""
 
     __option_spec = {}
-    __option_spec["scale-width"] = lambda arg: directives.nonnegative_int(arg.replace("px", ""))
-    __option_spec["scale-height"] = __option_spec["scale-width"]  # TODO s/scale/resize/
+    __option_spec["resize-width"] = lambda arg: directives.nonnegative_int(arg.replace("px", ""))
+    __option_spec["resize-height"] = __option_spec["resize-width"]
 
     def __add_request(self, nodes) -> list[Element]:
         """Build and add a ThumbRequest to the image node."""
         config = self.state.document.settings.env.config
 
         # Read width/height from directive options first.
-        if "scale-width" in self.options or "scale-height" in self.options:
+        if "resize-width" in self.options or "resize-height" in self.options:
             request = ThumbRequest(
-                width=self.options.get("scale-width", None),
-                height=self.options.get("scale-height", None),
+                width=self.options.get("resize-width", None),
+                height=self.options.get("resize-height", None),
             )
         else:
             # Read width/height from Sphinx config.
-            thumb_image_scale_width = config["thumb_image_scale_width"]
-            thumb_image_scale_height = config["thumb_image_scale_height"]
-            if thumb_image_scale_width is not None or thumb_image_scale_height is not None:
+            thumb_image_resize_width = config["thumb_image_resize_width"]
+            thumb_image_resize_height = config["thumb_image_resize_height"]
+            if thumb_image_resize_width is not None or thumb_image_resize_height is not None:
                 request = ThumbRequest(
-                    width=thumb_image_scale_width,
-                    height=thumb_image_scale_height,
+                    width=thumb_image_resize_width,
+                    height=thumb_image_resize_height,
                 )
             else:
                 # User has not provided the width/height.
-                raise self.error('Error in %r directive: "scale-width" option is missing.' % self.name)
+                raise self.error('Error in %r directive: "resize-width" option is missing.' % self.name)
 
         # Add request to the node.
         for node in nodes:
