@@ -22,31 +22,38 @@ __license__ = "BSD-2-Clause"
 __version__ = "0.0.1"
 
 
-def todo_doctree_read(app: Sphinx, doctree: document):
-    """TODO.
+class ThumbImageResize:
+    """TODO."""
 
-    - Log
-    - Cache
-    - Collisions
-    - Parallel
-
-    ..:
-    - s/scale/resize/
-    """
-    thumbs_dir = app.env.doctreedir / "_thumbs"
-    thumbs_dir.mkdir(exist_ok=True)
-    docpath = Path(doctree["source"])
-    for node in doctree.findall(lambda n: ThumbRequest.KEY in n):
-        request: ThumbRequest = node[ThumbRequest.KEY]
-        node_uri = Path(node["uri"])
-        source = docpath.parent / node_uri
+    @classmethod
+    def resize(cls, doctree_source_parent: Path, node_uri: Path, request :ThumbRequest, thumbs_dir: Path) -> Path:
+        """TODO."""
+        source = doctree_source_parent / node_uri
         with PIL.Image.open(source) as image:
             image.thumbnail((request.width or image.size[0], request.height or image.size[1]))
-            thumb_file_name = f"{node_uri.stem}.{image.size[0]}x{image.size[1]}{node_uri.suffix}"
+            thumb_file_name = f"{source.stem}.{image.size[0]}x{image.size[1]}{source.suffix}"
             target = thumbs_dir / node_uri.parent / thumb_file_name
             target.parent.mkdir(exist_ok=True)
             image.save(target)
-        node["uri"] = relpath(target, start=docpath.parent)
+        return target
+
+    @classmethod
+    def doctree_read(cls, app: Sphinx, doctree: document):
+        """TODO.
+
+        - Log
+        - Cache
+        - Collisions
+        - Parallel
+        """
+        thumbs_dir = app.env.doctreedir / "_thumbs"
+        thumbs_dir.mkdir(exist_ok=True)
+        doctree_source = Path(doctree["source"])
+        for node in doctree.findall(lambda n: ThumbRequest.KEY in n):
+            request: ThumbRequest = node[ThumbRequest.KEY]
+            node_uri = Path(node["uri"])
+            target = cls.resize(doctree_source.parent, node_uri, request, thumbs_dir)
+            node["uri"] = relpath(target, start=doctree_source.parent)
 
 
 def setup(app: Sphinx) -> dict[str, str]:
@@ -60,7 +67,7 @@ def setup(app: Sphinx) -> dict[str, str]:
     app.add_config_value("thumb_image_scale_height", None, "html")
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)
-    app.connect("doctree-read", todo_doctree_read, priority=499)
+    app.connect("doctree-read", ThumbImageResize.doctree_read, priority=499)
     return {
         "parallel_read_safe": False,  # TODO
         "parallel_write_safe": False,  # TODO
