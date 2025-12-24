@@ -38,7 +38,7 @@ class ThumbImageResize:
         return target
 
     @classmethod
-    def doctree_read(cls, app: Sphinx, doctree: document):
+    def resize_images_in_document(cls, app: Sphinx, doctree: document):
         """TODO.
 
         - Log
@@ -67,7 +67,7 @@ def setup(app: Sphinx) -> dict[str, str]:
     app.add_config_value("thumb_image_resize_height", None, "html")
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)
-    app.connect("doctree-read", ThumbImageResize.doctree_read, priority=499)
+    app.connect("doctree-read", ThumbImageResize.resize_images_in_document, priority=499)
     return {
         "parallel_read_safe": False,  # TODO
         "parallel_write_safe": False,  # TODO
