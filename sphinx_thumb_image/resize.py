@@ -17,13 +17,21 @@ from sphinx_thumb_image.lib import ThumbRequest
 
 
 class ThumbImageResize:
-    """TODO."""
+    """Resize images."""
 
     THUMBS_SUBDIR = "_thumbs"
 
     @classmethod
     def resize(cls, doctree_source_parent: Path, node_uri: Path, request :ThumbRequest, thumbs_dir: Path) -> Path:
-        """TODO."""
+        """Resize one image.
+
+        :param doctree_source_parent: TODO
+        :param node_uri: TODO
+        :param request: TODO
+        :param thumbs_dir: TODO
+
+        :returns: TODO
+        """
         source = doctree_source_parent / node_uri
         with PIL.Image.open(source) as image:
             image.thumbnail((request.width or image.size[0], request.height or image.size[1]))
@@ -35,7 +43,13 @@ class ThumbImageResize:
 
     @classmethod
     def resize_images_in_document(cls, app: Sphinx, doctree: document):
-        """TODO."""
+        """Resize all images in one Sphinx document.
+
+        Called from the doctree-read event.
+
+        :param app: TODO
+        :param doctree: TODO
+        """
         thumbs_dir = app.env.doctreedir / cls.THUMBS_SUBDIR
         thumbs_dir.mkdir(exist_ok=True)
         doctree_source = Path(doctree["source"])
