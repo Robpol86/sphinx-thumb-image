@@ -19,10 +19,10 @@ from bs4 import element
     srcdir="test_no_collisions",
     write_docs={
         "index.rst": dedent("""
-            .. image:: pictures/tux.png
-            .. thumb-image:: pictures/tux.png
+            .. image:: _images/tux.png
+            .. thumb-image:: _images/tux.png
                 :resize-width: 100
-            .. thumb-image:: pictures/tux.png
+            .. thumb-image:: _images/tux.png
                 :resize-width: 50
         """),
     },
@@ -50,9 +50,9 @@ def test_no_collisions(outdir: Path, img_tags: list[element.Tag]):
     srcdir="test_efficient",
     write_docs={
         "index.rst": dedent("""
-            .. thumb-image:: pictures/tux.png
+            .. thumb-image:: _images/tux.png
                 :resize-width: 100
-            .. thumb-image:: pictures/tux.png
+            .. thumb-image:: _images/tux.png
                 :resize-width: 50
         """),
     },

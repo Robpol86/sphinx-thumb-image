@@ -21,18 +21,18 @@ from sphinx.testing.util import SphinxTestApp
 @pytest.mark.parametrize(
     "app_params,expected",
     [
-        ({"write_docs": {"index.rst": ".. thumb-image:: pictures/tux.png\n  :resize-width: 132"}}, [132, 156]),
-        ({"write_docs": {"index.rst": ".. thumb-image:: pictures/tux.png\n  :resize-height: 78"}}, [66, 78]),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :resize-width: 132"}}, [132, 156]),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :resize-height: 78"}}, [66, 78]),
         (
             {
-                "write_docs": {"index.rst": ".. thumb-image:: pictures/tux.png"},
+                "write_docs": {"index.rst": ".. thumb-image:: _images/tux.png"},
                 "confoverrides": {"thumb_image_resize_width": 88},
             },
             [88, 104],
         ),
         (
             {
-                "write_docs": {"index.rst": ".. thumb-image:: pictures/tux.png"},
+                "write_docs": {"index.rst": ".. thumb-image:: _images/tux.png"},
                 "confoverrides": {"thumb_image_resize_height": 62},
             },
             [52, 62],
@@ -58,7 +58,7 @@ def test_resize_width_height(outdir: Path, img_tags: list[element.Tag], expected
     "html",
     testroot="defaults",
     write_docs={
-        "index.rst": ".. thumb-image:: pictures/tux.png",
+        "index.rst": ".. thumb-image:: _images/tux.png",
     },
 )
 def test_missing_width(app: SphinxTestApp):
@@ -71,12 +71,12 @@ def test_missing_width(app: SphinxTestApp):
 @pytest.mark.parametrize(
     "app_params,expected",
     [
-        ({"write_docs": {"index.rst": ".. thumb-image:: pictures/tux.png\n  :resize-width: 100"}}, None),
-        ({"write_docs": {"index.rst": ".. thumb-image:: pictures/tux.png\n  :resize-width: 100px"}}, None),
-        ({"write_docs": {"index.rst": ".. thumb-image:: pictures/tux.png\n  :resize-width: 100%"}}, SphinxWarning),
-        ({"write_docs": {"index.rst": ".. thumb-image:: pictures/tux.png\n  :resize-width: 100in"}}, SphinxWarning),
-        ({"write_docs": {"index.rst": ".. thumb-image:: pictures/tux.png\n  :resize-width: 100.2"}}, SphinxWarning),
-        ({"write_docs": {"index.rst": ".. thumb-image:: pictures/tux.png\n  :resize-width: -100"}}, SphinxWarning),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :resize-width: 100"}}, None),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :resize-width: 100px"}}, None),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :resize-width: 100%"}}, SphinxWarning),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :resize-width: 100in"}}, SphinxWarning),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :resize-width: 100.2"}}, SphinxWarning),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :resize-width: -100"}}, SphinxWarning),
     ],
     indirect=["app_params"],
     ids=lambda param: m[0] if (m := re.findall(r':resize-width:\s*[^\'"]+', str(param))) else param,
