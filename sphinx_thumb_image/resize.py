@@ -36,7 +36,7 @@ class ThumbImageResize:
         with PIL.Image.open(source) as image:
             image.thumbnail((request.width or image.size[0], request.height or image.size[1]))
             thumb_file_name = f"{source.stem}.{image.size[0]}x{image.size[1]}{source.suffix}"
-            target = thumbs_dir / source.parent / thumb_file_name  # TODO BUG
+            target = thumbs_dir / node_uri.parent / thumb_file_name
             target.parent.mkdir(exist_ok=True)
             image.save(target)
         return target
