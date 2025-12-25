@@ -14,7 +14,7 @@ import PIL.Image
 from docutils.nodes import document
 from sphinx.application import Sphinx
 
-from sphinx_thumb_image.lib import ThumbRequest
+from sphinx_thumb_image.lib import ThumbNodeRequest
 
 
 class ThumbImageResize:
@@ -23,7 +23,7 @@ class ThumbImageResize:
     THUMBS_SUBDIR = "_thumbs"
 
     @classmethod
-    def resize(cls, doctree_source_parent: Path, node_uri: Path, request: ThumbRequest, thumbs_dir: Path) -> Path:
+    def resize(cls, doctree_source_parent: Path, node_uri: Path, request: ThumbNodeRequest, thumbs_dir: Path) -> Path:
         """Resize one image.
 
         Output image saved with the same relative path as the source image but in the thumbs directory.
@@ -56,8 +56,8 @@ class ThumbImageResize:
         thumbs_dir = app.env.doctreedir / cls.THUMBS_SUBDIR
         thumbs_dir.mkdir(exist_ok=True)
         doctree_source = Path(doctree["source"])
-        for node in doctree.findall(lambda n: ThumbRequest.KEY in n):
-            request: ThumbRequest = node[ThumbRequest.KEY]
+        for node in doctree.findall(lambda n: ThumbNodeRequest.KEY in n):
+            request: ThumbNodeRequest = node[ThumbNodeRequest.KEY]
             node_uri = Path(node["uri"])
             target = cls.resize(doctree_source.parent, node_uri, request, thumbs_dir)
             node["uri"] = relpath(target, start=doctree_source.parent)

@@ -26,7 +26,7 @@ from docutils.nodes import image as ImageNode  # noqa: N812
 from docutils.parsers.rst import directives
 from docutils.parsers.rst.directives.images import Figure, Image
 
-from sphinx_thumb_image.lib import ThumbRequest
+from sphinx_thumb_image.lib import ThumbNodeRequest
 
 
 class ThumbCommon(Image):
@@ -42,7 +42,7 @@ class ThumbCommon(Image):
 
         # Read width/height from directive options first.
         if "resize-width" in self.options or "resize-height" in self.options:
-            request = ThumbRequest(
+            request = ThumbNodeRequest(
                 width=self.options.get("resize-width", None),
                 height=self.options.get("resize-height", None),
             )
@@ -51,7 +51,7 @@ class ThumbCommon(Image):
             thumb_image_resize_width = config["thumb_image_resize_width"]
             thumb_image_resize_height = config["thumb_image_resize_height"]
             if thumb_image_resize_width is not None or thumb_image_resize_height is not None:
-                request = ThumbRequest(
+                request = ThumbNodeRequest(
                     width=thumb_image_resize_width,
                     height=thumb_image_resize_height,
                 )
