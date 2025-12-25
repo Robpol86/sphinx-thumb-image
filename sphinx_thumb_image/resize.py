@@ -22,7 +22,7 @@ class ThumbImageResize:
     THUMBS_SUBDIR = "_thumbs"
 
     @classmethod
-    def resize(cls, doctree_source_parent: Path, node_uri: Path, request :ThumbRequest, thumbs_dir: Path) -> Path:
+    def resize(cls, doctree_source_parent: Path, node_uri: Path, request: ThumbRequest, thumbs_dir: Path) -> Path:
         """Resize one image. Output image saved in TODO.
 
         :param doctree_source_parent: TODO
