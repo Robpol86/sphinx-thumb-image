@@ -1,5 +1,6 @@
-"""TODO.
+"""Image resizing module.
 
+TODO::
 - Log
 - Cache
 - Collisions
@@ -23,14 +24,16 @@ class ThumbImageResize:
 
     @classmethod
     def resize(cls, doctree_source_parent: Path, node_uri: Path, request: ThumbRequest, thumbs_dir: Path) -> Path:
-        """Resize one image. Output image saved in TODO.
+        """Resize one image.
 
-        :param doctree_source_parent: TODO
-        :param node_uri: TODO
-        :param request: TODO
+        Output image saved with the same relative path as the source image but in the thumbs directory.
+
+        :param doctree_source_parent: Parent directory of the document's path.
+        :param node_uri: Relative path to the image node, from the document's path.
+        :param request: Image node's extension request object.
         :param thumbs_dir: Directory to write thumbnails to.
 
-        :returns: TODO
+        :returns: Path to the output image.
         """
         source = doctree_source_parent / node_uri
         with PIL.Image.open(source) as image:
