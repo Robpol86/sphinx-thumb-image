@@ -21,8 +21,7 @@ TODO::
 * Investigate transformer approach. Can all thumb file paths be determined before multiprocessed resampling?
 """
 
-from docutils.nodes import Element
-from docutils.nodes import image as ImageNode  # noqa: N812
+from docutils import nodes
 from docutils.parsers.rst import directives
 from docutils.parsers.rst.directives.images import Figure, Image
 
@@ -36,7 +35,7 @@ class ThumbCommon(Image):
     __option_spec["resize-width"] = lambda arg: directives.nonnegative_int(arg.replace("px", ""))
     __option_spec["resize-height"] = __option_spec["resize-width"]
 
-    def __add_request(self, nodes) -> list[Element]:
+    def __add_request(self, sphinx_nodes) -> list[nodes.Element]:
         """Build and add a ThumbRequest to the image node."""
         config = self.state.document.settings.env.config
 
@@ -60,11 +59,11 @@ class ThumbCommon(Image):
                 raise self.error('Error in %r directive: "resize-width" option is missing.' % self.name)
 
         # Add request to the node.
-        for node in nodes:
-            for image_node in node.findall(ImageNode):
+        for node in sphinx_nodes:
+            for image_node in node.findall(nodes.image):
                 image_node[request.KEY] = request
 
-        return nodes
+        return sphinx_nodes
 
 
 class ThumbImage(ThumbCommon):
@@ -72,7 +71,7 @@ class ThumbImage(ThumbCommon):
 
     option_spec = Image.option_spec | ThumbCommon._ThumbCommon__option_spec
 
-    def run(self) -> list[Element]:
+    def run(self) -> list[nodes.Element]:
         """Entrypoint."""
         return self._ThumbCommon__add_request(super().run())
 
@@ -82,6 +81,6 @@ class ThumbFigure(Figure, ThumbCommon):
 
     option_spec = Figure.option_spec | ThumbCommon._ThumbCommon__option_spec
 
-    def run(self) -> list[Element]:
+    def run(self) -> list[nodes.Element]:
         """Entrypoint."""
         return self._ThumbCommon__add_request(super().run())
