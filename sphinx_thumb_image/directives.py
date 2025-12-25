@@ -5,7 +5,7 @@ TODO::
 * If source image <= thumb size: still compress, unless 100% then noop and link to fullsize
 * Support parallel resizing, use lock files (one image may be referenced by multiple pages)
 * thumb-image directive
-    * Default scales down to default width
+    * Default resizes down to default width
     * :thumb_width: 700px (unitless == px, no other units supported)
 * config option to thumbisize all images/figures (sphinx directives)
     * No new directive options for ..image/..figure
@@ -30,19 +30,19 @@ class ThumbCommon(Image):
     """Common methods for both thumb image/figure subclassed directives."""
 
     __option_spec = {}
-    __option_spec["scale-width"] = lambda arg: directives.nonnegative_int(arg.replace("px", ""))
-    __option_spec["scale-height"] = __option_spec["scale-width"]
+    __option_spec["resize-width"] = lambda arg: directives.nonnegative_int(arg.replace("px", ""))
+    __option_spec["resize-height"] = __option_spec["resize-width"]
 
-    def __get_scale_size(self):
+    def __get_resize_size(self):
         """TODO."""
         config = self.state.document.settings.env.config
-        thumb_image_scale_width = config["thumb_image_scale_width"]
-        thumb_image_scale_height = config["thumb_image_scale_height"]
+        thumb_image_resize_width = config["thumb_image_resize_width"]
+        thumb_image_resize_height = config["thumb_image_resize_height"]
 
-        if "scale-width" not in self.options and "scale-height" not in self.options:
+        if "resize-width" not in self.options and "resize-height" not in self.options:
             # No dimensions specified in directive as options. Checking config for defaults.
-            if thumb_image_scale_width is None and thumb_image_scale_height is None:
-                raise self.error('Error in %r directive: "scale-width" option is missing.' % self.name)
+            if thumb_image_resize_width is None and thumb_image_resize_height is None:
+                raise self.error('Error in %r directive: "resize-width" option is missing.' % self.name)
 
         # TODO return
 
@@ -54,7 +54,7 @@ class ThumbImage(ThumbCommon):
 
     def run(self) -> list[Element]:
         """Entrypoint."""
-        self._ThumbCommon__get_scale_size()
+        self._ThumbCommon__get_resize_size()
         return super().run()
 
 
@@ -65,5 +65,5 @@ class ThumbFigure(Figure, ThumbCommon):
 
     def run(self) -> list[Element]:
         """Entrypoint."""
-        self._ThumbCommon__get_scale_size()
+        self._ThumbCommon__get_resize_size()
         return super().run()

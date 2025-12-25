@@ -21,19 +21,19 @@ from sphinx.testing.util import SphinxTestApp
 @pytest.mark.parametrize(
     "app_params,expected",
     [
-        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-width: 132"}}, [132, 157]),
-        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-height: 78"}}, [66, 78]),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :resize-width: 132"}}, [132, 157]),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :resize-height: 78"}}, [66, 78]),
         (
             {
                 "write_docs": {"index.rst": ".. thumb-image:: _images/tux.png"},
-                "confoverrides": {"thumb_image_scale_width": 88},
+                "confoverrides": {"thumb_image_resize_width": 88},
             },
             [88, 104],
         ),
         (
             {
                 "write_docs": {"index.rst": ".. thumb-image:: _images/tux.png"},
-                "confoverrides": {"thumb_image_scale_height": 62},
+                "confoverrides": {"thumb_image_resize_height": 62},
             },
             [53, 62],
         ),
@@ -42,7 +42,7 @@ from sphinx.testing.util import SphinxTestApp
     ids=lambda param: str(param) if isinstance(param, list) else param,
 )
 @pytest.mark.sphinx("html", testroot="defaults")
-def test_scale_width_height(outdir: Path, img_tags: list[element.Tag], expected: list[int, int]):
+def test_resize_width_height(outdir: Path, img_tags: list[element.Tag], expected: list[int, int]):
     """Test different ways to specify thumbnail size."""
     # Confirm img src.
     img_src = [t["src"] for t in img_tags]
@@ -66,21 +66,21 @@ def test_missing_width(app: SphinxTestApp):
     """Confirm error is raised if user does not specify any dimensions."""
     with pytest.raises(SphinxWarning) as exc:
         app.build()
-    assert '"scale-width" option is missing' in exc.value.args[0]
+    assert '"resize-width" option is missing' in exc.value.args[0]
 
 
 @pytest.mark.parametrize(
     "app_params,expected",
     [
-        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-width: 100"}}, None),
-        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-width: 100px"}}, None),
-        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-width: 100%"}}, SphinxWarning),
-        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-width: 100in"}}, SphinxWarning),
-        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-width: 100.2"}}, SphinxWarning),
-        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :scale-width: -100"}}, SphinxWarning),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :resize-width: 100"}}, None),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :resize-width: 100px"}}, None),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :resize-width: 100%"}}, SphinxWarning),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :resize-width: 100in"}}, SphinxWarning),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :resize-width: 100.2"}}, SphinxWarning),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :resize-width: -100"}}, SphinxWarning),
     ],
     indirect=["app_params"],
-    ids=lambda param: m[0] if (m := re.findall(r':scale-width:\s*[^\'"]+', str(param))) else param,
+    ids=lambda param: m[0] if (m := re.findall(r':resize-width:\s*[^\'"]+', str(param))) else param,
 )
 @pytest.mark.sphinx("html", testroot="defaults")
 def test_units(app: SphinxTestApp, expected: Optional[Exception]):
