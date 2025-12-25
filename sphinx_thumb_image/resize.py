@@ -23,12 +23,12 @@ class ThumbImageResize:
 
     @classmethod
     def resize(cls, doctree_source_parent: Path, node_uri: Path, request :ThumbRequest, thumbs_dir: Path) -> Path:
-        """Resize one image.
+        """Resize one image. Output image saved in TODO.
 
         :param doctree_source_parent: TODO
         :param node_uri: TODO
         :param request: TODO
-        :param thumbs_dir: TODO
+        :param thumbs_dir: Directory to write thumbnails to.
 
         :returns: TODO
         """
@@ -36,7 +36,7 @@ class ThumbImageResize:
         with PIL.Image.open(source) as image:
             image.thumbnail((request.width or image.size[0], request.height or image.size[1]))
             thumb_file_name = f"{source.stem}.{image.size[0]}x{image.size[1]}{source.suffix}"
-            target = thumbs_dir / node_uri.parent / thumb_file_name
+            target = thumbs_dir / source.parent / thumb_file_name
             target.parent.mkdir(exist_ok=True)
             image.save(target)
         return target
@@ -47,8 +47,8 @@ class ThumbImageResize:
 
         Called from the doctree-read event.
 
-        :param app: TODO
-        :param doctree: TODO
+        :param app: Sphinx application object.
+        :param doctree: Tree of docutils nodes.
         """
         thumbs_dir = app.env.doctreedir / cls.THUMBS_SUBDIR
         thumbs_dir.mkdir(exist_ok=True)

@@ -1,4 +1,4 @@
-"""TODO.
+"""Sphinx directives.
 
 TODO::
 * Support pdf and non-html builders such as pdf, epub, etc.
