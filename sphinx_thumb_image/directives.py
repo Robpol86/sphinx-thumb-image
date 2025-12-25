@@ -5,7 +5,7 @@ TODO::
 * If source image <= thumb size: still compress, unless 100% then noop and link to fullsize
 * Support parallel resizing, use lock files (one image may be referenced by multiple pages)
 * thumb-image directive
-    * Default resizes down to default width
+    * Default scales down to default width
     * :thumb_width: 700px (unitless == px, no other units supported)
 * config option to thumbisize all images/figures (sphinx directives)
     * No new directive options for ..image/..figure
