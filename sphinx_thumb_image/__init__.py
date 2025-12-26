@@ -10,6 +10,7 @@ https://pypi.org/project/sphinx-thumb-image
 from sphinx.application import Sphinx
 
 from sphinx_thumb_image.directives import ThumbFigure, ThumbImage
+from sphinx_thumb_image.resize import ThumbImageResize
 
 __author__ = "@Robpol86"
 __license__ = "BSD-2-Clause"
@@ -27,6 +28,7 @@ def setup(app: Sphinx) -> dict[str, str]:
     app.add_config_value("thumb_image_resize_height", None, "html")
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)
+    app.connect("doctree-read", ThumbImageResize.resize_images_in_document, priority=499)
     return {
         "parallel_read_safe": False,  # TODO
         "parallel_write_safe": False,  # TODO

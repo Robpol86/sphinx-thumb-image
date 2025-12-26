@@ -21,7 +21,7 @@ from sphinx.testing.util import SphinxTestApp
 @pytest.mark.parametrize(
     "app_params,expected",
     [
-        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :resize-width: 132"}}, [132, 157]),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :resize-width: 132"}}, [132, 156]),
         ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :resize-height: 78"}}, [66, 78]),
         (
             {
@@ -35,7 +35,7 @@ from sphinx.testing.util import SphinxTestApp
                 "write_docs": {"index.rst": ".. thumb-image:: _images/tux.png"},
                 "confoverrides": {"thumb_image_resize_height": 62},
             },
-            [53, 62],
+            [52, 62],
         ),
     ],
     indirect=["app_params"],
@@ -46,11 +46,10 @@ def test_resize_width_height(outdir: Path, img_tags: list[element.Tag], expected
     """Test different ways to specify thumbnail size."""
     # Confirm img src.
     img_src = [t["src"] for t in img_tags]
-    assert img_src == ["_images/tux.png"]
+    assert img_src == [f"_images/tux.{expected[0]}x{expected[1]}.png"]
     # Confirm image file's new dimensions.
     image_path = outdir / img_src[0]
     with PIL.Image.open(image_path) as image:
-        pytest.skip("TODO unskip after implementing scaling")
         assert image.size[0] == expected[0]
         assert image.size[1] == expected[1]
 
