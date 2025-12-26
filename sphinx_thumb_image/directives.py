@@ -35,8 +35,13 @@ class ThumbCommon(Image):
     __option_spec["resize-width"] = lambda arg: directives.nonnegative_int(arg.replace("px", ""))
     __option_spec["resize-height"] = __option_spec["resize-width"]
 
-    def __add_request(self, sphinx_nodes) -> list[nodes.Element]:
-        """Build and add a ThumbRequest to the image node."""
+    def __add_request(self, sphinx_nodes: list[nodes.Element]) -> list[nodes.Element]:
+        """Build and add a ThumbRequest to the image node.
+
+        :param sphinx_nodes: List of nodes returned by super().run(), one of which contains an image node to be modified.
+
+        :return: The same node list as the input with an annotated image node.
+        """
         config = self.state.document.settings.env.config
 
         # Read width/height from directive options first.
