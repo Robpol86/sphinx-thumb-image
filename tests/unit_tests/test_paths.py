@@ -105,17 +105,32 @@ def test_doctrees_paths(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
 
     # Patch open.
     orig_pil_image_open = PIL.Image.open
+
     def spy_pil_open(path, *args, **kwargs):
-        open_paths.append(path)
+        open_paths.append(path.relative_to(app.srcdir))
         return orig_pil_image_open(path, *args, **kwargs)
+
     monkeypatch.setattr(PIL.Image, "open", spy_pil_open)
 
     # Patch save.
     orig_pil_image_save = PIL.Image.Image.save
+
     def spy_pil_save(self, path, *args, **kwargs):
-        save_paths.append(path)
+        save_paths.append(path.relative_to(app.srcdir))
         return orig_pil_image_save(self, path, *args, **kwargs)
+
     monkeypatch.setattr(PIL.Image.Image, "save", spy_pil_save)
 
-    # TODO.
-    pytest.skip("TODO")
+    # Run.
+    app.build()
+
+    # Check.
+    assert open_paths == [
+        Path("_images/tux.png"),
+        Path("sub/pictures/tux.png"),
+    ]
+    pytest.skip("TODO fix bug first")
+    assert save_paths == [
+        Path("_build/doctrees/_thumbs/_images/tux.100x118.png"),
+        Path("_build/doctrees/_thumbs/sub/pictures/tux.100x118.png"),
+    ]
