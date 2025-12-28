@@ -11,6 +11,7 @@ from textwrap import dedent
 
 import pytest
 from bs4 import element
+from sphinx.testing.util import SphinxTestApp
 
 
 @pytest.mark.sphinx(
@@ -72,7 +73,26 @@ def test_efficient(outdir: Path, img_tags: list[element.Tag]):
     ]
 
 
-def test_doctrees_paths():
+@pytest.mark.sphinx(
+    "html",
+    testroot="defaults",
+    srcdir="test_doctrees_paths",
+    copy_files={
+        "_images/tux.png": "sub/pictures/tux.png",
+    },
+    write_docs={
+        "index.rst": dedent("""
+            .. thumb-image:: _images/tux.png
+                :resize-width: 100
+        """),
+        "sub/sub.rst": dedent("""
+            :orphan:\n
+            .. thumb-image:: pictures/tux.png
+                :resize-width: 100
+        """),
+    },
+)
+def test_doctrees_paths(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
     """TODO.
 
     - Monkeypatch PIL.Image.open() and image.save() to record paths, then run app.build()
