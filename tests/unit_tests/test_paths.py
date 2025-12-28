@@ -70,3 +70,13 @@ def test_efficient(outdir: Path, img_tags: list[element.Tag]):
         "tux.100x118.png",
         "tux.50x59.png",
     ]
+
+
+def test_doctrees_paths():
+    """TODO.
+
+    - Monkeypatch PIL.Image.open() and image.save() to record paths, then run app.build()
+    - Assert doctrees/_thumbs/sub/_images/tux.XxX.png
+    - Probably need to bring conftest.py changes from cache-collision-parallel branch
+    """
+    pytest.skip("TODO")
