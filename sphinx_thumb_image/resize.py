@@ -23,24 +23,22 @@ class ThumbImageResize:
     THUMBS_SUBDIR = "_thumbs"
 
     @classmethod
-    def resize(cls, doctree_source_parent: Path, node_uri: Path, request: ThumbNodeRequest, thumbs_dir: Path) -> Path:
+    def resize(cls, source: Path, target_dir: Path, request: ThumbNodeRequest) -> Path:
         """Resize one image.
 
         Output image saved with the same relative path as the source image but in the thumbs directory.
 
-        :param doctree_source_parent: Parent directory of the document's path.
-        :param node_uri: Relative path to the image node, from the document's path.
+        :param source: TODO
+        :param target_dir: TODO
         :param request: Image node's extension request object.
-        :param thumbs_dir: Directory to write thumbnails to.
 
         :returns: Path to the output image.
         """
-        source = doctree_source_parent / node_uri
         with PIL.Image.open(source) as image:
             image.thumbnail((request.width or image.size[0], request.height or image.size[1]))
             thumb_file_name = f"{source.stem}.{image.size[0]}x{image.size[1]}{source.suffix}"
-            target = thumbs_dir / node_uri.parent / thumb_file_name
-            target.parent.mkdir(exist_ok=True)
+            target = target_dir / thumb_file_name
+            target.parent.mkdir(exist_ok=True, parents=True)
             image.save(target)
         return target
 
@@ -56,8 +54,11 @@ class ThumbImageResize:
         thumbs_dir = app.env.doctreedir / cls.THUMBS_SUBDIR
         thumbs_dir.mkdir(exist_ok=True)
         doctree_source = Path(doctree["source"])
+        doctree_subdir = doctree_source.parent.relative_to(app.srcdir)
         for node in doctree.findall(lambda n: ThumbNodeRequest.KEY in n):
             request: ThumbNodeRequest = node[ThumbNodeRequest.KEY]
             node_uri = Path(node["uri"])
-            target = cls.resize(doctree_source.parent, node_uri, request, thumbs_dir)
+            source = doctree_source.parent / node_uri
+            target_dir = thumbs_dir / doctree_subdir / node_uri.parent
+            target = cls.resize(source, target_dir, request)
             node["uri"] = relpath(target, start=doctree_source.parent)

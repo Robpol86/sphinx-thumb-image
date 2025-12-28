@@ -129,7 +129,6 @@ def test_doctrees_paths(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
         Path("_images/tux.png"),
         Path("sub/pictures/tux.png"),
     ]
-    pytest.skip("TODO fix bug first")
     assert save_paths == [
         Path("_build/doctrees/_thumbs/_images/tux.100x118.png"),
         Path("_build/doctrees/_thumbs/sub/pictures/tux.100x118.png"),
