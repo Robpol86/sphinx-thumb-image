@@ -9,6 +9,7 @@ TODO::
 from pathlib import Path
 from textwrap import dedent
 
+import PIL.Image
 import pytest
 from bs4 import element
 from sphinx.testing.util import SphinxTestApp
@@ -99,4 +100,22 @@ def test_doctrees_paths(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
     - Assert doctrees/_thumbs/sub/_images/tux.XxX.png
     - Probably need to bring conftest.py changes from cache-collision-parallel branch
     """
+    open_paths = []
+    save_paths = []
+
+    # Patch open.
+    orig_pil_image_open = PIL.Image.open
+    def spy_pil_open(path, *args, **kwargs):
+        open_paths.append(path)
+        return orig_pil_image_open(path, *args, **kwargs)
+    monkeypatch.setattr(PIL.Image, "open", spy_pil_open)
+
+    # Patch save.
+    orig_pil_image_save = PIL.Image.Image.save
+    def spy_pil_save(self, path, *args, **kwargs):
+        save_paths.append(path)
+        return orig_pil_image_save(self, path, *args, **kwargs)
+    monkeypatch.setattr(PIL.Image.Image, "save", spy_pil_save)
+
+    # TODO.
     pytest.skip("TODO")
