@@ -12,6 +12,7 @@ from pathlib import Path
 
 import PIL.Image
 from docutils.nodes import document
+from portalocker import Lock, LockException
 from sphinx.application import Sphinx
 
 from sphinx_thumb_image.lib import ThumbNodeRequest
@@ -51,11 +52,17 @@ class ThumbImageResize:
             if target.exists():
                 append(app.builder.outdir, f"EXISTS {target}")
                 return target
-            # TODO get lock
-            # TODO if lock failed return target
             target.parent.mkdir(exist_ok=True, parents=True)
-            image.save(target)
-            # TODO release lock
+            lock_file = target.parent / f"{target.name}.lock"
+            try:
+                with Lock(lock_file, timeout=0):
+                    if target.exists():
+                        append(app.builder.outdir, f"RACE {target}")
+                        return target
+                    image.save(target)
+            except LockException:
+                append(app.builder.outdir, f"LOCKEXCEPTION {target}")
+                return target
         append(app.builder.outdir, f"WROTE {target}")
         return target
 
