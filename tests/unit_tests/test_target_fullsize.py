@@ -1,5 +1,7 @@
 """TODO."""
 
+from pathlib import Path
+
 import pytest
 from bs4 import element
 
@@ -47,6 +49,6 @@ from bs4 import element
     ids=lambda param: param,  # TODO
 )
 @pytest.mark.sphinx("html", testroot="defaults", srcdir="test_target_original")
-def test_target_original(img_tags: list[element.Tag], expected: list[int, int]):
+def test_target_original(outdir: Path, img_tags: list[element.Tag], expected: list[int, int]):
     """TODO."""
-    pytest.skip("TODO")
+    pytest.skip("TODO assert listdir")
