@@ -94,12 +94,7 @@ def test_efficient(outdir: Path, img_tags: list[element.Tag]):
     },
 )
 def test_doctrees_paths(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
-    """TODO.
-
-    - Monkeypatch PIL.Image.open() and image.save() to record paths, then run app.build()
-    - Assert doctrees/_thumbs/sub/_images/tux.XxX.png
-    - Probably need to bring conftest.py changes from cache-collision-parallel branch
-    """
+    """Confirm resized image paths keep their full relative path to srcdir to prevent collisions."""
     open_paths = []
     save_paths = []
 

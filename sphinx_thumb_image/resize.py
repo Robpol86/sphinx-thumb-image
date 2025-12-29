@@ -28,8 +28,8 @@ class ThumbImageResize:
 
         Output image saved with the same relative path as the source image but in the thumbs directory.
 
-        :param source: TODO
-        :param target_dir: TODO
+        :param source: Path to image file to resize.
+        :param target_dir: Path to directory to write resized output image to.
         :param request: Image node's extension request object.
 
         :returns: Path to the output image.
