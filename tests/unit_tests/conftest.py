@@ -1,5 +1,6 @@
 """pytest fixtures."""
 
+import shutil
 from pathlib import Path
 
 import pytest
@@ -21,11 +22,19 @@ def _app_params(app_params, request: pytest.FixtureRequest):
     app_params.kwargs["exception_on_warning"] = True
     app_params.kwargs["warningiserror"] = True
     app_params.kwargs["freshenv"] = True
-    srcdir = app_params.kwargs["srcdir"]
+    srcdir: Path = app_params.kwargs["srcdir"]
+    # Implement copy_files.
+    for copy_files in (app_params.kwargs.get("copy_files", {}), getattr(request, "param", {}).get("copy_files", {})):
+        for copy_from, copy_to in copy_files.items():
+            source: Path = srcdir / copy_from
+            target: Path = srcdir / copy_to
+            target.parent.mkdir(exist_ok=True, parents=True)
+            shutil.copyfile(source, target)
     # Implement write_docs.
     for write_docs in (app_params.kwargs.get("write_docs", {}), getattr(request, "param", {}).get("write_docs", {})):
         for path, contents in write_docs.items():
-            (srcdir / path).write_text(contents, encoding="utf8")
+            target: Path = srcdir / path
+            target.write_text(contents, encoding="utf8")
     # Implement confoverrides.
     if hasattr(request, "param") and "confoverrides" in request.param:
         for key, value in request.param["confoverrides"].items():
