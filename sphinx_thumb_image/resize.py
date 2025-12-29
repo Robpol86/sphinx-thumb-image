@@ -47,9 +47,13 @@ class ThumbImageResize:
             image.thumbnail((request.width or image.size[0], request.height or image.size[1]))
             thumb_file_name = f"{source.stem}.{image.size[0]}x{image.size[1]}{source.suffix}"
             target = target_dir / thumb_file_name
+            # TODO if file exists return target
+            # TODO get lock
+            # TODO if lock failed return target
             append(app.builder.outdir, f"TARGET {target}")
             target.parent.mkdir(exist_ok=True, parents=True)
             image.save(target)
+            # TODO release lock
         append(app.builder.outdir, f"DONE {target}")
         return target
 
