@@ -18,20 +18,13 @@ from sphinx.application import Sphinx
 from sphinx_thumb_image.lib import ThumbNodeRequest
 
 
-def append(outdir: Path, msg: str):
-    """TODO remove."""
-    log_file: Path = outdir / "sphinx-thumb-image-log.log"
-    with log_file.open("a") as f:
-        f.write(msg + "\n")
-
-
 class ThumbImageResize:
     """Resize images."""
 
     THUMBS_SUBDIR = "_thumbs"
 
     @classmethod
-    def resize(cls, source: Path, target_dir: Path, request: ThumbNodeRequest, app: Sphinx) -> Path:
+    def resize(cls, source: Path, target_dir: Path, request: ThumbNodeRequest) -> Path:
         """Resize one image.
 
         Output image saved with the same relative path as the source image but in the thumbs directory.
@@ -39,31 +32,24 @@ class ThumbImageResize:
         :param source: Path to image file to resize.
         :param target_dir: Path to directory to write resized output image to.
         :param request: Image node's extension request object.
-        :param app: TODO REMOVE
 
         :returns: Path to the output image.
         """
-        append(app.builder.outdir, f"SOURCE {source}")
         with PIL.Image.open(source) as image:
             image.thumbnail((request.width or image.size[0], request.height or image.size[1]))
             thumb_file_name = f"{source.stem}.{image.size[0]}x{image.size[1]}{source.suffix}"
             target = target_dir / thumb_file_name
-            append(app.builder.outdir, f"TARGET {target}")
             if target.exists():
-                append(app.builder.outdir, f"EXISTS {target}")
                 return target
             target.parent.mkdir(exist_ok=True, parents=True)
             lock_file = target.parent / f"{target.name}.lock"
             try:
                 with Lock(lock_file, timeout=0):
                     if target.exists():
-                        append(app.builder.outdir, f"RACE {target}")
                         return target
                     image.save(target)
             except LockException:
-                append(app.builder.outdir, f"LOCKEXCEPTION {target}")
                 return target
-        append(app.builder.outdir, f"WROTE {target}")
         return target
 
     @classmethod
@@ -75,7 +61,6 @@ class ThumbImageResize:
         :param app: Sphinx application object.
         :param doctree: Tree of docutils nodes.
         """
-        append(app.builder.outdir, f"START START START START START START {doctree['source']}")
         thumbs_dir = app.env.doctreedir / cls.THUMBS_SUBDIR
         thumbs_dir.mkdir(exist_ok=True)
         doctree_source = Path(doctree["source"])
@@ -85,6 +70,5 @@ class ThumbImageResize:
             node_uri = Path(node["uri"])
             source = doctree_source.parent / node_uri
             target_dir = thumbs_dir / doctree_subdir / node_uri.parent
-            target = cls.resize(source, target_dir, request, app)
+            target = cls.resize(source, target_dir, request)
             node["uri"] = relpath(target, start=doctree_source.parent)
-        append(app.builder.outdir, f"END END END END END END END END END END {doctree['source']}")
