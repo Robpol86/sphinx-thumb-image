@@ -51,4 +51,4 @@ from bs4 import element
 @pytest.mark.sphinx("html", testroot="defaults", srcdir="test_target_original")
 def test_target_original(outdir: Path, img_tags: list[element.Tag], expected: list[int, int]):
     """TODO."""
-    pytest.skip("TODO assert listdir")
+    pytest.skip("TODO assert listdir")  # TODO TDD first, then uncomment to confirm :target: works, then implement.
