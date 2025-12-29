@@ -1,18 +1,13 @@
-"""Image resizing module.
-
-TODO::
-- Log
-- Cache
-- Collisions
-- Parallel
-"""
+"""Image resizing module."""
 
 from os.path import relpath
 from pathlib import Path
 
 import PIL.Image
 from docutils.nodes import document
+from portalocker import Lock, LockException
 from sphinx.application import Sphinx
+from sphinx.util import logging
 
 from sphinx_thumb_image.lib import ThumbNodeRequest
 
@@ -34,12 +29,25 @@ class ThumbImageResize:
 
         :returns: Path to the output image.
         """
+        log = logging.getLogger(__name__)
         with PIL.Image.open(source) as image:
-            image.thumbnail((request.width or image.size[0], request.height or image.size[1]))
-            thumb_file_name = f"{source.stem}.{image.size[0]}x{image.size[1]}{source.suffix}"
+            source_size = image.size
+            image.thumbnail((request.width or source_size[0], request.height or source_size[1]))
+            target_size = image.size
+            thumb_file_name = f"{source.stem}.{target_size[0]}x{target_size[1]}{source.suffix}"
             target = target_dir / thumb_file_name
+            if target.exists():
+                return target
             target.parent.mkdir(exist_ok=True, parents=True)
-            image.save(target)
+            lock_file = target.parent / f"{target.name}.lock"
+            try:
+                with Lock(lock_file, timeout=0):
+                    if target.exists():
+                        return target
+                    log.debug(f"resizing {source} ({source_size[0]}x{source_size[1]}) to {target}")
+                    image.save(target)
+            except LockException:
+                return target
         return target
 
     @classmethod

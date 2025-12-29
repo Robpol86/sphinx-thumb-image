@@ -30,7 +30,7 @@ def setup(app: Sphinx) -> dict[str, str]:
     app.add_directive("thumb-figure", ThumbFigure)
     app.connect("doctree-read", ThumbImageResize.resize_images_in_document, priority=499)
     return {
-        "parallel_read_safe": False,  # TODO
-        "parallel_write_safe": False,  # TODO
+        "parallel_read_safe": True,
+        "parallel_write_safe": True,
         "version": __version__,
     }

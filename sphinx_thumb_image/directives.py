@@ -3,7 +3,6 @@
 TODO::
 * Support pdf and non-html builders such as pdf, epub, etc.
 * If source image <= thumb size: still compress, unless 100% then noop and link to fullsize
-* Support parallel resizing, use lock files (one image may be referenced by multiple pages)
 * thumb-image directive
     * Default scales down to default width
     * :thumb_width: 700px (unitless == px, no other units supported)
@@ -15,10 +14,8 @@ TODO::
 * Thumb filename:
     * /_images/dog.jpg -> /_images/dog.th700.jpg [quality collision: dog.th700.2.jpg]
     * /posts/2025-11-23/cat.jpg -> /posts/2025-11-23/cat.th700.jpg
-* Space saving: don't write fullsize image to _build if not referenced
 * config and option for resample algorithm (nearest, bilinear, bicubic, lanczos)
 * Handle smaller than thumb images.
-* Investigate transformer approach. Can all thumb file paths be determined before multiprocessed resampling?
 """
 
 from docutils import nodes
