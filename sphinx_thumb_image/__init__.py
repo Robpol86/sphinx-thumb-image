@@ -8,6 +8,7 @@ https://pypi.org/project/sphinx-thumb-image
 """
 
 from sphinx.application import Sphinx
+from sphinx.builders import Builder
 
 from sphinx_thumb_image.directives import ThumbFigure, ThumbImage
 from sphinx_thumb_image.resize import ThumbImageResize
@@ -15,6 +16,12 @@ from sphinx_thumb_image.resize import ThumbImageResize
 __author__ = "@Robpol86"
 __license__ = "BSD-2-Clause"
 __version__ = "0.0.1"
+
+
+def todo_write_started(app: Sphinx, builder: Builder):
+    """TODO."""
+    # builder.images.update({'_images/tux.png': 'tux.png'})
+    pass  # TODO import pdb; pdb.set_trace()
 
 
 def setup(app: Sphinx) -> dict[str, str]:
@@ -30,6 +37,7 @@ def setup(app: Sphinx) -> dict[str, str]:
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)
     app.connect("doctree-read", ThumbImageResize.resize_images_in_document, priority=499)
+    app.connect("write-started", todo_write_started)
     return {
         "parallel_read_safe": True,
         "parallel_write_safe": True,
