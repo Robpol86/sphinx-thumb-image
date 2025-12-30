@@ -1,29 +1,34 @@
 """TODO."""
 
 from pathlib import Path
+from typing import Optional
 
 import pytest
 from bs4 import element
 
 
 @pytest.mark.parametrize(
-    "app_params,expected",
+    "app_params,expected_href,expected_files",
     [
         (
             {"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :target: google.com"}},
             "google.com",
+            ["tux.100x118.png"],
         ),
         (
             {"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :target: google.com\n  :target-fullsize:"}},
             "_images/tux.png",
+            ["tux.100x118.png", "tux.png"],
         ),
         (
             {"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :target-fullsize:"}},
             "_images/tux.png",
+            ["tux.100x118.png", "tux.png"],
         ),
         (
             {"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png"}},
             None,
+            ["tux.100x118.png"],
         ),
         (
             {
@@ -31,12 +36,13 @@ from bs4 import element
                 "confoverrides": {"thumb_image_target_fullsize": True},
             },
             "_images/tux.png",
+            ["tux.100x118.png", "tux.png"],
         ),
     ],
     indirect=["app_params"],
-    ids=lambda param: param,  # TODO
+    ids=lambda param: str(param) if isinstance(param, list) else param,
 )
 @pytest.mark.sphinx("html", testroot="defaults", confoverrides={"thumb_image_resize_width": 100})
-def test_target_fullsize(outdir: Path, img_tags: list[element.Tag], expected: list[int, int]):
+def test_target_fullsize(outdir: Path, img_tags: list[element.Tag], expected_href: Optional[str], expected_files: list[str]):
     """TODO."""
     pytest.skip("TODO assert listdir")  # TODO TDD first, then uncomment to confirm :target: works, then implement.
