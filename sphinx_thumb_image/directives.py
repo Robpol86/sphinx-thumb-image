@@ -89,4 +89,9 @@ class ThumbFigure(Figure, ThumbCommon):
 
     def run(self) -> list[nodes.Element]:
         """Entrypoint."""
-        return self._ThumbCommon__add_request(super().run())
+        config = self.state.document.settings.env.config
+        target_fullsize = True if "target-fullsize" in self.options else not not config["thumb_image_target_fullsize"]
+        if target_fullsize:
+            # TODO move to own method.
+            self.options["target"] = self.arguments[0]
+        return self._ThumbCommon__add_request(super().run(), target_fullsize)
