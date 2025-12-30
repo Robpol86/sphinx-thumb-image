@@ -33,10 +33,11 @@ class ThumbCommon(Image):
     __option_spec["resize-height"] = __option_spec["resize-width"]
     __option_spec["target-fullsize"] = directives.flag
 
-    def __add_request(self, sphinx_nodes: list[nodes.Element]) -> list[nodes.Element]:
+    def __add_request(self, sphinx_nodes: list[nodes.Element], target_fullsize: bool) -> list[nodes.Element]:
         """Build and add a ThumbRequest to the image node.
 
         :param sphinx_nodes: List of nodes returned by super().run(), one of which contains an image node to be modified.
+        :param target_fullsize: TODO
 
         :return: The same node list as the input with an annotated image node.
         """
@@ -57,11 +58,6 @@ class ThumbCommon(Image):
                 # User has not provided the width/height.
                 raise self.error('Error in %r directive: "resize-width" option is missing.' % self.name)
 
-        # Read target-fullsize.
-        target_fullsize = True if "target-fullsize" in self.options else not not config["thumb_image_target_fullsize"]
-        if target_fullsize:
-            self.options["target"] = self.arguments[0]
-
         # Add request to the node.
         request = ThumbNodeRequest(width, height, target_fullsize)
         for node in sphinx_nodes:
@@ -78,7 +74,12 @@ class ThumbImage(ThumbCommon):
 
     def run(self) -> list[nodes.Element]:
         """Entrypoint."""
-        return self._ThumbCommon__add_request(super().run())
+        config = self.state.document.settings.env.config
+        target_fullsize = True if "target-fullsize" in self.options else not not config["thumb_image_target_fullsize"]
+        if target_fullsize:
+            # TODO move to own method.
+            self.options["target"] = self.arguments[0]
+        return self._ThumbCommon__add_request(super().run(), target_fullsize)
 
 
 class ThumbFigure(Figure, ThumbCommon):
