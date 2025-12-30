@@ -59,6 +59,8 @@ class ThumbCommon(Image):
 
         # Read target-fullsize.
         target_fullsize = True if "target-fullsize" in self.options else not not config["thumb_image_target_fullsize"]
+        if target_fullsize:
+            self.options["target"] = self.arguments[0]
 
         # Add request to the node.
         request = ThumbNodeRequest(width, height, target_fullsize)

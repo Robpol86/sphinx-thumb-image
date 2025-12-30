@@ -68,5 +68,14 @@ class ThumbImageResize:
             node_uri = Path(node["uri"])
             source = doctree_source.parent / node_uri
             target_dir = thumbs_dir / doctree_subdir / node_uri.parent
+            # Keep fullsize image in output directory?
+            keep_fullsize = request.target_fullsize
+            if keep_fullsize:
+                docname = app.env.docname
+                imgpath = str(doctree_subdir / node_uri)
+                app.env.dependencies[docname].add(imgpath)
+                app.env.images.add_file(docname, imgpath)
+            # Resize.
             target = cls.resize(source, target_dir, request)
+            # Update URI to point to resized file.
             node["uri"] = relpath(target, start=doctree_source.parent)

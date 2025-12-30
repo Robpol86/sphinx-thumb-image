@@ -5,6 +5,7 @@ from typing import Optional
 
 import pytest
 from bs4 import element
+from sphinx.testing.util import SphinxTestApp
 
 
 @pytest.mark.parametrize(
@@ -43,7 +44,9 @@ from bs4 import element
     ids=lambda param: str(param) if isinstance(param, list) else param,
 )
 @pytest.mark.sphinx("html", testroot="defaults", confoverrides={"thumb_image_resize_width": 100})
-def test_target_fullsize(outdir: Path, img_tags: list[element.Tag], expected_href: Optional[str], expected_files: list[str]):
+def test_target_fullsize(
+    outdir: Path, img_tags: list[element.Tag], expected_href: Optional[str], expected_files: list[str], app: SphinxTestApp
+):
     """TODO."""
     # Confirm href.
     img_hrefs = [t.parent.get("href") for t in img_tags]
