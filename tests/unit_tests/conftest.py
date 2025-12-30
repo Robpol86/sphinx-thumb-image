@@ -1,5 +1,6 @@
 """pytest fixtures."""
 
+import re
 import shutil
 from pathlib import Path
 
@@ -8,6 +9,16 @@ from bs4 import BeautifulSoup, element
 from sphinx.testing.util import SphinxTestApp
 
 pytest_plugins = ("sphinx.testing.fixtures",)  # pylint: disable=invalid-name
+
+
+def pytest_collection_modifyitems(items: list[pytest.Item]):
+    """Modify tests before they run."""
+    # Set srcdir to the test name so each test has a unique copy of test Sphinx docs.
+    for item in items:
+        mark_sphinx = item.get_closest_marker("sphinx")
+        if mark_sphinx:
+            if "srcdir" not in mark_sphinx.kwargs:
+                mark_sphinx.kwargs["srcdir"] = re.sub(r"[^A-Za-z0-9_-]", "_", item.nodeid)
 
 
 @pytest.fixture(scope="session")
