@@ -75,6 +75,7 @@ class ThumbImageResize:
                 imgpath = str(doctree_subdir / node_uri)
                 app.env.dependencies[docname].add(imgpath)
                 app.env.images.add_file(docname, imgpath)
+                # TODO not working
             # Resize.
             target = cls.resize(source, target_dir, request)
             # Update URI to point to resized file.
