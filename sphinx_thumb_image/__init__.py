@@ -21,6 +21,8 @@ __version__ = "0.0.1"
 def todo_write_started(app: Sphinx, builder: Builder):
     """TODO."""
     # builder.images.update({'_images/tux.png': 'tux.png'})
+    # TODO but then I need to deal with collisions, etc.
+    # TODO maybe a hidden image node and not use this api?
     pass  # TODO import pdb; pdb.set_trace()
 
 
