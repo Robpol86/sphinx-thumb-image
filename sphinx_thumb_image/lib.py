@@ -13,5 +13,6 @@ class ThumbNodeRequest:
 
     width: Optional[int]
     height: Optional[int]
+    target_fullsize: bool
 
     KEY: ClassVar[str] = "thumb-request"

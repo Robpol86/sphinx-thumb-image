@@ -44,24 +44,24 @@ class ThumbCommon(Image):
 
         # Read width/height from directive options first.
         if "resize-width" in self.options or "resize-height" in self.options:
-            request = ThumbNodeRequest(
-                width=self.options.get("resize-width", None),
-                height=self.options.get("resize-height", None),
-            )
+            width = self.options.get("resize-width", None)
+            height = self.options.get("resize-height", None)
         else:
             # Read width/height from Sphinx config.
             thumb_image_resize_width = config["thumb_image_resize_width"]
             thumb_image_resize_height = config["thumb_image_resize_height"]
             if thumb_image_resize_width is not None or thumb_image_resize_height is not None:
-                request = ThumbNodeRequest(
-                    width=thumb_image_resize_width,
-                    height=thumb_image_resize_height,
-                )
+                width = thumb_image_resize_width
+                height = thumb_image_resize_height
             else:
                 # User has not provided the width/height.
                 raise self.error('Error in %r directive: "resize-width" option is missing.' % self.name)
 
+        # Read target-fullsize.
+        target_fullsize = True if "target-fullsize" in self.options else not not config["thumb_image_target_fullsize"]
+
         # Add request to the node.
+        request = ThumbNodeRequest(width, height, target_fullsize)
         for node in sphinx_nodes:
             for image_node in node.findall(nodes.image):
                 image_node[request.KEY] = request
