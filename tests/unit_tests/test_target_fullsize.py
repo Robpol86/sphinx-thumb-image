@@ -45,4 +45,9 @@ from bs4 import element
 @pytest.mark.sphinx("html", testroot="defaults", confoverrides={"thumb_image_resize_width": 100})
 def test_target_fullsize(outdir: Path, img_tags: list[element.Tag], expected_href: Optional[str], expected_files: list[str]):
     """TODO."""
-    pytest.skip("TODO assert listdir")  # TODO TDD first, then uncomment to confirm :target: works, then implement.
+    # Confirm href.
+    img_hrefs = [t.parent.get("href") for t in img_tags]
+    pytest.skip("TODO implement")
+    assert img_hrefs == [expected_href]
+    # Confirm presence of original image.
+    assert sorted(f.name for f in (outdir / "_images").iterdir()) == expected_files
