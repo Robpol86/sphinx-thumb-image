@@ -10,27 +10,19 @@ from bs4 import element
     "app_params,expected",
     [
         (
-            {
-                "write_docs": {"index.rst": ".. thumb-image:: _images/tux.png"},
-            },
+            {"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png"}},
             None,
         ),
         (
-            {
-                "write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :target-fullsize:"},
-            },
+            {"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :target-fullsize:"}},
             "_images/tux.png",
         ),
         (
-            {
-                "write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :target: google.com"},
-            },
+            {"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :target: google.com"}},
             "google.com",
         ),
         (
-            {
-                "write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :target: google.com\n  :target-fullsize:"},
-            },
+            {"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png\n  :target: google.com\n  :target-fullsize:"}},
             "_images/tux.png",
         ),
         (
