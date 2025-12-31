@@ -22,8 +22,17 @@ def todo_write_started(app: Sphinx, builder: Builder):
     """TODO."""
     # builder.images.update({'_images/tux.png': 'tux.png'})
     # TODO but then I need to deal with collisions, etc.
-    # TODO maybe a hidden image node and not use this api?
-    pass  # TODO import pdb; pdb.set_trace()
+    import pdb; pdb.set_trace()
+
+
+def todo_doctree_resolved(app: Sphinx, doctree, docname: str):
+    """TODO."""
+    import pdb; pdb.set_trace()
+
+
+def todo_missing_reference(app: Sphinx, env, node, contnode):
+    """TODO."""
+    import pdb; pdb.set_trace()
 
 
 def setup(app: Sphinx) -> dict[str, str]:
@@ -39,7 +48,9 @@ def setup(app: Sphinx) -> dict[str, str]:
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)
     app.connect("doctree-read", ThumbImageResize.resize_images_in_document, priority=499)
-    app.connect("write-started", todo_write_started)
+    # app.connect("write-started", todo_write_started)
+    # app.connect("doctree-resolved", todo_doctree_resolved)
+    # app.connect("missing-reference", todo_missing_reference)
     return {
         "parallel_read_safe": True,
         "parallel_write_safe": True,
