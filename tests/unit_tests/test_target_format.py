@@ -25,7 +25,7 @@ def write_build_read(app: SphinxTestApp, index_rst_contents: str) -> list[str]:
     testroot="defaults",
     confoverrides={"thumb_image_resize_width": 100, "thumb_image_target_format_substitutions": {"branch": "mock_branch"}},
 )
-def test_target_format(app: SphinxTestApp):
+def test_target_format(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
     """TODO."""
     # Just target (control).
     hrefs = write_build_read(
@@ -57,10 +57,9 @@ def test_target_format(app: SphinxTestApp):
         """),
     )
     assert hrefs == [None]
-    pytest.skip("TODO")
 
     # Format via conf.
-    app.confoverride = {"thumb_image_target_format": True}
+    monkeypatch.setattr(app.config, "thumb_image_target_format", True)
     hrefs = write_build_read(
         app,
         dedent(r"""\
@@ -69,7 +68,8 @@ def test_target_format(app: SphinxTestApp):
         """),
     )
     assert hrefs == [r"https://github.com/Robpol86/sphinx-thumb-image/blob/mock_branch/docs/_images/tux.png"]
-    app.confoverride = {}
+    monkeypatch.undo()
+    pytest.skip("TODO")
 
     # Negate conf.
     app.confoverride = {"thumb_image_target_format": True}
