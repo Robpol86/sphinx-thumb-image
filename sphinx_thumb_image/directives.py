@@ -45,6 +45,7 @@ class ThumbCommon(Image):
             return
         # Format.
         substitutions = {
+            "raw_path": self.arguments[0],
             "fullsize_path": self.arguments[0],
         }
         substitutions.update(config["thumb_image_target_format_substitutions"])

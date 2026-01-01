@@ -1,5 +1,6 @@
 """Test the "target-format" directive option."""
 
+from pathlib import Path
 from textwrap import dedent
 
 import pytest
@@ -113,3 +114,29 @@ def test_target_format(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
     )
     assert hrefs == [r"https://localhost"]
     assert 'WARNING: no subtitutions made by "target-format" in "target"' in app.warning.getvalue()
+
+
+@pytest.mark.sphinx(
+    "html",
+    testroot="defaults",
+    confoverrides={"thumb_image_resize_width": 100},
+    copy_files={
+        "_images/tux.png": "sub/pictures/tux.png",
+    },
+    write_docs={
+        "sub/sub.rst": dedent("""
+            :orphan:\n
+            .. thumb-image:: pictures/tux.png
+                :target: https://github.com/Robpol86/sphinx-thumb-image/blob/mock_branch/docs/%(fullsize_path)s
+                :target-format:
+        """),
+    },
+)
+def test_subdir(outdir: Path):
+    """Test path to an iamge in a subdirectory."""
+    sub_html = outdir / "sub" / "sub.html"
+    sub_html_contents = sub_html.read_text(encoding="utf8")
+    sub_html_bs = BeautifulSoup(sub_html_contents, "html.parser")
+    hrefs = [img.parent.get("href") for img in sub_html_bs.find_all("img")]
+    pytest.skip("TODO")
+    assert hrefs == [r"https://github.com/Robpol86/sphinx-thumb-image/blob/mock_branch/docs/sub/pictures/tux.png"]
