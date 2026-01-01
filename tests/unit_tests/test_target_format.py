@@ -102,7 +102,8 @@ def test_target_format(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
     assert hrefs == [r"https://localhost/%(ignore)s/_images/tux.png"]
 
     # Warn on no format.
-    monkeypatch.setattr(app, "exception_on_warning", False)
+    if hasattr(app, "exception_on_warning"):
+        monkeypatch.setattr(app, "exception_on_warning", False)
     monkeypatch.setattr(app, "warningiserror", False)
     app.warning.truncate(0)  # Clear warnings.
     hrefs = write_build_read(
