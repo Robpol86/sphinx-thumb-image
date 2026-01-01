@@ -51,6 +51,10 @@ class ThumbCommon(Image):
         target = self.options["target"]
         for key, value in substitutions.items():
             target = target.replace(f"%({key})s", value)
+        if target == self.options["target"]:
+            return self.state.document.reporter.warning(
+                'no subtitutions made by "target-format" in "target"', line=self.lineno
+            )
         self.options["target"] = target
 
     def __add_request(self, sphinx_nodes: list[nodes.Element]) -> list[nodes.Element]:

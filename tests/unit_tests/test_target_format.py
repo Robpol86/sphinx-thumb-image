@@ -82,7 +82,6 @@ def test_target_format(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
     )
     assert hrefs == [r"https://github.com/Robpol86/sphinx-thumb-image/blob/%(branch)s/docs/%(fullsize_path)s"]
     monkeypatch.undo()
-    pytest.skip("TODO")
 
     # Ignore unknown.
     hrefs = write_build_read(
@@ -96,7 +95,8 @@ def test_target_format(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
     assert hrefs == [r"https://localhost/%(ignore)s/_images/tux.png"]
 
     # Warn on no format.
-    app.warningiserror = False
+    monkeypatch.setattr(app, "warningiserror", False)
+    app.warning.truncate(0)  # Clear warnings.
     hrefs = write_build_read(
         app,
         dedent(r"""\
@@ -106,4 +106,4 @@ def test_target_format(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
         """),
     )
     assert hrefs == [r"https://localhost"]
-    assert app.warnings == ["TODO nothing formatted"]
+    assert 'WARNING: no subtitutions made by "target-format" in "target"' in app.warning.getvalue()
