@@ -44,8 +44,13 @@ class ThumbCommon(Image):
         if "target-format" not in self.options and not config["thumb_image_target_format"]:
             return
         # Format.
+        substitutions = {
+            "fullsize_path": self.arguments[0],
+        }
         target = self.options["target"]
-        self.options["target"] = target.format(a="TODO", b="TODO")
+        for key, value in substitutions.items():
+            target = target.replace(f"%({key})s", value)
+        self.options["target"] = target
 
     def __add_request(self, sphinx_nodes: list[nodes.Element]) -> list[nodes.Element]:
         """Build and add a ThumbRequest to the image node.
