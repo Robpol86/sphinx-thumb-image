@@ -18,6 +18,8 @@ TODO::
 * Handle smaller than thumb images.
 """
 
+from pathlib import Path
+
 from docutils import nodes
 from docutils.parsers.rst import directives
 from docutils.parsers.rst.directives.images import Figure, Image
@@ -44,9 +46,10 @@ class ThumbCommon(Image):
         if "target-format" not in self.options and not config["thumb_image_target_format"]:
             return
         # Format.
+        subdir = Path(self.state.document["source"]).parent.relative_to(self.state.document.settings.env.srcdir)
         substitutions = {
             "raw_path": self.arguments[0],
-            "fullsize_path": self.arguments[0],
+            "fullsize_path": str(subdir / self.arguments[0]),
         }
         substitutions.update(config["thumb_image_target_format_substitutions"])
         target = self.options["target"]

@@ -138,5 +138,4 @@ def test_subdir(outdir: Path):
     sub_html_contents = sub_html.read_text(encoding="utf8")
     sub_html_bs = BeautifulSoup(sub_html_contents, "html.parser")
     hrefs = [img.parent.get("href") for img in sub_html_bs.find_all("img")]
-    pytest.skip("TODO")
     assert hrefs == [r"https://github.com/Robpol86/sphinx-thumb-image/blob/mock_branch/docs/sub/pictures/tux.png"]
