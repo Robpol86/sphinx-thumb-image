@@ -18,7 +18,7 @@ TODO::
 * Handle smaller than thumb images.
 """
 
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -48,7 +48,7 @@ class ThumbCommon(Image):
         # Format.
         doctree_source = Path(self.state.document["source"])
         env = self.state.document.settings.env
-        subdir = doctree_source.parent.relative_to(env.srcdir)
+        subdir = PurePosixPath(doctree_source.parent.relative_to(env.srcdir).as_posix())
         substitutions = {
             "raw_path": self.arguments[0],
             "fullsize_path": str(subdir / self.arguments[0]),
