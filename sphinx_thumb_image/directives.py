@@ -47,6 +47,7 @@ class ThumbCommon(Image):
         substitutions = {
             "fullsize_path": self.arguments[0],
         }
+        substitutions.update(config["thumb_image_target_format_substitutions"])
         target = self.options["target"]
         for key, value in substitutions.items():
             target = target.replace(f"%({key})s", value)

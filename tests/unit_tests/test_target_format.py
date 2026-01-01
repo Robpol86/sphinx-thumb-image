@@ -20,7 +20,11 @@ def write_build_read(app: SphinxTestApp, index_rst_contents: str) -> list[str]:
     return [img.parent.get("href") for img in index_html_bs.find_all("img")]
 
 
-@pytest.mark.sphinx("html", testroot="defaults", confoverrides={"thumb_image_resize_width": 100})
+@pytest.mark.sphinx(
+    "html",
+    testroot="defaults",
+    confoverrides={"thumb_image_resize_width": 100, "thumb_image_target_format_substitutions": {"branch": "mock_branch"}},
+)
 def test_target_format(app: SphinxTestApp):
     """TODO."""
     # Just target (control).
@@ -32,7 +36,6 @@ def test_target_format(app: SphinxTestApp):
         """),
     )
     assert hrefs == [r"https://github.com/Robpol86/sphinx-thumb-image/blob/%(branch)s/docs/%(fullsize_path)s"]
-    pytest.skip("TODO")
 
     # Format via directive.
     hrefs = write_build_read(
@@ -54,6 +57,7 @@ def test_target_format(app: SphinxTestApp):
         """),
     )
     assert hrefs == [None]
+    pytest.skip("TODO")
 
     # Format via conf.
     app.confoverride = {"thumb_image_target_format": True}
