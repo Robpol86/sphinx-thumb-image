@@ -45,6 +45,16 @@ def test_target_format(app: SphinxTestApp):
     )
     assert hrefs == [r"https://github.com/Robpol86/sphinx-thumb-image/blob/mock_branch/docs/_images/tux.png"]
 
+    # Noop.
+    hrefs = write_build_read(
+        app,
+        dedent(r"""\
+            .. thumb-image:: _images/tux.png
+                :target-format:
+        """),
+    )
+    assert hrefs == [None]
+
     # Format via conf.
     app.confoverride = {"thumb_image_target_format": True}
     hrefs = write_build_read(
