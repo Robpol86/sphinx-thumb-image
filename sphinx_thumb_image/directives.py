@@ -35,7 +35,7 @@ class ThumbCommon(Image):
     __option_spec["no-target-format"] = directives.flag
 
     def __format_target(self):
-        """TODO."""
+        """Apply the "target-format" option."""
         if "target" not in self.options:
             return
         if "no-target-format" in self.options:

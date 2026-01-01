@@ -1,4 +1,4 @@
-"""TODO."""
+"""Test the "target-format" directive option."""
 
 from textwrap import dedent
 
@@ -8,7 +8,13 @@ from sphinx.testing.util import SphinxTestApp
 
 
 def write_build_read(app: SphinxTestApp, index_rst_contents: str) -> list[str]:
-    """TODO."""
+    """Overwrite index.rst and build the index.html.
+
+    :param app: Sphinx test app.
+    :param index_rst_contents: Write this to the file.
+
+    :return: Parent a.href for each image in index.html.
+    """
     index_rst = app.srcdir / "index.rst"
     index_html = app.outdir / "index.html"
 
@@ -26,7 +32,7 @@ def write_build_read(app: SphinxTestApp, index_rst_contents: str) -> list[str]:
     confoverrides={"thumb_image_resize_width": 100, "thumb_image_target_format_substitutions": {"branch": "mock_branch"}},
 )
 def test_target_format(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
-    """TODO."""
+    """Test cases for the option."""
     # Just target (control).
     hrefs = write_build_read(
         app,
