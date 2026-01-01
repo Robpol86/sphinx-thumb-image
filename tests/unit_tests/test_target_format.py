@@ -28,10 +28,10 @@ def test_target_format(app: SphinxTestApp):
         app,
         dedent(r"""\
             .. thumb-image:: _images/tux.png
-                :target: https://github.com/Robpol86/sphinx-thumb-image/blob/{branch}/docs/{fullsize_path}
+                :target: https://github.com/Robpol86/sphinx-thumb-image/blob/%(branch)s/docs/%(fullsize_path)s
         """),
     )
-    assert hrefs == [r"https://github.com/Robpol86/sphinx-thumb-image/blob/{branch}/docs/{fullsize_path}"]
+    assert hrefs == [r"https://github.com/Robpol86/sphinx-thumb-image/blob/%(branch)s/docs/%(fullsize_path)s"]
     pytest.skip("TODO")
 
     # Format via directive.
@@ -39,7 +39,7 @@ def test_target_format(app: SphinxTestApp):
         app,
         dedent(r"""\
             .. thumb-image:: _images/tux.png
-                :target: https://github.com/Robpol86/sphinx-thumb-image/blob/{branch}/docs/{fullsize_path}
+                :target: https://github.com/Robpol86/sphinx-thumb-image/blob/%(branch)s/docs/%(fullsize_path)s
                 :target-format:
         """),
     )
@@ -61,7 +61,7 @@ def test_target_format(app: SphinxTestApp):
         app,
         dedent(r"""\
             .. thumb-image:: _images/tux.png
-                :target: https://github.com/Robpol86/sphinx-thumb-image/blob/{branch}/docs/{fullsize_path}
+                :target: https://github.com/Robpol86/sphinx-thumb-image/blob/%(branch)s/docs/%(fullsize_path)s
         """),
     )
     assert hrefs == [r"https://github.com/Robpol86/sphinx-thumb-image/blob/mock_branch/docs/_images/tux.png"]
@@ -73,11 +73,11 @@ def test_target_format(app: SphinxTestApp):
         app,
         dedent(r"""\
             .. thumb-image:: _images/tux.png
-                :target: https://github.com/Robpol86/sphinx-thumb-image/blob/{branch}/docs/{fullsize_path}
+                :target: https://github.com/Robpol86/sphinx-thumb-image/blob/%(branch)s/docs/%(fullsize_path)s
                 :no-target-format:
         """),
     )
-    assert hrefs == [r"https://github.com/Robpol86/sphinx-thumb-image/blob/{branch}/docs/{fullsize_path}"]
+    assert hrefs == [r"https://github.com/Robpol86/sphinx-thumb-image/blob/%(branch)s/docs/%(fullsize_path)s"]
     app.confoverride = {}
 
     # Ignore unknown.
@@ -85,11 +85,11 @@ def test_target_format(app: SphinxTestApp):
         app,
         dedent(r"""\
             .. thumb-image:: _images/tux.png
-                :target: https://localhost/{ignore}/{fullsize_path}
+                :target: https://localhost/%(ignore)s/%(fullsize_path)s
                 :target-format:
         """),
     )
-    assert hrefs == [r"https://localhost/{ignore}/_images/tux.png"]
+    assert hrefs == [r"https://localhost/%(ignore)s/_images/tux.png"]
 
     # Warn on no format.
     app.warningiserror = False
