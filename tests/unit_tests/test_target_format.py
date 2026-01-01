@@ -98,6 +98,7 @@ def test_target_format(app: SphinxTestApp):
         """),
     )
     assert href == r"https://github.com/Robpol86/sphinx-thumb-image/blob/mock_branch/docs/_images/tux.png"
+    app.confoverride = {}
 
     # Negate conf.
     app.confoverride = {"thumb_image_target_format": True}
@@ -110,9 +111,28 @@ def test_target_format(app: SphinxTestApp):
         """),
     )
     assert href == r"https://github.com/Robpol86/sphinx-thumb-image/blob/{branch}/docs/{fullsize_path}"
+    app.confoverride = {}
 
     # Ignore unknown.
-    # TODO
+    href = write_build_read(
+        app,
+        dedent(r"""\
+            .. thumb-image:: _images/tux.png
+                :target: https://localhost/{ignore}/{fullsize_path}
+                :target-format:
+        """),
+    )
+    assert href == r"https://localhost/{ignore}/_images/tux.png"
 
     # Warn on no format.
-    # TODO
+    app.warningiserror = False
+    href = write_build_read(
+        app,
+        dedent(r"""\
+            .. thumb-image:: _images/tux.png
+                :target: https://localhost
+                :target-format:
+        """),
+    )
+    assert href == r"https://localhost"
+    assert app.warnings == ["TODO nothing formatted"]
