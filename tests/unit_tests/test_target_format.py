@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from sphinx.testing.util import SphinxTestApp
 
 
-def write_build_read(app: SphinxTestApp, index_rst_contents: str) -> str:
+def write_build_read(app: SphinxTestApp, index_rst_contents: str) -> list[str]:
     """TODO."""
     index_rst = app.srcdir / "index.rst"
     index_html = app.outdir / "index.html"
@@ -17,68 +17,25 @@ def write_build_read(app: SphinxTestApp, index_rst_contents: str) -> str:
 
     index_html_contents = index_html.read_text(encoding="utf8")
     index_html_bs = BeautifulSoup(index_html_contents, "html.parser")
-    return index_html_bs.find_all("img")[0].parent.get("href")
+    return [img.parent.get("href") for img in index_html_bs.find_all("img")]
 
 
-# @pytest.mark.parametrize(
-#     "app_params,expected",
-#     [
-#         (
-#             {
-#                 "write_docs": {
-#                     "index.rst": dedent(r"""
-#                         .. thumb-image:: _images/tux.png
-#                             :target: https://github.com/Robpol86/sphinx-thumb-image/blob/{branch}/docs/{fullsize_path}
-#                     """),
-#                 }
-#             },
-#             r"https://github.com/Robpol86/sphinx-thumb-image/blob/{branch}/docs/{fullsize_path}",
-#         ),
-#         (
-#             {
-#                 "write_docs": {
-#                     "index.rst": dedent(r"""
-#                         .. thumb-image:: _images/tux.png
-#                             :target: https://github.com/Robpol86/sphinx-thumb-image/blob/{branch}/docs/{fullsize_path}
-#                             :target-format:
-#                     """),
-#                 }
-#             },
-#             "https://github.com/Robpol86/sphinx-thumb-image/blob/mock_branch/docs/_images/tux.png",
-#         ),
-#         (
-#             {
-#                 "write_docs": {
-#                     "index.rst": dedent(r"""
-#                         .. thumb-image:: _images/tux.png
-#                             :target: https://localhost/{ignore}/{fullsize_path}
-#                             :target-format:
-#                     """),
-#                 }
-#             },
-#             "https://github.com/Robpol86/sphinx-thumb-image/blob/mock_branch/docs/_images/tux.png",
-#         ),
-#     ],
-#     indirect=["app_params"],
-#     ids=lambda param: str(param) if isinstance(param, list) else param,
-# )
 @pytest.mark.sphinx("html", testroot="defaults", confoverrides={"thumb_image_resize_width": 100})
 def test_target_format(app: SphinxTestApp):
     """TODO."""
     # Just target (control).
-    href = write_build_read(
+    hrefs = write_build_read(
         app,
         dedent(r"""\
             .. thumb-image:: _images/tux.png
                 :target: https://github.com/Robpol86/sphinx-thumb-image/blob/{branch}/docs/{fullsize_path}
         """),
     )
-    assert href == r"https://github.com/Robpol86/sphinx-thumb-image/blob/{branch}/docs/{fullsize_path}"
-
+    assert hrefs == [r"https://github.com/Robpol86/sphinx-thumb-image/blob/{branch}/docs/{fullsize_path}"]
     pytest.skip("TODO")
 
     # Format via directive.
-    href = write_build_read(
+    hrefs = write_build_read(
         app,
         dedent(r"""\
             .. thumb-image:: _images/tux.png
@@ -86,23 +43,23 @@ def test_target_format(app: SphinxTestApp):
                 :target-format:
         """),
     )
-    assert href == r"https://github.com/Robpol86/sphinx-thumb-image/blob/mock_branch/docs/_images/tux.png"
+    assert hrefs == [r"https://github.com/Robpol86/sphinx-thumb-image/blob/mock_branch/docs/_images/tux.png"]
 
     # Format via conf.
     app.confoverride = {"thumb_image_target_format": True}
-    href = write_build_read(
+    hrefs = write_build_read(
         app,
         dedent(r"""\
             .. thumb-image:: _images/tux.png
                 :target: https://github.com/Robpol86/sphinx-thumb-image/blob/{branch}/docs/{fullsize_path}
         """),
     )
-    assert href == r"https://github.com/Robpol86/sphinx-thumb-image/blob/mock_branch/docs/_images/tux.png"
+    assert hrefs == [r"https://github.com/Robpol86/sphinx-thumb-image/blob/mock_branch/docs/_images/tux.png"]
     app.confoverride = {}
 
     # Negate conf.
     app.confoverride = {"thumb_image_target_format": True}
-    href = write_build_read(
+    hrefs = write_build_read(
         app,
         dedent(r"""\
             .. thumb-image:: _images/tux.png
@@ -110,11 +67,11 @@ def test_target_format(app: SphinxTestApp):
                 :no-target-format:
         """),
     )
-    assert href == r"https://github.com/Robpol86/sphinx-thumb-image/blob/{branch}/docs/{fullsize_path}"
+    assert hrefs == [r"https://github.com/Robpol86/sphinx-thumb-image/blob/{branch}/docs/{fullsize_path}"]
     app.confoverride = {}
 
     # Ignore unknown.
-    href = write_build_read(
+    hrefs = write_build_read(
         app,
         dedent(r"""\
             .. thumb-image:: _images/tux.png
@@ -122,11 +79,11 @@ def test_target_format(app: SphinxTestApp):
                 :target-format:
         """),
     )
-    assert href == r"https://localhost/{ignore}/_images/tux.png"
+    assert hrefs == [r"https://localhost/{ignore}/_images/tux.png"]
 
     # Warn on no format.
     app.warningiserror = False
-    href = write_build_read(
+    hrefs = write_build_read(
         app,
         dedent(r"""\
             .. thumb-image:: _images/tux.png
@@ -134,5 +91,5 @@ def test_target_format(app: SphinxTestApp):
                 :target-format:
         """),
     )
-    assert href == r"https://localhost"
+    assert hrefs == [r"https://localhost"]
     assert app.warnings == ["TODO nothing formatted"]

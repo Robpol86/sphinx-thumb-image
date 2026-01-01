@@ -34,6 +34,19 @@ class ThumbCommon(Image):
     __option_spec["target-format"] = directives.flag
     __option_spec["no-target-format"] = directives.flag
 
+    def __format_target(self):
+        """TODO."""
+        if "target" not in self.options:
+            return
+        if "no-target-format" in self.options:
+            return
+        config = self.state.document.settings.env.config
+        if "target-format" not in self.options and not config["thumb_image_target_format"]:
+            return
+        # Format.
+        target = self.options["target"]
+        self.options["target"] = target.format(a="TODO", b="TODO")
+
     def __add_request(self, sphinx_nodes: list[nodes.Element]) -> list[nodes.Element]:
         """Build and add a ThumbRequest to the image node.
 
@@ -77,6 +90,7 @@ class ThumbImage(ThumbCommon):
 
     def run(self) -> list[nodes.Element]:
         """Entrypoint."""
+        self._ThumbCommon__format_target()
         return self._ThumbCommon__add_request(super().run())
 
 
@@ -87,4 +101,5 @@ class ThumbFigure(Figure, ThumbCommon):
 
     def run(self) -> list[nodes.Element]:
         """Entrypoint."""
+        self._ThumbCommon__format_target()
         return self._ThumbCommon__add_request(super().run())
