@@ -46,4 +46,4 @@ def test_not_a_file(app: SphinxTestApp, img_tags: list[element.Tag]):
     assert img_src == ["_images/_images"]
     # Confirm warning was emitted.
     warnings = app.warning.getvalue()
-    assert "[Errno 21] Is a directory" in warnings
+    assert "[Errno 21] Is a directory" in warnings or "[Errno 13] Permission denied" in warnings  # On Windows it's error 13.
