@@ -1,8 +1,4 @@
-"""Test image scaling in the directive with dimensions specified in directive options and Sphinx configs.
-
-TODO::
-* If no thumbs are used (low res) then _thumbs shouldn't exist.
-"""
+"""Test image scaling in the directive with dimensions specified in directive options and Sphinx configs."""
 
 import re
 from pathlib import Path
