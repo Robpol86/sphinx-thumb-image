@@ -18,6 +18,8 @@ TODO::
 * Handle smaller than thumb images.
 """
 
+from pathlib import Path, PurePosixPath
+
 from docutils import nodes
 from docutils.parsers.rst import directives
 from docutils.parsers.rst.directives.images import Figure, Image
@@ -31,6 +33,35 @@ class ThumbCommon(Image):
     __option_spec = {}
     __option_spec["resize-width"] = lambda arg: directives.nonnegative_int(arg.replace("px", ""))
     __option_spec["resize-height"] = __option_spec["resize-width"]
+    __option_spec["target-format"] = directives.flag
+    __option_spec["no-target-format"] = directives.flag
+
+    def __format_target(self):
+        """Apply the "target-format" option."""
+        if "target" not in self.options:
+            return
+        if "no-target-format" in self.options:
+            return
+        config = self.state.document.settings.env.config
+        if "target-format" not in self.options and not config["thumb_image_target_format"]:
+            return
+        # Build substitutions.
+        doctree_source = Path(self.state.document["source"])
+        env = self.state.document.settings.env
+        subdir = PurePosixPath(doctree_source.parent.relative_to(env.srcdir).as_posix())
+        substitutions = {
+            "raw_path": self.arguments[0],
+            "fullsize_path": str(subdir / self.arguments[0]),
+        }
+        substitutions.update(config["thumb_image_target_format_substitutions"])
+        # Format.
+        target = self.options["target"]
+        for key, value in substitutions.items():
+            target = target.replace(f"%({key})s", value)
+        if target == self.options["target"]:
+            self.state.document.reporter.warning('no subtitutions made by "target-format" in "target"', line=self.lineno)
+        else:
+            self.options["target"] = target
 
     def __add_request(self, sphinx_nodes: list[nodes.Element]) -> list[nodes.Element]:
         """Build and add a ThumbRequest to the image node.
@@ -75,6 +106,7 @@ class ThumbImage(ThumbCommon):
 
     def run(self) -> list[nodes.Element]:
         """Entrypoint."""
+        self._ThumbCommon__format_target()
         return self._ThumbCommon__add_request(super().run())
 
 
@@ -85,4 +117,5 @@ class ThumbFigure(Figure, ThumbCommon):
 
     def run(self) -> list[nodes.Element]:
         """Entrypoint."""
+        self._ThumbCommon__format_target()
         return self._ThumbCommon__add_request(super().run())
