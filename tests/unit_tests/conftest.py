@@ -35,8 +35,8 @@ def _app_params(app_params, request: pytest.FixtureRequest):
     app_params.kwargs.setdefault("freshenv", True)
     srcdir: Path = app_params.kwargs["srcdir"]
     # Implement copy_files.
-    for copy_files in (app_params.kwargs.get("copy_files", {}), getattr(request, "param", {}).get("copy_files", {})):
-        for copy_from, copy_to in copy_files.items():
+    for copy_files in (app_params.kwargs.get("copy_files", []), getattr(request, "param", {}).get("copy_files", [])):
+        for copy_from, copy_to in copy_files:
             source: Path = srcdir / copy_from
             target: Path = srcdir / copy_to
             target.parent.mkdir(exist_ok=True, parents=True)
