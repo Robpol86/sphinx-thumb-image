@@ -80,11 +80,7 @@ def test_missing_width(app: SphinxTestApp):
 )
 @pytest.mark.sphinx("html", testroot="defaults")
 def test_units(app: SphinxTestApp, expected: Optional[Exception]):
-    """Test supported and unsupported scaling units.
-
-    TODO::
-    - Test height/option/config permutations.
-    """
+    """Test supported and unsupported scaling units."""
     if expected is None:
         app.build()
         return
