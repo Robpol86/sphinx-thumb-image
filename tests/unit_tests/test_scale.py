@@ -92,3 +92,26 @@ def test_units(app: SphinxTestApp, expected: Optional[Exception]):
     with pytest.raises(Exception) as exc:
         app.build()
     assert "invalid option value" in exc.value.args[0]
+
+
+@pytest.mark.sphinx(
+    "html",
+    testroot="defaults",
+    warningiserror=False,
+    exception_on_warning=False,
+    write_docs={
+        "index.rst": ".. thumb-image:: _images/tux.png\n  :resize-width: 10000",
+    },
+)
+def test_scale_up(outdir: Path, app: SphinxTestApp, img_tags: list[element.Tag]):
+    """Test when user specifies a thumbnail size that's not smaller than the source image."""
+    # Confirm img src.
+    img_src = [t["src"] for t in img_tags]
+    assert img_src == ["_images/tux.265x314.png"]
+    # Confirm image file's new dimensions.
+    image_path = outdir / img_src[0]
+    with PIL.Image.open(image_path) as image:
+        assert image.size[0] == 265  # noqa PLR2004
+        assert image.size[1] == 314  # noqa PLR2004
+    # Confirm warning was emitted.
+    assert "WARNING: requested thumbnail size is not smaller than source image" in app.warning.getvalue()
