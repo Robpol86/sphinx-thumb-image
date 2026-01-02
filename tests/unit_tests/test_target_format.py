@@ -130,9 +130,9 @@ def test_target_format(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
     "html",
     testroot="defaults",
     confoverrides={"thumb_image_resize_width": 100},
-    copy_files={
-        "_images/tux.png": "sub/pictures/tux.png",
-    },
+    copy_files=[
+        ("_images/tux.png", "sub/pictures/tux.png"),
+    ],
     write_docs={
         "sub/sub.rst": dedent("""
             :orphan:\n

@@ -69,9 +69,9 @@ def test_efficient(outdir: Path, img_tags: list[element.Tag]):
 @pytest.mark.sphinx(
     "html",
     testroot="defaults",
-    copy_files={
-        "_images/tux.png": "sub/pictures/tux.png",
-    },
+    copy_files=[
+        ("_images/tux.png", "sub/pictures/tux.png"),
+    ],
     write_docs={
         "index.rst": dedent("""
             .. thumb-image:: _images/tux.png
