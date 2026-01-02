@@ -1,8 +1,4 @@
-"""Sphinx directives.
-
-TODO::
-* Remote/linked images unsupported
-"""
+"""Sphinx directives."""
 
 from pathlib import Path, PurePosixPath
 

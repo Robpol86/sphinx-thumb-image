@@ -69,8 +69,15 @@ class ThumbImageResize:
         doctree_source = Path(doctree["source"])
         doctree_subdir = doctree_source.parent.relative_to(app.srcdir)
         for node in doctree.findall(lambda n: ThumbNodeRequest.KEY in n):
+            imguri = node["uri"]
+            if imguri.startswith("data:"):
+                doctree.reporter.warning("embedded images (data:...) are not supported", source=node.source, line=node.line)
+                continue
+            if imguri.find("://") != -1:
+                doctree.reporter.warning("external images are not supported", source=node.source, line=node.line)
+                continue
             request: ThumbNodeRequest = node[ThumbNodeRequest.KEY]
-            node_uri = Path(node["uri"])
+            node_uri = Path(imguri)
             source = doctree_source.parent / node_uri
             target_dir = thumbs_dir / doctree_subdir / node_uri.parent
             target = cls.resize(source, target_dir, request, doctree, node)
