@@ -45,7 +45,7 @@ class ThumbCommon(Image):
         config = self.state.document.settings.env.config
         if "target-format" not in self.options and not config["thumb_image_target_format"]:
             return
-        # Format.
+        # Build substitutions.
         doctree_source = Path(self.state.document["source"])
         env = self.state.document.settings.env
         subdir = PurePosixPath(doctree_source.parent.relative_to(env.srcdir).as_posix())
@@ -54,14 +54,14 @@ class ThumbCommon(Image):
             "fullsize_path": str(subdir / self.arguments[0]),
         }
         substitutions.update(config["thumb_image_target_format_substitutions"])
+        # Format.
         target = self.options["target"]
         for key, value in substitutions.items():
             target = target.replace(f"%({key})s", value)
         if target == self.options["target"]:
-            return self.state.document.reporter.warning(
-                'no subtitutions made by "target-format" in "target"', line=self.lineno
-            )
-        self.options["target"] = target
+            self.state.document.reporter.warning('no subtitutions made by "target-format" in "target"', line=self.lineno)
+        else:
+            self.options["target"] = target
 
     def __add_request(self, sphinx_nodes: list[nodes.Element]) -> list[nodes.Element]:
         """Build and add a ThumbRequest to the image node.
