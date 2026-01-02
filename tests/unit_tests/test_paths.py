@@ -110,7 +110,7 @@ def test_doctrees_paths(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
     # Run.
     app.build()
 
-    # Check.
+    # Check patched.
     assert open_paths == [
         Path("_images/tux.png"),
         Path("sub/pictures/tux.png"),
@@ -118,4 +118,14 @@ def test_doctrees_paths(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
     assert save_paths == [
         Path("_build/doctrees/_thumbs/_images/tux.100x118.png"),
         Path("_build/doctrees/_thumbs/sub/pictures/tux.100x118.png"),
+    ]
+
+    # Check doctreedir contents.
+    doctreedir_thumbs = app.doctreedir / "_thumbs"
+    assert sorted(f.relative_to(doctreedir_thumbs) for f in doctreedir_thumbs.rglob("*")) == [
+        Path("_images"),
+        Path("_images/tux.100x118.png"),
+        Path("sub"),
+        Path("sub/pictures"),
+        Path("sub/pictures/tux.100x118.png"),
     ]

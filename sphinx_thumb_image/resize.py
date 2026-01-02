@@ -5,7 +5,7 @@ from pathlib import Path
 
 import PIL.Image
 from docutils.nodes import Element, document
-from portalocker import Lock, LockException
+from portalocker import LockException, TemporaryFileLock
 from sphinx.application import Sphinx
 from sphinx.util import logging
 
@@ -47,7 +47,7 @@ class ThumbImageResize:
             target.parent.mkdir(exist_ok=True, parents=True)
             lock_file = target.parent / f"{target.name}.lock"
             try:
-                with Lock(lock_file, timeout=0):
+                with TemporaryFileLock(lock_file, timeout=0):
                     if target.exists():
                         return target
                     log.debug(f"resizing {source} ({source_size[0]}x{source_size[1]}) to {target}")
