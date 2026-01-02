@@ -66,7 +66,6 @@ class ThumbImageResize:
         :param doctree: Current document.
         """
         thumbs_dir = app.env.doctreedir / cls.THUMBS_SUBDIR
-        thumbs_dir.mkdir(exist_ok=True)
         doctree_source = Path(doctree["source"])
         doctree_subdir = doctree_source.parent.relative_to(app.srcdir)
         for node in doctree.findall(lambda n: ThumbNodeRequest.KEY in n):
