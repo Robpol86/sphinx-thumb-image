@@ -2,7 +2,6 @@
 
 TODO::
 * Remote/linked images unsupported
-* Handle smaller than thumb images.
 """
 
 from pathlib import Path, PurePosixPath

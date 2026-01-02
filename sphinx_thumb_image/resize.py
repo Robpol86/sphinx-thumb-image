@@ -4,7 +4,7 @@ from os.path import relpath
 from pathlib import Path
 
 import PIL.Image
-from docutils.nodes import document
+from docutils.nodes import Element, document
 from portalocker import Lock, LockException
 from sphinx.application import Sphinx
 from sphinx.util import logging
@@ -18,7 +18,7 @@ class ThumbImageResize:
     THUMBS_SUBDIR = "_thumbs"
 
     @classmethod
-    def resize(cls, source: Path, target_dir: Path, request: ThumbNodeRequest) -> Path:
+    def resize(cls, source: Path, target_dir: Path, request: ThumbNodeRequest, doctree: document, node: Element) -> Path:
         """Resize one image.
 
         Output image saved with the same relative path as the source image but in the thumbs directory.
@@ -26,6 +26,8 @@ class ThumbImageResize:
         :param source: Path to image file to resize.
         :param target_dir: Path to directory to write resized output image to.
         :param request: Image node's extension request object.
+        :param doctree: Current document.
+        :param node: Current image node.
 
         :returns: Path to the output image.
         """
@@ -34,6 +36,10 @@ class ThumbImageResize:
             source_size = image.size
             image.thumbnail((request.width or source_size[0], request.height or source_size[1]))
             target_size = image.size
+            if target_size[0] >= source_size[0]:
+                doctree.reporter.warning(
+                    "requested thumbnail size is not smaller than source image", source=node.source, line=node.line
+                )
             thumb_file_name = f"{source.stem}.{target_size[0]}x{target_size[1]}{source.suffix}"
             target = target_dir / thumb_file_name
             if target.exists():
@@ -57,7 +63,7 @@ class ThumbImageResize:
         Called from the doctree-read event.
 
         :param app: Sphinx application object.
-        :param doctree: Tree of docutils nodes.
+        :param doctree: Current document.
         """
         thumbs_dir = app.env.doctreedir / cls.THUMBS_SUBDIR
         thumbs_dir.mkdir(exist_ok=True)
@@ -68,5 +74,5 @@ class ThumbImageResize:
             node_uri = Path(node["uri"])
             source = doctree_source.parent / node_uri
             target_dir = thumbs_dir / doctree_subdir / node_uri.parent
-            target = cls.resize(source, target_dir, request)
+            target = cls.resize(source, target_dir, request, doctree, node)
             node["uri"] = relpath(target, start=doctree_source.parent)
