@@ -31,7 +31,6 @@ def rootdir() -> Path:
 def _app_params(app_params, request: pytest.FixtureRequest):
     """Inject Sphinx test app config before each test, including conf overrides (enabled with indirect=True)."""
     app_params.kwargs.setdefault("exception_on_warning", True)
-    app_params.kwargs.setdefault("exception_on_warning", True)
     app_params.kwargs.setdefault("warningiserror", True)
     app_params.kwargs.setdefault("freshenv", True)
     srcdir: Path = app_params.kwargs["srcdir"]
