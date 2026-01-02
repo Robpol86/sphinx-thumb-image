@@ -1,10 +1,4 @@
-"""Test thumbnail image file paths in HTML and on disk.
-
-TODO::
-- Test multiple directives same file same and different resizes.
-    - Different size == different file e.g. tux2.png
-- Also test in sub.
-"""
+"""Test thumbnail image file paths in HTML and on disk."""
 
 from pathlib import Path
 from textwrap import dedent
