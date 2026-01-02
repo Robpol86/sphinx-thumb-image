@@ -106,4 +106,5 @@ def test_scale_up(outdir: Path, app: SphinxTestApp, img_tags: list[element.Tag])
         assert image.size[0] == 265  # noqa PLR2004
         assert image.size[1] == 314  # noqa PLR2004
     # Confirm warning was emitted.
-    assert "WARNING: requested thumbnail size is not smaller than source image" in app.warning.getvalue()
+    warnings = app.warning.getvalue()
+    assert "WARNING: requested thumbnail size is not smaller than source image" in warnings

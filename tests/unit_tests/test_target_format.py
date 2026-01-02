@@ -122,7 +122,8 @@ def test_target_format(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
         """),
     )
     assert hrefs == ["https://localhost"]
-    assert 'WARNING: no subtitutions made by "target-format" in "target"' in app.warning.getvalue()
+    warnings = app.warning.getvalue()
+    assert 'WARNING: no subtitutions made by "target-format" in "target"' in warnings
 
 
 @pytest.mark.sphinx(
