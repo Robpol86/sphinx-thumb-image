@@ -14,7 +14,7 @@ from sphinx.testing.util import SphinxTestApp
         "thumb_image_resize_width": 100,
     },
     write_docs={
-        "index.rst": ".. image:: does_not_exist.jpg",
+        "index.rst": ".. thumb-image:: does_not_exist.jpg",
     },
 )
 def test_file_not_found(app: SphinxTestApp, img_tags: list[element.Tag]):

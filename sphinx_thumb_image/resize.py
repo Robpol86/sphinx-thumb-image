@@ -79,6 +79,8 @@ class ThumbImageResize:
             request: ThumbNodeRequest = node[ThumbNodeRequest.KEY]
             node_uri = Path(imguri)
             source = doctree_source.parent / node_uri
+            if not source.exists():
+                continue  # Subclassed Image directive already emits a warning in this case.
             target_dir = thumbs_dir / doctree_subdir / node_uri.parent
             target = cls.resize(source, target_dir, request, doctree, node)
             node["uri"] = relpath(target, start=doctree_source.parent)
