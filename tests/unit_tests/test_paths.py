@@ -122,7 +122,7 @@ def test_doctrees_paths(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
 
     # Check doctreedir contents.
     doctreedir_thumbs = app.doctreedir / "_thumbs"
-    assert sorted(f.relative_to(doctreedir_thumbs) for f in (doctreedir_thumbs).rglob("*")) == [
+    assert sorted(f.relative_to(doctreedir_thumbs) for f in doctreedir_thumbs.rglob("*")) == [
         Path("_images"),
         Path("_images/tux.100x118.png"),
         Path("sub"),
