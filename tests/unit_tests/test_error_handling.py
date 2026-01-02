@@ -23,7 +23,8 @@ def test_file_not_found(app: SphinxTestApp, img_tags: list[element.Tag]):
     img_src = [t["src"] for t in img_tags]
     assert img_src == ["does_not_exist.jpg"]
     # Confirm warning was emitted.
-    assert "WARNING: image file not readable: does_not_exist.jpg" in app.warning.getvalue()
+    warnings = app.warning.getvalue()
+    assert "WARNING: image file not readable: does_not_exist.jpg" in warnings
 
 
 @pytest.mark.sphinx(
@@ -44,4 +45,5 @@ def test_not_a_file(app: SphinxTestApp, img_tags: list[element.Tag]):
     img_src = [t["src"] for t in img_tags]
     assert img_src == ["_images/_images"]
     # Confirm warning was emitted.
-    assert "[Errno 21] Is a directory" in app.warning.getvalue()
+    warnings = app.warning.getvalue()
+    assert "[Errno 21] Is a directory" in warnings

@@ -23,4 +23,5 @@ def test_hotlinked(app: SphinxTestApp, img_tags: list[element.Tag]):
     img_src = [t["src"] for t in img_tags]
     assert img_src == ["https://i.imgur.com/Ouih4Z1.jpeg"]
     # Confirm warning was emitted.
-    assert "WARNING: external images are not supported" in app.warning.getvalue()
+    warnings = app.warning.getvalue()
+    assert "WARNING: external images are not supported" in warnings
