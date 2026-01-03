@@ -25,3 +25,8 @@ def test_hotlinked(app: SphinxTestApp, img_tags: list[element.Tag]):
     # Confirm warning was emitted.
     warnings = app.warning.getvalue()
     assert "WARNING: external images are not supported" in warnings
+
+
+# TODO jpeg test
+
+# TODO gif TDD
