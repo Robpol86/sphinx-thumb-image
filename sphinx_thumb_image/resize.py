@@ -18,6 +18,11 @@ class ThumbImageResize:
     THUMBS_SUBDIR = "_thumbs"
 
     @classmethod
+    def save_animated(cls, target: Path):
+        """TODO."""
+        raise NotImplementedError
+
+    @classmethod
     def resize(cls, source: Path, target_dir: Path, request: ThumbNodeRequest, doctree: document, node: Element) -> Path:
         """Resize one image.
 
@@ -51,7 +56,10 @@ class ThumbImageResize:
                     if target.exists():
                         return target
                     log.debug(f"resizing {source} ({source_size[0]}x{source_size[1]}) to {target}")
-                    image.save(target, format=image.format)
+                    if image.is_animated:
+                        cls.save_animated(target)
+                    else:
+                        image.save(target, format=image.format)
             except LockException:
                 return target
         return target
