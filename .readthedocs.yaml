@@ -6,11 +6,11 @@ build:
     python: latest
   jobs:
     pre_create_environment:
-      - asdf plugin add poetry
-      - asdf install poetry latest
-      - asdf global poetry latest
+      - asdf plugin add uv
+      - asdf install uv latest
+      - asdf global uv latest
     post_install:
-      - VIRTUAL_ENV="$READTHEDOCS_VIRTUALENV_PATH" poetry install --with dev
+      - uv sync --frozen
 
 sphinx:
   configuration: docs/conf.py
