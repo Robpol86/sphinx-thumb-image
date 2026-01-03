@@ -137,16 +137,7 @@ def test_doctrees_paths(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
     ]
 
 
-@pytest.mark.sphinx(
-    "html",
-    testroot="defaults",
-    write_docs={
-        "index.rst": dedent("""
-            .. thumb-image:: ABS_TODO/_images/tux.png
-                :resize-width: 100
-        """),
-    },
-)
+@pytest.mark.sphinx("html", testroot="defaults")
 def test_absolut_path(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
     """Test with absolute path to image."""
     open_paths = []
@@ -170,11 +161,14 @@ def test_absolut_path(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
 
     monkeypatch.setattr(PIL.Image.Image, "save", spy_pil_save)
 
-    # Update test document.
-    index_rst = app.srcdir / "index.rst"
-    index_rst_contents = index_rst.read_text(encoding="utf8")
-    index_rst_contents = index_rst_contents.replace("ABS_TODO", str(app.srcdir.absolute()))
+    # Write test document.
+    tux_png_path = app.srcdir / "_images" / "tux.png"
+    index_rst_contents = dedent(f"""\
+        .. thumb-image:: {tux_png_path.absolute()}
+            :resize-width: 100
+    """)
     assert "tests_unit_tests_test_paths_py__test_absolut_path" in index_rst_contents
+    index_rst = app.srcdir / "index.rst"
     index_rst.write_text(index_rst_contents, encoding="utf8")
 
     # Run.
