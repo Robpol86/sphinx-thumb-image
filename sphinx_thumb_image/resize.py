@@ -76,11 +76,13 @@ class ThumbImageResize:
             if imguri.find("://") != -1:
                 doctree.reporter.warning("external images are not supported", source=node.source, line=node.line)
                 continue
-            request: ThumbNodeRequest = node[ThumbNodeRequest.KEY]
             node_uri = Path(imguri)
+            if node_uri.is_absolute():
+                node_uri = node_uri.relative_to(doctree_source.parent)
             source = doctree_source.parent / node_uri
             if not source.is_file():
                 continue  # Subclassed Image directive already emits a warning in this case.
             target_dir = thumbs_dir / doctree_subdir / node_uri.parent
+            request: ThumbNodeRequest = node[ThumbNodeRequest.KEY]
             target = cls.resize(source, target_dir, request, doctree, node)
             node["uri"] = relpath(target, start=doctree_source.parent)
