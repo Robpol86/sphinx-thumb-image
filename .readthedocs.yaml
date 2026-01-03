@@ -10,7 +10,7 @@ build:
       - asdf install uv latest
       - asdf global uv latest
     post_install:
-      - uv sync --frozen
+      - uv sync --frozen --group dev
 
 sphinx:
   configuration: docs/conf.py
