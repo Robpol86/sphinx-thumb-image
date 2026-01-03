@@ -51,7 +51,7 @@ class ThumbImageResize:
                     if target.exists():
                         return target
                     log.debug(f"resizing {source} ({source_size[0]}x{source_size[1]}) to {target}")
-                    image.save(target)
+                    image.save(target, format=image.format)
             except LockException:
                 return target
         return target

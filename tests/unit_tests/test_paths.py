@@ -71,6 +71,7 @@ def test_efficient(outdir: Path, img_tags: list[element.Tag]):
     testroot="defaults",
     copy_files=[
         ("_images/tux.png", "sub/pictures/tux.png"),
+        ("_images/tux.png", "sub/pictures/x_no_ext"),
     ],
     write_docs={
         "index.rst": dedent("""
@@ -80,6 +81,8 @@ def test_efficient(outdir: Path, img_tags: list[element.Tag]):
         "sub/sub.rst": dedent("""
             :orphan:\n
             .. thumb-image:: pictures/tux.png
+                :resize-width: 100
+            .. thumb-image:: pictures/x_no_ext
                 :resize-width: 100
         """),
     },
@@ -114,10 +117,12 @@ def test_doctrees_paths(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
     assert open_paths == [
         Path("_images/tux.png"),
         Path("sub/pictures/tux.png"),
+        Path("sub/pictures/x_no_ext"),
     ]
     assert save_paths == [
         Path("_build/doctrees/_thumbs/_images/tux.100x118.png"),
         Path("_build/doctrees/_thumbs/sub/pictures/tux.100x118.png"),
+        Path("_build/doctrees/_thumbs/sub/pictures/x_no_ext.100x118"),
     ]
 
     # Check doctreedir contents.
@@ -128,4 +133,5 @@ def test_doctrees_paths(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
         Path("sub"),
         Path("sub/pictures"),
         Path("sub/pictures/tux.100x118.png"),
+        Path("sub/pictures/x_no_ext.100x118"),
     ]
