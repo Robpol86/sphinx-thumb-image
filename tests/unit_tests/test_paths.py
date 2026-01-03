@@ -135,3 +135,62 @@ def test_doctrees_paths(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
         Path("sub/pictures/tux.100x118.png"),
         Path("sub/pictures/x_no_ext.100x118"),
     ]
+
+
+@pytest.mark.sphinx(
+    "html",
+    testroot="defaults",
+    write_docs={
+        "index.rst": dedent("""
+            .. thumb-image:: ABS_TODO/_images/tux.png
+                :resize-width: 100
+        """),
+    },
+)
+def test_absolut_path(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
+    """Test with absolute path to image."""
+    open_paths = []
+    save_paths = []
+
+    # Patch open.
+    orig_pil_image_open = PIL.Image.open
+
+    def spy_pil_open(path, *args, **kwargs):
+        open_paths.append(path.relative_to(app.srcdir))
+        return orig_pil_image_open(path, *args, **kwargs)
+
+    monkeypatch.setattr(PIL.Image, "open", spy_pil_open)
+
+    # Patch save.
+    orig_pil_image_save = PIL.Image.Image.save
+
+    def spy_pil_save(self, path, *args, **kwargs):
+        save_paths.append(path.relative_to(app.srcdir))
+        return orig_pil_image_save(self, path, *args, **kwargs)
+
+    monkeypatch.setattr(PIL.Image.Image, "save", spy_pil_save)
+
+    # Update test document.
+    index_rst = app.srcdir / "index.rst"
+    index_rst_contents = index_rst.read_text(encoding="utf8")
+    index_rst_contents = index_rst_contents.replace("ABS_TODO", str(app.srcdir.absolute()))
+    assert "tests_unit_tests_test_paths_py__test_absolut_path" in index_rst_contents
+    index_rst.write_text(index_rst_contents, encoding="utf8")
+
+    # Run.
+    app.build()
+
+    # Check patched.
+    assert open_paths == [
+        Path("_images/tux.png"),
+    ]
+    assert save_paths == [
+        Path("_build/doctrees/_thumbs/_images/tux.100x118.png"),
+    ]
+
+    # Check doctreedir contents.
+    doctreedir_thumbs = app.doctreedir / "_thumbs"
+    assert sorted(f.relative_to(doctreedir_thumbs) for f in doctreedir_thumbs.rglob("*")) == [
+        Path("_images"),
+        Path("_images/tux.100x118.png"),
+    ]
