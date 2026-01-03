@@ -10,7 +10,7 @@ build:
       - asdf install uv latest
       - asdf global uv latest
     post_install:
-      - uv sync --frozen --group dev
+      - VIRTUAL_ENV="$READTHEDOCS_VIRTUALENV_PATH" uv sync --frozen
 
 sphinx:
   configuration: docs/conf.py
