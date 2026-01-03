@@ -37,4 +37,9 @@ To use in Sphinx simply add to your `conf.py`:
 extensions = ["sphinx_thumb_image"]
 ```
 
-TODO work on extension still in progress.
+And in a document you can use it with:
+
+```rst
+.. thumb-image:: photo.jpg
+    :resize-width: 800
+```
