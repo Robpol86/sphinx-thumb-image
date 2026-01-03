@@ -4,6 +4,7 @@ from os.path import relpath
 from pathlib import Path
 
 import PIL.Image
+import PIL.ImageFile
 from docutils.nodes import Element, document
 from portalocker import LockException, TemporaryFileLock
 from sphinx.application import Sphinx
@@ -18,9 +19,9 @@ class ThumbImageResize:
     THUMBS_SUBDIR = "_thumbs"
 
     @classmethod
-    def save_animated(cls, target: Path):
+    def save_animated(cls, image: PIL.ImageFile.ImageFile, target: Path):
         """TODO."""
-        raise NotImplementedError
+        image.save(target, format=image.format)  # TODO
 
     @classmethod
     def resize(cls, source: Path, target_dir: Path, request: ThumbNodeRequest, doctree: document, node: Element) -> Path:
@@ -56,8 +57,8 @@ class ThumbImageResize:
                     if target.exists():
                         return target
                     log.debug(f"resizing {source} ({source_size[0]}x{source_size[1]}) to {target}")
-                    if image.is_animated:
-                        cls.save_animated(target)
+                    if getattr(image, "is_animated", False):  # TODO without getattr?
+                        cls.save_animated(image, target)
                     else:
                         image.save(target, format=image.format)
             except LockException:
