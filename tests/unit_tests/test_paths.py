@@ -164,7 +164,7 @@ def test_absolut_path(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
     # Write test document.
     tux_png_path = app.srcdir / "_images" / "tux.png"
     index_rst_contents = dedent(f"""\
-        .. thumb-image:: {tux_png_path.absolute()}
+        .. thumb-image:: {tux_png_path.absolute().as_posix()}
             :resize-width: 100
     """)
     assert "tests_unit_tests_test_paths_py__test_absolut_path" in index_rst_contents
