@@ -5,6 +5,7 @@ from pathlib import Path
 
 import PIL.Image
 import PIL.ImageFile
+import PIL.ImageSequence
 from docutils.nodes import Element, document
 from portalocker import LockException, TemporaryFileLock
 from sphinx.application import Sphinx

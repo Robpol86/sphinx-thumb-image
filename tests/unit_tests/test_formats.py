@@ -54,8 +54,8 @@ def test_formats(outdir: Path, img_tags: list[element.Tag], expected_name: str, 
 @pytest.mark.parametrize(
     "app_params,expected_name,expected_format,expected_frames",
     [
-        ({"write_docs": {"index.rst": ".. thumb-image:: _images/goku.gif"}}, "goku.10x3.gif", "GIF", 20),
-        ({"write_docs": {"index.rst": ".. thumb-image:: _images/ball.apng"}}, "ball.10x10.apng", "PNG", 10),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/goku.gif"}}, "goku.10x3.gif", "GIF", 7),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/ball.apng"}}, "ball.10x10.apng", "PNG", 20),
     ],
     indirect=["app_params"],
 )
