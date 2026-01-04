@@ -1,5 +1,8 @@
 """Test support of different input image formats."""
 
+from pathlib import Path
+
+import PIL.Image
 import pytest
 from bs4 import element
 from sphinx.testing.util import SphinxTestApp
@@ -27,6 +30,28 @@ def test_hotlinked(app: SphinxTestApp, img_tags: list[element.Tag]):
     assert "WARNING: external images are not supported" in warnings
 
 
-# TODO jpeg test
+@pytest.mark.parametrize(
+    "app_params,expected_fname,expected_format",
+    [
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png"}}, "tux.10x12.png", "PNG"),
+        # TODO jpg
+    ],
+    indirect=["app_params"],
+    ids=lambda param: param,  # TODO
+)
+@pytest.mark.sphinx("html", testroot="defaults", confoverrides={"thumb_image_resize_width": 10})
+def test_formats(outdir: Path, img_tags: list[element.Tag], expected_fname: str, expected_format: str):
+    """Test with image of different non-animated formats."""
+    # Confirm img src.
+    img_src = [t["src"] for t in img_tags]
+    assert img_src == [f"_images/{expected_fname}"]
+    # Confirm image file's new dimensions.
+    image_path = outdir / img_src[0]
+    with PIL.Image.open(image_path) as image:
+        assert image.format == expected_format
 
-# TODO gif TDD
+
+@pytest.mark.sphinx("html", testroot="defaults", confoverrides={"thumb_image_resize_width": 10})
+def test_animated():
+    """TODO."""
+    pytest.skip("TODO")
