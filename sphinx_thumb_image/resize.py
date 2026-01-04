@@ -57,7 +57,7 @@ class ThumbImageResize:
                     if target.exists():
                         return target
                     log.debug(f"resizing {source} ({source_size[0]}x{source_size[1]}) to {target}")
-                    if getattr(image, "is_animated", False):  # TODO without getattr?
+                    if getattr(image, "is_animated", False) and image.n_frames > 1:
                         cls.save_animated(image, target)
                     else:
                         image.save(target, format=image.format)
