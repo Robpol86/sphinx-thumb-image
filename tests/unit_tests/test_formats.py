@@ -33,13 +33,12 @@ def test_hotlinked(app: SphinxTestApp, img_tags: list[element.Tag]):
 @pytest.mark.parametrize(
     "app_params,expected_fname,expected_format",
     [
-        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png"}}, "tux.10x12.png", "PNG"),
-        # TODO jpg
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png"}}, "tux.50x59.png", "PNG"),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/apple.jpg"}}, "apple.50x6.jpg", "JPEG"),
     ],
     indirect=["app_params"],
-    ids=lambda param: param,  # TODO
 )
-@pytest.mark.sphinx("html", testroot="defaults", confoverrides={"thumb_image_resize_width": 10})
+@pytest.mark.sphinx("html", testroot="defaults", confoverrides={"thumb_image_resize_width": 50})
 def test_formats(outdir: Path, img_tags: list[element.Tag], expected_fname: str, expected_format: str):
     """Test with image of different non-animated formats."""
     # Confirm img src.
