@@ -27,7 +27,8 @@ class ThumbImageResize:
         for frame in PIL.ImageSequence.Iterator(image):
             frame_resized = frame.resize(target_size)
             frames.append(frame_resized)
-        frames[0].save(target, format=image.format, save_all=True, append_images=frames[1:])
+        disposal = 2  # TODO parametrize
+        frames[0].save(target, format=image.format, save_all=True, append_images=frames[1:], disposal=disposal)
 
     @classmethod
     def resize(cls, source: Path, target_dir: Path, request: ThumbNodeRequest, doctree: document, node: Element) -> Path:
