@@ -2,8 +2,11 @@
 
 from os.path import relpath
 from pathlib import Path
+from shutil import copyfile
 
 import PIL.Image
+import PIL.ImageFile
+import PIL.ImageSequence
 from docutils.nodes import Element, document
 from portalocker import LockException, TemporaryFileLock
 from sphinx.application import Sphinx
@@ -16,6 +19,21 @@ class ThumbImageResize:
     """Resize images."""
 
     THUMBS_SUBDIR = "_thumbs"
+
+    @classmethod
+    def save_animated(cls, image: PIL.ImageFile.ImageFile, target: Path, target_size: tuple[int, int]):
+        """Save all frames in an animated image file to the target file.
+
+        :param image: Opened source image.
+        :param target: Path to target file.
+        :param target_size: Image width and height to resize to.
+        """
+        frames = []
+        for frame in PIL.ImageSequence.Iterator(image):
+            frame_resized = frame.resize(target_size)
+            frames.append(frame_resized)
+        disposal = 2  # https://github.com/Robpol86/sphinx-thumb-image/issues/43
+        frames[0].save(target, format=image.format, save_all=True, append_images=frames[1:], disposal=disposal)
 
     @classmethod
     def resize(cls, source: Path, target_dir: Path, request: ThumbNodeRequest, doctree: document, node: Element) -> Path:
@@ -34,24 +52,43 @@ class ThumbImageResize:
         log = logging.getLogger(__name__)
         with PIL.Image.open(source) as image:
             source_size = image.size
-            image.thumbnail((request.width or source_size[0], request.height or source_size[1]))
-            target_size = image.size
+            is_animated = getattr(image, "is_animated", False) and image.n_frames > 1
+            # Get target size.
+            if is_animated:
+                image_copy = image.copy()
+                image_copy.thumbnail((request.width or source_size[0], request.height or source_size[1]))
+                target_size = image_copy.size
+            else:
+                image.thumbnail((request.width or source_size[0], request.height or source_size[1]))
+                target_size = image.size
             if target_size[0] >= source_size[0]:
                 doctree.reporter.warning(
                     "requested thumbnail size is not smaller than source image", source=node.source, line=node.line
                 )
+                copy_instead_of_save = True
+            else:
+                copy_instead_of_save = False
+            # Get target file path.
             thumb_file_name = f"{source.stem}.{target_size[0]}x{target_size[1]}{source.suffix}"
             target = target_dir / thumb_file_name
             if target.exists():
                 return target
+            # Write to target file path.
             target.parent.mkdir(exist_ok=True, parents=True)
             lock_file = target.parent / f"{target.name}.lock"
             try:
                 with TemporaryFileLock(lock_file, timeout=0):
                     if target.exists():
                         return target
-                    log.debug(f"resizing {source} ({source_size[0]}x{source_size[1]}) to {target}")
-                    image.save(target, format=image.format)
+                    if copy_instead_of_save:
+                        log.debug(f"copying {source} ({source_size[0]}x{source_size[1]}) to {target}")
+                        copyfile(source, target)
+                    else:
+                        log.debug(f"resizing {source} ({source_size[0]}x{source_size[1]}) to {target}")
+                        if is_animated:
+                            cls.save_animated(image, target, target_size)
+                        else:
+                            image.save(target, format=image.format)
             except LockException:
                 return target
         return target
