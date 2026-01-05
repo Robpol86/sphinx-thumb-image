@@ -23,51 +23,11 @@ class ThumbImageResize:
     @classmethod
     def save_animated(cls, image: PIL.ImageFile.ImageFile, target: Path, target_size: tuple[int, int]):
         """TODO."""
-        # frames = []
-        # durations = []
-        # default_duration = image.info.get("duration", 100)
-        # loop = image.info.get("loop", 0)
-        # for f in PIL.ImageSequence.Iterator(image):
-        #     # Grab duration from the live frame (or fall back), BEFORE copying/resizing.
-        #     durations.append(f.info.get("duration", default_duration))
-        #     fr = f.copy()
-        #     fr.thumbnail(target_size)
-        #     frames.append(fr)
-        # if not frames:
-        #     image.save(target, format=image.format)
-        #     return
-        # # Pillow expects `duration` (singular). Can be int or list.
-        # duration_arg = durations[0] if len(set(durations)) == 1 else durations
-        # save_kwargs = dict(
-        #     format=image.format,
-        #     save_all=True,
-        #     append_images=frames[1:],
-        #     loop=loop,
-        #     duration=duration_arg,
-        # )
-        # # (Optional) GIF-specific fields that help correctness / avoid artifacts.
-        # if (image.format or "").upper() == "GIF":
-        #     for k in ("disposal", "transparency", "background"):
-        #         if k in image.info:
-        #             save_kwargs[k] = image.info[k]
-        # frames[0].save(target, **save_kwargs)
-        # return
-        # frames = []
-        # for frame in PIL.ImageSequence.Iterator(image):
-        #     frame = frame.resize(target_size)
-        #     frames.append(frame)
-        # import pdb; pdb.set_trace()
-        # frames[0].save(target, save_all=True, append_images=frames[1:])
-        # return
-        # frames = []
-        # durations = []
-        # for frame in (f.copy() for f in PIL.ImageSequence.Iterator(image)):
-        #     frame.thumbnail(target_size)
-        #     frames.append(frame)
-        #     durations.append(frame.info["duration"])
-        # frames[0].save(target, format=image.format, save_all=True, append_images=frames[1:], durations=durations,
-        #       loop=image.info["loop"])
-        image.save(target, format=image.format)  # TODO
+        frames = []
+        for frame in PIL.ImageSequence.Iterator(image):
+            frame_resized = frame.resize(target_size)
+            frames.append(frame_resized)
+        frames[0].save(target, format=image.format, save_all=True, append_images=frames[1:])
 
     @classmethod
     def resize(cls, source: Path, target_dir: Path, request: ThumbNodeRequest, doctree: document, node: Element) -> Path:

@@ -69,6 +69,5 @@ def test_animated(outdir: Path, img_tags: list[element.Tag], expected_name: str,
     image_path = outdir / img_src[0]
     with PIL.Image.open(image_path) as image:
         assert image.format == expected_format
-        pytest.skip("TODO")
         assert image.is_animated is True
         assert image.n_frames == expected_frames
