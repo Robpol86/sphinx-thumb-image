@@ -34,16 +34,20 @@ define your `Disqus shortname <https://help.disqus.com/en/articles/1717111-what-
 
 The last step is to enable comments on each document.
 
-.. tab-set-code::
+.. tab-set::
 
-    .. code-block:: reStructuredText
+    .. tab-item:: reStructuredText
 
-        .. disqus::
+        .. code-block:: reStructuredText
 
-    .. code-block:: Markdown
+            .. disqus::
 
-        ```{disqus}
-        ```
+    .. tab-item:: Markdown
+
+        .. code-block:: Markdown
+
+            ```{disqus}
+            ```
 
 Specifying an Identifier
 ========================
@@ -53,15 +57,19 @@ By default the extension will define the
 document title. To override this behavior you can define your own identifier for a particular document using the
 ``disqus_identifier`` option.
 
-.. tab-set-code::
+.. tab-set::
 
-    .. code-block:: reStructuredText
+    .. tab-item:: reStructuredText
 
-        .. disqus::
+        .. code-block:: reStructuredText
+
+            .. disqus::
+                :disqus_identifier: name_of_this_page
+
+    .. tab-item:: Markdown
+
+        .. code-block:: Markdown
+
+            ```{disqus}
             :disqus_identifier: name_of_this_page
-
-    .. code-block:: Markdown
-
-        ```{disqus}
-        :disqus_identifier: name_of_this_page
-        ```
+            ```
