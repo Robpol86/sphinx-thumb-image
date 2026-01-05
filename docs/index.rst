@@ -2,7 +2,7 @@
 Sphinx Thumb Image
 ==================
 
-Sphinx extension that resizes images into thumbnails on the fly.
+Resize images in Sphinx documents/pages to thumbnails.
 
 Project Links
 =============

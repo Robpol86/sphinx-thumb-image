@@ -1,6 +1,6 @@
 # sphinx-thumb-image
 
-Sphinx extension that resizes images into thumbnails on the fly.
+Resize images in Sphinx documents/pages to thumbnails.
 
 * Python 3.9 through 3.14 supported on Linux, macOS, and Windows.
 
@@ -37,9 +37,9 @@ To use in Sphinx simply add to your `conf.py`:
 extensions = ["sphinx_thumb_image"]
 ```
 
-And in a document you can use it with:
+And in your Sphinx documents:
 
 ```rst
-.. thumb-image:: photo.jpg
-    :resize-width: 800
+.. thumb-image:: pictures/photo.jpg
+    :resize-width: 100px
 ```
