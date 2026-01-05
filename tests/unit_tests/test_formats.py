@@ -35,6 +35,7 @@ def test_hotlinked(app: SphinxTestApp, img_tags: list[element.Tag]):
     [
         ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png"}}, "tux.50x59.png", "PNG"),
         ({"write_docs": {"index.rst": ".. thumb-image:: _images/apple.jpg"}}, "apple.50x6.jpg", "JPEG"),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/netscape-static.gif"}}, "netscape-static.50x18.gif", "GIF"),
     ],
     indirect=["app_params"],
 )
@@ -49,6 +50,7 @@ def test_formats(outdir: Path, img_tags: list[element.Tag], expected_name: str, 
     with PIL.Image.open(image_path) as image:
         assert image.format == expected_format
         assert getattr(image, "is_animated", False) is False
+        assert getattr(image, "n_frames", 1) == 1
 
 
 @pytest.mark.parametrize(
