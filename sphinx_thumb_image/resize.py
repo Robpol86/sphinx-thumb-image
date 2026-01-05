@@ -22,12 +22,17 @@ class ThumbImageResize:
 
     @classmethod
     def save_animated(cls, image: PIL.ImageFile.ImageFile, target: Path, target_size: tuple[int, int]):
-        """TODO."""
+        """Save all frames in an animated image file to the target file.
+
+        :param image: Opened source image.
+        :param target: Path to target file.
+        :param target_size: Image width and height to resize to.
+        """
         frames = []
         for frame in PIL.ImageSequence.Iterator(image):
             frame_resized = frame.resize(target_size)
             frames.append(frame_resized)
-        disposal = 2  # TODO parametrize
+        disposal = 2  # https://github.com/Robpol86/sphinx-thumb-image/issues/43
         frames[0].save(target, format=image.format, save_all=True, append_images=frames[1:], disposal=disposal)
 
     @classmethod
