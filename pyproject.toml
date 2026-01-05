@@ -54,6 +54,7 @@ dev = [
     "sphinx-design",
     "sphinx-notfound-page",
     "sphinx-rtd-theme",
+    "sphinxext-opengraph",
     "toml",
     # Linters.
     "ruff",

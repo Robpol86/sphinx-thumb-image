@@ -20,7 +20,9 @@ extensions = [
     "sphinx_copybutton",  # https://sphinx-copybutton.readthedocs.io
     "sphinx_design",  # https://sphinx-design.readthedocs.io
     "sphinx_thumb_image",
+    "sphinxext.opengraph",  # https://sphinxext-opengraph.readthedocs.io
 ]
+language = "en"
 project = PYPROJECT["project"]["name"]
 pygments_style = "sphinx"
 
@@ -28,3 +30,9 @@ pygments_style = "sphinx"
 # Options for HTML output.
 html_copy_source = False
 html_theme = "sphinx_rtd_theme"
+
+
+# https://sphinxext-opengraph.readthedocs.io/en/latest/#options
+ogp_site_name = project
+ogp_type = "website"
+ogp_use_first_image = True
