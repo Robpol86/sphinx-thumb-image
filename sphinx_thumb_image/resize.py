@@ -2,6 +2,7 @@
 
 from os.path import relpath
 from pathlib import Path
+from shutil import copyfile
 
 import PIL.Image
 import PIL.ImageFile
@@ -20,8 +21,52 @@ class ThumbImageResize:
     THUMBS_SUBDIR = "_thumbs"
 
     @classmethod
-    def save_animated(cls, image: PIL.ImageFile.ImageFile, target: Path):
+    def save_animated(cls, image: PIL.ImageFile.ImageFile, target: Path, target_size: tuple[int, int]):
         """TODO."""
+        # frames = []
+        # durations = []
+        # default_duration = image.info.get("duration", 100)
+        # loop = image.info.get("loop", 0)
+        # for f in PIL.ImageSequence.Iterator(image):
+        #     # Grab duration from the live frame (or fall back), BEFORE copying/resizing.
+        #     durations.append(f.info.get("duration", default_duration))
+        #     fr = f.copy()
+        #     fr.thumbnail(target_size)
+        #     frames.append(fr)
+        # if not frames:
+        #     image.save(target, format=image.format)
+        #     return
+        # # Pillow expects `duration` (singular). Can be int or list.
+        # duration_arg = durations[0] if len(set(durations)) == 1 else durations
+        # save_kwargs = dict(
+        #     format=image.format,
+        #     save_all=True,
+        #     append_images=frames[1:],
+        #     loop=loop,
+        #     duration=duration_arg,
+        # )
+        # # (Optional) GIF-specific fields that help correctness / avoid artifacts.
+        # if (image.format or "").upper() == "GIF":
+        #     for k in ("disposal", "transparency", "background"):
+        #         if k in image.info:
+        #             save_kwargs[k] = image.info[k]
+        # frames[0].save(target, **save_kwargs)
+        # return
+        # frames = []
+        # for frame in PIL.ImageSequence.Iterator(image):
+        #     frame = frame.resize(target_size)
+        #     frames.append(frame)
+        # import pdb; pdb.set_trace()
+        # frames[0].save(target, save_all=True, append_images=frames[1:])
+        # return
+        # frames = []
+        # durations = []
+        # for frame in (f.copy() for f in PIL.ImageSequence.Iterator(image)):
+        #     frame.thumbnail(target_size)
+        #     frames.append(frame)
+        #     durations.append(frame.info["duration"])
+        # frames[0].save(target, format=image.format, save_all=True, append_images=frames[1:], durations=durations,
+        #       loop=image.info["loop"])
         image.save(target, format=image.format)  # TODO
 
     @classmethod
@@ -41,27 +86,43 @@ class ThumbImageResize:
         log = logging.getLogger(__name__)
         with PIL.Image.open(source) as image:
             source_size = image.size
-            image.thumbnail((request.width or source_size[0], request.height or source_size[1]))
-            target_size = image.size
+            is_animated = getattr(image, "is_animated", False) and image.n_frames > 1
+            # Get target size.
+            if is_animated:
+                image_copy = image.copy()
+                image_copy.thumbnail((request.width or source_size[0], request.height or source_size[1]))
+                target_size = image_copy.size
+            else:
+                image.thumbnail((request.width or source_size[0], request.height or source_size[1]))
+                target_size = image.size
             if target_size[0] >= source_size[0]:
                 doctree.reporter.warning(
                     "requested thumbnail size is not smaller than source image", source=node.source, line=node.line
                 )
+                copy_instead_of_save = True
+            else:
+                copy_instead_of_save = False
+            # Get target file path.
             thumb_file_name = f"{source.stem}.{target_size[0]}x{target_size[1]}{source.suffix}"
             target = target_dir / thumb_file_name
             if target.exists():
                 return target
+            # Write to target file path.
             target.parent.mkdir(exist_ok=True, parents=True)
             lock_file = target.parent / f"{target.name}.lock"
             try:
                 with TemporaryFileLock(lock_file, timeout=0):
                     if target.exists():
                         return target
-                    log.debug(f"resizing {source} ({source_size[0]}x{source_size[1]}) to {target}")
-                    if getattr(image, "is_animated", False) and image.n_frames > 1:
-                        cls.save_animated(image, target)
+                    if copy_instead_of_save:
+                        log.debug(f"copying {source} ({source_size[0]}x{source_size[1]}) to {target}")
+                        copyfile(source, target)
                     else:
-                        image.save(target, format=image.format)
+                        log.debug(f"resizing {source} ({source_size[0]}x{source_size[1]}) to {target}")
+                        if is_animated:
+                            cls.save_animated(image, target, target_size)
+                        else:
+                            image.save(target, format=image.format)
             except LockException:
                 return target
         return target
