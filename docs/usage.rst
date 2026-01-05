@@ -9,8 +9,16 @@ Two directives are provided by the extension.
 Images
 ======
 
-.. thumb-image:: _images/tux.png
-    :resize-width: 100px
+.. tab-set::
+
+    .. tab-item:: Thumbnail
+
+        .. thumb-image:: _images/tux.png
+            :resize-width: 100px
+
+    .. tab-item:: Original
+
+        .. image:: _images/tux.png
 
 .. tab-set::
 

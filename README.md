@@ -2,6 +2,8 @@
 
 Resize images in Sphinx documents/pages to thumbnails.
 
+TODO mention save web hosting user traffic and disk space.
+
 * Python 3.9 through 3.14 supported on Linux, macOS, and Windows.
 
 📖 Full documentation: https://sphinx-thumb-image.readthedocs.io
