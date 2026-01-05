@@ -4,20 +4,16 @@ Sphinx Thumb Image
 
 Sphinx extension that resizes images into thumbnails on the fly.
 
-GOKU:
+Project Links
+=============
 
-.. image:: _images/goku.gif
+* Documentation: https://sphinx-thumb-image.readthedocs.io
+* Source code: https://github.com/Robpol86/sphinx-thumb-image
+* PyPI homepage: https://pypi.org/project/sphinx-thumb-image
 
-<br>
+.. toctree::
+    :maxdepth: 3
+    :caption: Contents
 
-.. thumb-image:: _images/goku.gif
-    :resize-width: 100
-
-BALL:
-
-.. image:: _images/ball.apng
-
-<br>
-
-.. thumb-image:: _images/ball.apng
-    :resize-width: 50
+    install
+    usage
