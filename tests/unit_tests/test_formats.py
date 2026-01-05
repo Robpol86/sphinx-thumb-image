@@ -1,5 +1,8 @@
 """Test support of different input image formats."""
 
+from pathlib import Path
+
+import PIL.Image
 import pytest
 from bs4 import element
 from sphinx.testing.util import SphinxTestApp
@@ -25,3 +28,48 @@ def test_hotlinked(app: SphinxTestApp, img_tags: list[element.Tag]):
     # Confirm warning was emitted.
     warnings = app.warning.getvalue()
     assert "WARNING: external images are not supported" in warnings
+
+
+@pytest.mark.parametrize(
+    "app_params,expected_name,expected_format",
+    [
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/tux.png"}}, "tux.50x59.png", "PNG"),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/apple.jpg"}}, "apple.50x6.jpg", "JPEG"),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/netscape-static.gif"}}, "netscape-static.50x18.gif", "GIF"),
+    ],
+    indirect=["app_params"],
+)
+@pytest.mark.sphinx("html", testroot="defaults", confoverrides={"thumb_image_resize_width": 50})
+def test_formats(outdir: Path, img_tags: list[element.Tag], expected_name: str, expected_format: str):
+    """Test with image of different non-animated formats."""
+    # Confirm img src.
+    img_src = [t["src"] for t in img_tags]
+    assert img_src == [f"_images/{expected_name}"]
+    # Confirm image file's new dimensions.
+    image_path = outdir / img_src[0]
+    with PIL.Image.open(image_path) as image:
+        assert image.format == expected_format
+        assert getattr(image, "is_animated", False) is False
+        assert getattr(image, "n_frames", 1) == 1
+
+
+@pytest.mark.parametrize(
+    "app_params,expected_name,expected_format,expected_frames",
+    [
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/goku.gif"}}, "goku.10x3.gif", "GIF", 7),
+        ({"write_docs": {"index.rst": ".. thumb-image:: _images/ball.apng"}}, "ball.10x10.apng", "PNG", 20),
+    ],
+    indirect=["app_params"],
+)
+@pytest.mark.sphinx("html", testroot="defaults", confoverrides={"thumb_image_resize_width": 10})
+def test_animated(outdir: Path, img_tags: list[element.Tag], expected_name: str, expected_format: str, expected_frames: int):
+    """Test with image of different non-animated formats."""
+    # Confirm img src.
+    img_src = [t["src"] for t in img_tags]
+    assert img_src == [f"_images/{expected_name}"]
+    # Confirm image file's new dimensions.
+    image_path = outdir / img_src[0]
+    with PIL.Image.open(image_path) as image:
+        assert image.format == expected_format
+        assert image.is_animated is True
+        assert image.n_frames == expected_frames
