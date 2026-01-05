@@ -4,6 +4,9 @@ Sphinx Thumb Image
 
 Resize images in Sphinx documents/pages to thumbnails.
 
+``sphinx-thumb-image`` provides a ``thumb-image`` directive that's a drop-in replacement for the ``image`` directive. Set the
+thumbnail's size using the ``:resize-width:`` and/or ``:resize-height:`` options.
+
 Project Links
 =============
 
