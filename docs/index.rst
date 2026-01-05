@@ -20,3 +20,4 @@ Project Links
 
     install
     usage
+    examples
