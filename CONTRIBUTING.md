@@ -1,5 +1,7 @@
 # Contributing
 
+TODO revisit
+
 Everyone that wants to contribute to the project should read this document.
 
 ## Getting Started
