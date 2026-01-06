@@ -64,12 +64,48 @@ Images
         scaled down to fit within both dimensions. A default width may be specified with :option:`thumb_image_resize_width`
         in ``conf.py``.
 
-TODO
-
 Figures
 =======
 
-TODO
+.. tab-set::
+
+    .. tab-item:: Thumbnail
+
+        .. thumb-figure:: _images/tux.png
+            :resize-width: 100px
+
+            This is a thumbnail.
+
+    .. tab-item:: Fullsize
+
+        .. figure:: _images/tux.png
+
+            This is the fullsize original.
+
+.. tab-set::
+
+    .. tab-item:: reStructuredText
+
+        .. code-block:: reStructuredText
+
+            .. thumb-figure:: _images/tux.png
+                :resize-width: 100px
+
+                This is a thumbnail.
+
+    .. tab-item:: Markdown
+
+        .. code-block:: Markdown
+
+            ```{thumb-figure} _images/tux.png
+            :resize-width: 100px
+
+            This is a thumbnail.
+            ```
+
+.. rst:directive:: thumb-figure
+
+    Figures have the same options as the :rst:dir:`thumb-image` directive.
 
 Configuration
 =============

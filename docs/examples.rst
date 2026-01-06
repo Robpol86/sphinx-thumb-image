@@ -4,7 +4,7 @@
 Examples
 ========
 
-Here are some examples along with the original images.
+Here are some examples along with the original fullsize images.
 
 JPEG
 ====
