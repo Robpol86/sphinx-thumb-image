@@ -66,11 +66,28 @@ Images
 
     .. rst:directive:option:: target-format
 
-        TODO.
+        Boolean option to enable substitutions in the built in ``:target:`` option. Built in substitutions:
+
+        * ``%(raw_path)s``: Replaced with the path to the original fullsize image as given in the directive
+        * ``%(fullsize_path)s``: Replaced with the path to the original fullsize image taking into account subdirectories
+
+        Additional substitutions may be provided with the :option:`thumb_image_target_format_substitutions` option in your
+        ``conf.py``.
+
+        Here's an example for the file ``docs/posts/2026/guide.rst`` (``conf.py`` is located at ``docs/conf.py`` in this
+        example):
+
+        .. code-block:: reStructuredText
+
+            .. thumb-image:: assets/tux.png
+                :target: https://cdn/account/docs/%(fullsize_path)s
+                :target-format:
+
+        The thumbnail image will link to ``https://cdn/account/docs/posts/2026/assets/tux.png``.
 
     .. rst:directive:option:: no-target-format
 
-        TODO.
+        Boolean option to negate :rst:dir:`thumb-image:target-format` if :option:`thumb_image_target_format` is ``True``.
 
 Figures
 =======
