@@ -159,12 +159,18 @@ Set defaults for the extension in your ``conf.py`` file:
 
     *Default:* :guilabel:`False`
 
-    TODO
+    Sets :rst:dir:`thumb-image:target-format` by default for all thumb directives if True.
 
 .. option:: thumb_image_target_format_substitutions
 
     *Default:* :guilabel:`dict()`
 
-    TODO
+    Provide additional substitutions with this option. Example:
+
+    .. code-block:: python
+
+        thumb_image_target_format_substitutions = {"key": "value"}
+
+    Will replace ``%(key)s`` with ``value``.
 
 .. _doctreedir: https://www.sphinx-doc.org/en/master/extdev/appapi.html#sphinx.application.Sphinx.doctreedir
