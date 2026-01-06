@@ -16,7 +16,7 @@ Images
         .. thumb-image:: _images/tux.png
             :resize-width: 100px
 
-    .. tab-item:: Original
+    .. tab-item:: Fullsize
 
         .. image:: _images/tux.png
 
