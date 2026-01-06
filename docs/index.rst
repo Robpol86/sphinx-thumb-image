@@ -15,7 +15,7 @@ Project Links
 * PyPI homepage: https://pypi.org/project/sphinx-thumb-image
 
 .. toctree::
-    :maxdepth: 3
+    :maxdepth: 2
     :caption: Contents
 
     install
