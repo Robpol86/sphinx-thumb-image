@@ -10,7 +10,7 @@ JPEG
 ====
 
 .. thumb-figure:: _images/apple.jpg
-    :resize-width: 100px
+    :resize-width: 300px
 
     Thumbnail
 
