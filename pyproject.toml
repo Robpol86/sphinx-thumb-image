@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "sphinx-thumb-image"
-version = "0.0.1"
+version = "0.1.0"
 description = "Sphinx extension that resizes images into thumbnails on the fly"
 readme = "README.md"
 authors = [{name = "Robpol86", email = "robpol86@gmail.com"}]
