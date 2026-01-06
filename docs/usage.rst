@@ -64,6 +64,14 @@ Images
         scaled down to fit within both dimensions. A default width may be specified with :option:`thumb_image_resize_width`
         in ``conf.py``.
 
+    .. rst:directive:option:: target-format
+
+        TODO.
+
+    .. rst:directive:option:: no-target-format
+
+        TODO.
+
 Figures
 =======
 
@@ -129,5 +137,17 @@ Set defaults for the extension in your ``conf.py`` file:
     be overridden with the :rst:dir:`thumb-image:resize-height` option in the directive in document files. If
     :option:`thumb_image_resize_width` and :option:`thumb_image_resize_height` are both set the thumbnail will retain its
     aspect ratio and fit within both dimensions.
+
+.. option:: thumb_image_target_format
+
+    *Default:* :guilabel:`False`
+
+    TODO
+
+.. option:: thumb_image_target_format_substitutions
+
+    *Default:* :guilabel:`dict()`
+
+    TODO
 
 .. _doctreedir: https://www.sphinx-doc.org/en/master/extdev/appapi.html#sphinx.application.Sphinx.doctreedir
