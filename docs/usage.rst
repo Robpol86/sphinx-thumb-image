@@ -51,16 +51,18 @@ Images
     .. rst:directive:option:: resize-width
 
         Resize the image into a thumbnail with this width in pixels with the height automatically calculated to maintain the
-        same aspect ratio. If :rst:dir:`thumb-image:resize-width` and :rst:dir:`thumb-image:resize-height` are both specified
-        the thumbnail will retain its aspect ratio and will be scaled down to fit within both dimensions. A default width may
-        be specified with :option:`thumb_image_resize_width` in ``conf.py``.
+        same aspect ratio. Can be an integer or a string such as :guilabel:`"100px"`. If :rst:dir:`thumb-image:resize-width`
+        and :rst:dir:`thumb-image:resize-height` are both specified the thumbnail will retain its aspect ratio and will be
+        scaled down to fit within both dimensions. A default width may be specified with :option:`thumb_image_resize_width`
+        in ``conf.py``.
 
     .. rst:directive:option:: resize-height
 
         Resize the image into a thumbnail with this height in pixels with the width automatically calculated to maintain the
-        same aspect ratio. If :rst:dir:`thumb-image:resize-width` and :rst:dir:`thumb-image:resize-height` are both specified
-        the thumbnail will retain its aspect ratio and will be scaled down to fit within both dimensions. A default width may
-        be specified with :option:`thumb_image_resize_width` in ``conf.py``.
+        same aspect ratio. Can be an integer or a string such as :guilabel:`"100px"`. If :rst:dir:`thumb-image:resize-width`
+        and :rst:dir:`thumb-image:resize-height` are both specified the thumbnail will retain its aspect ratio and will be
+        scaled down to fit within both dimensions. A default width may be specified with :option:`thumb_image_resize_width`
+        in ``conf.py``.
 
 TODO
 
