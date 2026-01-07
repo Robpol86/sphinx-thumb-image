@@ -50,6 +50,7 @@ class ThumbImageResize:
         :returns: Path to the output image.
         """
         log = logging.getLogger(__name__)
+        log.debug(f"opening {source}")
         with PIL.Image.open(source) as image:
             source_size = image.size
             is_animated = getattr(image, "is_animated", False) and image.n_frames > 1
