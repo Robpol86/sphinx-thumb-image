@@ -38,7 +38,7 @@ def test_no_target(app: SphinxTestApp):
     hrefs = write_build_read(
         app,
         dedent(r"""\
-            .. thumb-image:: _images/tux.png
+            .. thumb-figure:: _images/tux.png
         """),
     )
     assert hrefs == [None]
@@ -58,7 +58,7 @@ def test_default_target(app: SphinxTestApp):
     hrefs = write_build_read(
         app,
         dedent(r"""\
-            .. thumb-image:: _images/tux.png
+            .. thumb-figure:: _images/tux.png
         """),
     )
     assert hrefs == ["https://localhost/%(fullsize_path)s"]
@@ -67,7 +67,7 @@ def test_default_target(app: SphinxTestApp):
     hrefs = write_build_read(
         app,
         dedent(r"""\
-            .. thumb-image:: _images/tux.png
+            .. thumb-figure:: _images/tux.png
                 :target-format:
         """),
     )
@@ -77,7 +77,7 @@ def test_default_target(app: SphinxTestApp):
     hrefs = write_build_read(
         app,
         dedent(r"""\
-            .. thumb-image:: _images/tux.png
+            .. thumb-figure:: _images/tux.png
                 :no-default-target:
         """),
     )
@@ -87,7 +87,7 @@ def test_default_target(app: SphinxTestApp):
     hrefs = write_build_read(
         app,
         dedent(r"""\
-            .. thumb-image:: _images/tux.png
+            .. thumb-figure:: _images/tux.png
                 :target: https://github.com
         """),
     )
