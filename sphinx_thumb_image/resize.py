@@ -73,6 +73,7 @@ class ThumbImageResize:
             thumb_file_name = f"{source.stem}.{target_size[0]}x{target_size[1]}{source.suffix}"
             target = target_dir / thumb_file_name
             if target.exists():
+                log.debug(f"skipping {source} ({target} exists)")
                 return target
             # Write to target file path.
             target.parent.mkdir(exist_ok=True, parents=True)
@@ -80,6 +81,7 @@ class ThumbImageResize:
             try:
                 with TemporaryFileLock(lock_file, timeout=0):
                     if target.exists():
+                        log.debug(f"skipping {source} ({target} exists after lock)")
                         return target
                     if copy_instead_of_save:
                         log.debug(f"copying {source} ({source_size[0]}x{source_size[1]}) to {target}")
@@ -91,6 +93,7 @@ class ThumbImageResize:
                         else:
                             image.save(target, format=image.format)
             except LockException:
+                log.debug(f"skipping {source} ({target} exists after race)")
                 return target
         return target
 
