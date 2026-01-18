@@ -17,6 +17,18 @@ class ThumbCommon(Image):
     __option_spec["resize-height"] = __option_spec["resize-width"]
     __option_spec["target-format"] = directives.flag
     __option_spec["no-target-format"] = directives.flag
+    __option_spec["no-default-target"] = directives.flag
+
+    def __default_target(self):
+        """Apply the thumb_image_default_target config."""
+        if "target" in self.options:
+            return
+        if "no-default-target" in self.options:
+            return
+        config = self.state.document.settings.env.config
+        default_target = config["thumb_image_default_target"]
+        if default_target is not None:
+            self.options["target"] = default_target
 
     def __format_target(self):
         """Apply the "target-format" option."""
@@ -88,6 +100,7 @@ class ThumbImage(ThumbCommon):
 
     def run(self) -> list[nodes.Element]:
         """Entrypoint."""
+        self._ThumbCommon__default_target()
         self._ThumbCommon__format_target()
         return self._ThumbCommon__add_request(super().run())
 
@@ -99,5 +112,6 @@ class ThumbFigure(Figure, ThumbCommon):
 
     def run(self) -> list[nodes.Element]:
         """Entrypoint."""
+        self._ThumbCommon__default_target()
         self._ThumbCommon__format_target()
         return self._ThumbCommon__add_request(super().run())

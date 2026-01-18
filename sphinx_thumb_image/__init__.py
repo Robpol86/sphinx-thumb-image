@@ -28,6 +28,7 @@ def setup(app: Sphinx) -> dict[str, str]:
     app.add_config_value("thumb_image_resize_height", None, "html")
     app.add_config_value("thumb_image_target_format", False, "html")
     app.add_config_value("thumb_image_target_format_substitutions", {}, "html")
+    app.add_config_value("thumb_image_default_target", None, "html")
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)
     app.connect("doctree-read", ThumbImageResize.resize_images_in_document, priority=499)
