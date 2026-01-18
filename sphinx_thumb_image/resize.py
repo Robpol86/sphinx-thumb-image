@@ -63,7 +63,8 @@ class ThumbImageResize:
                 image.thumbnail((request.width or source_size[0], request.height or source_size[1]))
                 target_size = image.size
             if target_size[0] >= source_size[0]:
-                message = f"requested thumbnail size is not smaller than source image ({source_size[0]}x{source_size[1]})"
+                paren = f"{node['uri']} {source_size[0]}x{source_size[1]}"
+                message = f"requested thumbnail size is not smaller than source image ({paren})"
                 doctree.reporter.warning(message, source=node.source, line=node.line)
                 copy_instead_of_save = True
             else:
