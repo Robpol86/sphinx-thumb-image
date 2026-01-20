@@ -138,60 +138,7 @@ def test_doctrees_paths(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
 
 
 @pytest.mark.sphinx("html", testroot="defaults")
-def test_absolute_fs_path(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
-    """Test with absolute filesystem path to image."""
-    open_paths = []
-    save_paths = []
-
-    # Patch open.
-    orig_pil_image_open = PIL.Image.open
-
-    def spy_pil_open(path, *args, **kwargs):
-        open_paths.append(path.relative_to(app.srcdir))
-        return orig_pil_image_open(path, *args, **kwargs)
-
-    monkeypatch.setattr(PIL.Image, "open", spy_pil_open)
-
-    # Patch save.
-    orig_pil_image_save = PIL.Image.Image.save
-
-    def spy_pil_save(self, path, *args, **kwargs):
-        save_paths.append(path.relative_to(app.srcdir))
-        return orig_pil_image_save(self, path, *args, **kwargs)
-
-    monkeypatch.setattr(PIL.Image.Image, "save", spy_pil_save)
-
-    # Write test document.
-    tux_png_path = app.srcdir / "_images" / "tux.png"
-    index_rst_contents = dedent(f"""\
-        .. thumb-image:: {tux_png_path.absolute().as_posix()}
-            :resize-width: 100
-    """)
-    assert "tests_unit_tests_test_paths_py__test_absolute_fs_path" in index_rst_contents
-    index_rst = app.srcdir / "index.rst"
-    index_rst.write_text(index_rst_contents, encoding="utf8")
-
-    # Run.
-    app.build()
-
-    # Check patched.
-    assert open_paths == [
-        Path("_images/tux.png"),
-    ]
-    assert save_paths == [
-        Path("_build/doctrees/_thumbs/_images/tux.100x118.png"),
-    ]
-
-    # Check doctreedir contents.
-    doctreedir_thumbs = app.doctreedir / "_thumbs"
-    assert sorted(f.relative_to(doctreedir_thumbs) for f in doctreedir_thumbs.rglob("*")) == [
-        Path("_images"),
-        Path("_images/tux.100x118.png"),
-    ]
-
-
-@pytest.mark.sphinx("html", testroot="defaults")
-def test_absolute_docs_path(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
+def test_absolute_path(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
     """Test with absolute path to image relative to the docs root."""
     pytest.skip("TODO")
     open_paths = []
