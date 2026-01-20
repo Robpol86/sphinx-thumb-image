@@ -138,8 +138,8 @@ def test_doctrees_paths(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
 
 
 @pytest.mark.sphinx("html", testroot="defaults")
-def test_absolut_path(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
-    """Test with absolute path to image."""
+def test_absolute_fs_path(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
+    """Test with absolute filesystem path to image."""
     open_paths = []
     save_paths = []
 
@@ -167,7 +167,7 @@ def test_absolut_path(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
         .. thumb-image:: {tux_png_path.absolute().as_posix()}
             :resize-width: 100
     """)
-    assert "tests_unit_tests_test_paths_py__test_absolut_path" in index_rst_contents
+    assert "tests_unit_tests_test_paths_py__test_absolute_fs_path" in index_rst_contents
     index_rst = app.srcdir / "index.rst"
     index_rst.write_text(index_rst_contents, encoding="utf8")
 
