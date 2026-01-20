@@ -161,7 +161,7 @@ def test_absolute_path(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
 
     monkeypatch.setattr(PIL.Image.Image, "save", spy_pil_save)
 
-    # Write test documents.
+    # Write test document.
     sub_rst_contents = dedent("""\
         :orphan:\n
         .. thumb-image:: /_images/tux.png
