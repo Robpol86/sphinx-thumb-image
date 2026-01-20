@@ -52,7 +52,7 @@ class ThumbCommon(Image):
         # Format.
         target = self.options["target"]
         for key, value in substitutions.items():
-            target = target.replace(f"%({key})s", value)
+            target = target.replace(f"%({key})s", value(self, substitutions, target) if callable(value) else value)
         if target == self.options["target"]:
             self.state.document.reporter.warning('no subtitutions made by "target-format" in "target"', line=self.lineno)
         else:
