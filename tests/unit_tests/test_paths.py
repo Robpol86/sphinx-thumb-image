@@ -140,7 +140,6 @@ def test_doctrees_paths(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
 @pytest.mark.sphinx("html", testroot="defaults")
 def test_absolute_path(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
     """Test with absolute path to image relative to the docs root."""
-    pytest.skip("TODO")
     open_paths = []
     save_paths = []
 

@@ -108,7 +108,6 @@ class ThumbImageResize:
         """
         thumbs_dir = app.env.doctreedir / cls.THUMBS_SUBDIR
         doctree_source = Path(doctree["source"])
-        doctree_subdir = doctree_source.parent.relative_to(app.srcdir)
         for node in doctree.findall(lambda n: ThumbNodeRequest.KEY in n):
             imguri = node["uri"]
             if imguri.startswith("data:"):
@@ -117,13 +116,11 @@ class ThumbImageResize:
             if imguri.find("://") != -1:
                 doctree.reporter.warning("external images are not supported", source=node.source, line=node.line)
                 continue
-            node_uri = Path(imguri)
-            if node_uri.is_absolute():
-                node_uri = node_uri.relative_to(doctree_source.parent)
-            source = doctree_source.parent / node_uri
+            path_rel, path_abs = app.env.relfn2path(imguri, app.env.docname)
+            source = Path(path_abs)
             if not source.is_file():
                 continue  # Subclassed Image directive already emits a warning in this case.
-            target_dir = thumbs_dir / doctree_subdir / node_uri.parent
+            target_dir = thumbs_dir / Path(path_rel).parent
             request: ThumbNodeRequest = node[ThumbNodeRequest.KEY]
             target = cls.resize(source, target_dir, request, doctree, node)
             node["uri"] = relpath(target, start=doctree_source.parent)
