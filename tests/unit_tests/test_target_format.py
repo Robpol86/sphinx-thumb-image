@@ -4,7 +4,7 @@ from pathlib import Path
 from textwrap import dedent
 
 import pytest
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, element
 from sphinx.testing.util import SphinxTestApp
 
 
@@ -149,3 +149,24 @@ def test_subdir(outdir: Path):
     sub_html_bs = BeautifulSoup(sub_html_contents, "html.parser")
     hrefs = [img.parent.get("href") for img in sub_html_bs.find_all("img")]
     assert hrefs == ["https://github.com/Robpol86/sphinx-thumb-image/blob/mock_branch/docs/sub/pictures/tux.png"]
+
+
+@pytest.mark.sphinx(
+    "html",
+    testroot="defaults",
+    confoverrides={
+        "thumb_image_resize_width": 100,
+        "thumb_image_target_format": True,
+        "thumb_image_target_format_substitutions": {"fullsize_rel": lambda **kw: kw["substitutions"]["fullsize_path"][2:]},
+    },
+    write_docs={
+        "index.rst": dedent("""
+            .. thumb-image:: _images/tux.png
+                :target: https://localhost/%(fullsize_rel)s
+        """),
+    },
+)
+def test_callable(img_tags: list[element.Tag]):
+    """TODO."""
+    hrefs = [t.parent.get("href") for t in img_tags]
+    assert hrefs == ["https://localhost/mages/tux.png"]
