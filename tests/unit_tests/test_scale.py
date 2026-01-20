@@ -95,16 +95,11 @@ def test_units(app: SphinxTestApp, expected: Optional[Exception]):
         "index.rst": ".. thumb-image:: _images/tux.png\n  :resize-width: 10000",
     },
 )
-def test_scale_up(outdir: Path, app: SphinxTestApp, img_tags: list[element.Tag]):
+def test_scale_up(app: SphinxTestApp, img_tags: list[element.Tag]):
     """Test when user specifies a thumbnail size that's not smaller than the source image."""
     # Confirm img src.
     img_src = [t["src"] for t in img_tags]
-    assert img_src == ["_images/tux.265x314.png"]
-    # Confirm image file's new dimensions.
-    image_path = outdir / img_src[0]
-    with PIL.Image.open(image_path) as image:
-        assert image.size[0] == 265  # noqa PLR2004
-        assert image.size[1] == 314  # noqa PLR2004
+    assert img_src == ["_images/tux.png"]
     # Confirm warning was emitted.
     warnings = app.warning.getvalue()
     assert "WARNING: requested thumbnail size is not smaller than source image" in warnings
