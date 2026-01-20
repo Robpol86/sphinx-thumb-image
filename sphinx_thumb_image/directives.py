@@ -15,6 +15,7 @@ class ThumbCommon(Image):
     __option_spec = {}
     __option_spec["resize-width"] = lambda arg: directives.nonnegative_int(arg.replace("px", ""))
     __option_spec["resize-height"] = __option_spec["resize-width"]
+    __option_spec["no-resize"] = directives.flag
     __option_spec["target-format"] = directives.flag
     __option_spec["no-target-format"] = directives.flag
     __option_spec["no-default-target"] = directives.flag
@@ -66,8 +67,12 @@ class ThumbCommon(Image):
         """
         config = self.state.document.settings.env.config
 
-        # Read width/height from directive options first.
-        if "resize-width" in self.options or "resize-height" in self.options:
+        if "no-resize" in self.options:
+            request = ThumbNodeRequest(
+                no_resize=True,
+            )
+        elif "resize-width" in self.options or "resize-height" in self.options:
+            # Read width/height from directive options first.
             request = ThumbNodeRequest(
                 width=self.options.get("resize-width", None),
                 height=self.options.get("resize-height", None),

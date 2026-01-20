@@ -2,7 +2,7 @@
 
 from os.path import relpath
 from pathlib import Path
-from shutil import copyfile
+from typing import Optional
 
 import PIL.Image
 import PIL.ImageFile
@@ -36,7 +36,9 @@ class ThumbImageResize:
         frames[0].save(target, format=image.format, save_all=True, append_images=frames[1:], disposal=disposal)
 
     @classmethod
-    def resize(cls, source: Path, target_dir: Path, request: ThumbNodeRequest, doctree: document, node: Element) -> Path:
+    def resize(
+        cls, source: Path, target_dir: Path, request: ThumbNodeRequest, doctree: document, node: Element
+    ) -> Optional[Path]:
         """Resize one image.
 
         Output image saved with the same relative path as the source image but in the thumbs directory.
@@ -47,7 +49,7 @@ class ThumbImageResize:
         :param doctree: Current document.
         :param node: Current image node.
 
-        :returns: Path to the output image.
+        :returns: Path to the output image or None if no resizing is done.
         """
         log = logging.getLogger(__name__)
         log.debug(f"opening {source}")
@@ -66,9 +68,7 @@ class ThumbImageResize:
                 paren = f"{node['uri']} {source_size[0]}x{source_size[1]}"
                 message = f"requested thumbnail size is not smaller than source image ({paren})"
                 doctree.reporter.warning(message, source=node.source, line=node.line)
-                copy_instead_of_save = True
-            else:
-                copy_instead_of_save = False
+                return None
             # Get target file path.
             thumb_file_name = f"{source.stem}.{target_size[0]}x{target_size[1]}{source.suffix}"
             target = target_dir / thumb_file_name
@@ -83,15 +83,11 @@ class ThumbImageResize:
                     if target.exists():
                         log.debug(f"skipping {source} ({target} exists after lock)")
                         return target
-                    if copy_instead_of_save:
-                        log.debug(f"copying {source} ({source_size[0]}x{source_size[1]}) to {target}")
-                        copyfile(source, target)
+                    log.debug(f"resizing {source} ({source_size[0]}x{source_size[1]}) to {target}")
+                    if is_animated:
+                        cls.save_animated(image, target, target_size)
                     else:
-                        log.debug(f"resizing {source} ({source_size[0]}x{source_size[1]}) to {target}")
-                        if is_animated:
-                            cls.save_animated(image, target, target_size)
-                        else:
-                            image.save(target, format=image.format)
+                        image.save(target, format=image.format)
             except LockException:
                 log.debug(f"skipping {source} ({target} exists after race)")
                 return target
@@ -109,6 +105,9 @@ class ThumbImageResize:
         thumbs_dir = app.env.doctreedir / cls.THUMBS_SUBDIR
         doctree_source = Path(doctree["source"])
         for node in doctree.findall(lambda n: ThumbNodeRequest.KEY in n):
+            request: ThumbNodeRequest = node[ThumbNodeRequest.KEY]
+            if request.no_resize:
+                continue
             imguri = node["uri"]
             if imguri.startswith("data:"):
                 doctree.reporter.warning("embedded images (data:...) are not supported", source=node.source, line=node.line)
@@ -121,6 +120,7 @@ class ThumbImageResize:
             if not source.is_file():
                 continue  # Subclassed Image directive already emits a warning in this case.
             target_dir = thumbs_dir / Path(path_rel).parent
-            request: ThumbNodeRequest = node[ThumbNodeRequest.KEY]
             target = cls.resize(source, target_dir, request, doctree, node)
+            if not target:
+                continue
             node["uri"] = relpath(target, start=doctree_source.parent)

@@ -11,7 +11,8 @@ class ThumbNodeRequest:
     Designed for messages to be passed from the image directives to the resizing class.
     """
 
-    width: Optional[int]
-    height: Optional[int]
+    width: Optional[int] = None
+    height: Optional[int] = None
+    no_resize: Optional[bool] = None
 
     KEY: ClassVar[str] = "thumb-request"
