@@ -108,3 +108,17 @@ def test_scale_up(outdir: Path, app: SphinxTestApp, img_tags: list[element.Tag])
     # Confirm warning was emitted.
     warnings = app.warning.getvalue()
     assert "WARNING: requested thumbnail size is not smaller than source image" in warnings
+
+
+@pytest.mark.sphinx(
+    "html",
+    testroot="defaults",
+    write_docs={
+        "index.rst": ".. thumb-image:: _images/tux.png\n  :no-resize:",
+    },
+)
+def test_no_resize(img_tags: list[element.Tag]):
+    """Test no-resize directive option."""
+    # Confirm img src.
+    img_src = [t["src"] for t in img_tags]
+    assert img_src == ["_images/tux.png"]
