@@ -36,38 +36,6 @@ class ThumbImageResize:
         frames[0].save(target, format=image.format, save_all=True, append_images=frames[1:], disposal=disposal)
 
     @classmethod
-    def copy(cls, source: Path, target_dir: Path) -> Path:
-        """Copy one image.
-
-        Does not resize, does not open the source image to read width and height. Only copies the file. Output image saved
-        with the same relative path as the source image but in the thumbs directory. The same file name will be used.
-
-        :param source: Path to image file to resize.
-        :param target_dir: Path to directory to write resized output image to.
-
-        :returns: Path to the output image.
-        """
-        log = logging.getLogger(__name__)
-        target = target_dir / source.name
-        if target.exists():
-            log.debug(f"skipping {source} ({target} exists)")
-            return target
-        # Copy to target file path.
-        target.parent.mkdir(exist_ok=True, parents=True)
-        lock_file = target.parent / f"{target.name}.lock"
-        try:
-            with TemporaryFileLock(lock_file, timeout=0):
-                if target.exists():
-                    log.debug(f"skipping {source} ({target} exists after lock)")
-                    return target
-                log.debug(f"copying {source} to {target}")
-                copyfile(source, target)
-        except LockException:
-            log.debug(f"skipping {source} ({target} exists after race)")
-            return target
-        return target
-
-    @classmethod
     def resize(cls, source: Path, target_dir: Path, request: ThumbNodeRequest, doctree: document, node: Element) -> Path:
         """Resize one image.
 
@@ -141,6 +109,9 @@ class ThumbImageResize:
         thumbs_dir = app.env.doctreedir / cls.THUMBS_SUBDIR
         doctree_source = Path(doctree["source"])
         for node in doctree.findall(lambda n: ThumbNodeRequest.KEY in n):
+            request: ThumbNodeRequest = node[ThumbNodeRequest.KEY]
+            if request.no_resize:
+                continue
             imguri = node["uri"]
             if imguri.startswith("data:"):
                 doctree.reporter.warning("embedded images (data:...) are not supported", source=node.source, line=node.line)
@@ -153,9 +124,5 @@ class ThumbImageResize:
             if not source.is_file():
                 continue  # Subclassed Image directive already emits a warning in this case.
             target_dir = thumbs_dir / Path(path_rel).parent
-            request: ThumbNodeRequest = node[ThumbNodeRequest.KEY]
-            if request.no_resize:
-                target = cls.copy(source, target_dir)
-            else:
-                target = cls.resize(source, target_dir, request, doctree, node)
+            target = cls.resize(source, target_dir, request, doctree, node)
             node["uri"] = relpath(target, start=doctree_source.parent)
