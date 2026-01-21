@@ -16,3 +16,8 @@ class ThumbNodeRequest:
     no_resize: Optional[bool] = None
 
     KEY: ClassVar[str] = "thumb-request"
+
+
+def format_replacement(string: str, key: str, replacement: str) -> str:
+    """TODO."""
+    return string.replace(f"%({key})s", replacement)

@@ -6,7 +6,7 @@ from docutils import nodes
 from docutils.parsers.rst import directives
 from docutils.parsers.rst.directives.images import Figure, Image
 
-from sphinx_thumb_image.lib import ThumbNodeRequest
+from sphinx_thumb_image.lib import ThumbNodeRequest, format_replacement
 
 
 class ThumbCommon(Image):
@@ -62,7 +62,7 @@ class ThumbCommon(Image):
                 replacement = value(**kwargs)
             else:
                 replacement = value
-            target = target.replace(f"%({key})s", replacement)
+            target = format_replacement(target, key, replacement)
         if target == self.options["target"]:
             self.state.document.reporter.warning('no subtitutions made by "target-format" in "target"', line=self.lineno)
         else:
