@@ -41,5 +41,10 @@ def format_replacement(target: str, key: str, replacement: str) -> str:
         target = target.replace(search, replacement[:int(a):])
     for search, a in re.findall(rf"(%\({key}:::(-?\d+)\)s)", target):
         target = target.replace(search, replacement[::int(a)])
+    # Two slice permutations.
+    for search, a in re.findall(rf"(%\({key}::(-?\d+)\)s)", target):
+        target = target.replace(search, replacement[:int(a)])
+    for search, a in re.findall(rf"(%\({key}:(-?\d+):\)s)", target):
+        target = target.replace(search, replacement[int(a):])
     # No slice.
     return target.replace(f"%({key})s", replacement)
