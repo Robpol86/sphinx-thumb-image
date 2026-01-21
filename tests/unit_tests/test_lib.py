@@ -14,8 +14,10 @@ def test_simple():
 
 def test_slicing():
     """Test string slicing."""
-    string = "https://localhost/%(fullsize_path)s"
-    assert format_replacement(string, "fullsize_path", "_images/tux.png") == "https://localhost/" + "_images/tux.png"
+    def go(target, expected):
+        actual = format_replacement(target, "fullsize_path", "_images/tux.png")
+        assert actual == expected
+    go("https://localhost/%(fullsize_path)s", "https://localhost/" + "_images/tux.png")
     pytest.skip("TODO")
     # :target: https://localhost/%(fullsize_path)s
     # :target: https://localhost/%(fullsize_path:-4:)s
