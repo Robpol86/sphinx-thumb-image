@@ -14,30 +14,20 @@ def test_simple():
 
 def test_slicing():
     """Test string slicing."""
-    def go(target, expected):
+    def go(target: str, expected: str = None):
+        if expected is None:
+            expected = target
         actual = format_replacement(target, "fullsize_path", "_images/tux.png")
         assert actual == expected
     go("https://localhost/%(fullsize_path)s", "https://localhost/" + "_images/tux.png")
     pytest.skip("TODO")
-    # :target: https://localhost/%(fullsize_path)s
-    # :target: https://localhost/%(fullsize_path:-4:)s
-    # :target: https://localhost/%(fullsize_path:7:)s
-    # :target: https://localhost/%(fullsize_path::-3)s
-    # :target: https://localhost/%(fullsize_path::5)s
-    # :target: https://localhost/%(fullsize_path:-5:-2)s
-    # :target: https://localhost/%(fullsize_path:1:5)s
-    # :target: https://localhost/%(fullsize_path:-8:-1:2)s
-    # :target: https://localhost/%(fullsize_path:1:8:3)s
-    # :target: https://localhost/%(fullsize_path:::-1)s
-    # :target: https://localhost/%(fullsize_path:)s
-
-    # "https://localhost/" + "_images/tux.png",
-    # "https://localhost/" + "_images/tux.png"[-4:],
-    # "https://localhost/" + "_images/tux.png"[7:],
-    # "https://localhost/" + "_images/tux.png"[:-3],
-    # "https://localhost/" + "_images/tux.png"[:5],
-    # "https://localhost/" + "_images/tux.png"[-5:-2],
-    # "https://localhost/" + "_images/tux.png"[1:5],
-    # "https://localhost/" + "_images/tux.png"[-8:-1:2],
-    # "https://localhost/" + "_images/tux.png"[1:8:3],
-    # "https://localhost/" + "_images/tux.png"[::-1],
+    go("https://localhost/%(fullsize_path:-4:)s", "https://localhost/" + "_images/tux.png"[-4:])
+    go("https://localhost/%(fullsize_path:7:)s", "https://localhost/" + "_images/tux.png"[7:])
+    go("https://localhost/%(fullsize_path::-3)s", "https://localhost/" + "_images/tux.png"[:-3])
+    go("https://localhost/%(fullsize_path::5)s", "https://localhost/" + "_images/tux.png"[:5])
+    go("https://localhost/%(fullsize_path:-5:-2)s", "https://localhost/" + "_images/tux.png"[-5:-2])
+    go("https://localhost/%(fullsize_path:1:5)s", "https://localhost/" + "_images/tux.png"[1:5])
+    go("https://localhost/%(fullsize_path:-8:-1:2)s", "https://localhost/" + "_images/tux.png"[-8:-1:2])
+    go("https://localhost/%(fullsize_path:1:8:3)s", "https://localhost/" + "_images/tux.png"[1:8:3])
+    go("https://localhost/%(fullsize_path:::-1)s", "https://localhost/" + "_images/tux.png"[::-1])
+    go("https://localhost/%(fullsize_path:)s")  # No-op, same as input.
