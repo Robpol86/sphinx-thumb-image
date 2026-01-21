@@ -143,7 +143,7 @@ def test_target_format(monkeypatch: pytest.MonkeyPatch, app: SphinxTestApp):
     },
 )
 def test_subdir(outdir: Path):
-    """Test path to an iamge in a subdirectory."""
+    """Test path to an image in a subdirectory."""
     sub_html = outdir / "sub" / "sub.html"
     sub_html_contents = sub_html.read_text(encoding="utf8")
     sub_html_bs = BeautifulSoup(sub_html_contents, "html.parser")
@@ -168,6 +168,6 @@ def test_subdir(outdir: Path):
     },
 )
 def test_callable(img_tags: list[element.Tag]):
-    """TODO."""
+    """Test with callables as format substitution values."""
     hrefs = [t.parent.get("href") for t in img_tags]
     assert hrefs == ["https://localhost/mages/tux.png"]
