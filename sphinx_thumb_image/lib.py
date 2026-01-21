@@ -1,5 +1,6 @@
 """Miscellaneous code."""
 
+import re
 from dataclasses import dataclass
 from typing import ClassVar, Optional
 
@@ -18,6 +19,8 @@ class ThumbNodeRequest:
     KEY: ClassVar[str] = "thumb-request"
 
 
-def format_replacement(string: str, key: str, replacement: str) -> str:
+def format_replacement(target: str, key: str, replacement: str) -> str:
     """TODO."""
-    return string.replace(f"%({key})s", replacement)
+    for search, a, b, c in re.findall(rf"(%\({key}:(-?\d+):(-?\d+):(-?\d+)\)s)", target):
+        target = target.replace(search, replacement[int(a):int(b):int(c)])
+    return target.replace(f"%({key})s", replacement)
