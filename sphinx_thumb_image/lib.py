@@ -20,7 +20,12 @@ class ThumbNodeRequest:
 
 
 def format_replacement(target: str, key: str, replacement: str) -> str:
-    """TODO."""
+    """TODO.
+
+    TODO: Update documentation for other PRs too.
+
+    TODO: rename?
+    """
     # Simple slices.
     for search, a, b, c in re.findall(rf"(%\({key}:(-?\d+):(-?\d+):(-?\d+)\)s)", target):
         target = target.replace(search, replacement[int(a):int(b):int(c)])
