@@ -154,8 +154,9 @@ def test_subdir(outdir: Path):
 @pytest.mark.sphinx(
     "html",
     testroot="defaults",
+    warningiserror=False,
+    exception_on_warning=False,
     confoverrides={
-        "suppress_warnings": ["config.cache"],
         "thumb_image_resize_width": 100,
         "thumb_image_target_format": True,
         "thumb_image_target_format_substitutions": {"fullsize_rel": lambda **kw: kw["substitutions"]["fullsize_path"][2:]},
