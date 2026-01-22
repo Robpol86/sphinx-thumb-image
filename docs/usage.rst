@@ -96,7 +96,7 @@ Images
 
     .. rst:directive:option:: no-default-target
 
-        Boolean option to negate :option:`thumb_image_default_target` if it is ``True``.
+        Boolean option to ignore :option:`thumb_image_default_target` and leave the target unmodified.
 
 Figures
 =======
