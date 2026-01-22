@@ -20,11 +20,13 @@ class ThumbNodeRequest:
 
 
 def format_replacement(target: str, key: str, replacement: str) -> str:
-    """TODO.
+    """Apply special formatting to the replacement string.
 
-    TODO: Update documentation for other PRs too.
+    :param target: The unformatted string to operate on.
+    :param key: Format key (e.g. "key" in "%(key)s").
+    :param replacement: The value to replace the key formatting with.
 
-    TODO: rename?
+    :return: The formatted string.
     """
     # Simple slices.
     for search, a, b, c in re.findall(rf"(%\({key}:(-?\d+):(-?\d+):(-?\d+)\)s)", target):

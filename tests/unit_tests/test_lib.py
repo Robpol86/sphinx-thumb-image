@@ -28,5 +28,7 @@ def test_format_replacement_slicing():
     go("https://localhost/%(fullsize_path:1:5)s", "https://localhost/" + "_images/tux.png"[1:5])
     go("https://localhost/%(fullsize_path:-8:-1:2)s", "https://localhost/" + "_images/tux.png"[-8:-1:2])
     go("https://localhost/%(fullsize_path:1:8:3)s", "https://localhost/" + "_images/tux.png"[1:8:3])
+    go("https://localhost/%(fullsize_path:1::3)s", "https://localhost/" + "_images/tux.png"[1::3])
+    go("https://localhost/%(fullsize_path::8:3)s", "https://localhost/" + "_images/tux.png"[:8:3])
     go("https://localhost/%(fullsize_path:::-1)s", "https://localhost/" + "_images/tux.png"[::-1])
     go("https://localhost/%(fullsize_path:)s")  # No-op, same as input.
