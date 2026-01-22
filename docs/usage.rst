@@ -90,6 +90,16 @@ Images
 
         The thumbnail image will link to ``https://cdn/account/docs/posts/2026/assets/tux.png``.
 
+        Substutions can also incorporate string slicing:
+
+        .. code-block:: reStructuredText
+
+            .. thumb-image:: assets/tux.png
+                :target: https://cdn/account/docs/%(fullsize_path:6:-4)s
+                :target-format:
+
+        The thumbnail image will link to ``https://cdn/account/docs/2026/assets/tux``.
+
     .. rst:directive:option:: no-target-format
 
         Boolean option to negate :rst:dir:`thumb-image:target-format` if :option:`thumb_image_target_format` is ``True``.
@@ -181,6 +191,12 @@ Set defaults for the extension in your ``conf.py`` file:
         thumb_image_target_format_substitutions = {"key": "value"}
 
     Will replace ``%(key)s`` with ``value``.
+
+    You can also specify functions or callables as values:
+
+    .. code-block:: python
+
+        thumb_image_target_format_substitutions = {"key": lambda self, substitutions, target, env: "value"}
 
 .. option:: thumb_image_default_target
 
