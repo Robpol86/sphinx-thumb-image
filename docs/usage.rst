@@ -203,7 +203,8 @@ Set defaults for the extension in your ``conf.py`` file:
     *Default:* :guilabel:`None`
 
     Sets a thumb's `target`_ URL by default for all thumb directives if set to a string. Use this if all thumb images should
-    link to files in the same location, such as an image host or another git repository's web interface.
+    link to files in the same location, such as an image host or another git repository's web interface. Supports formatting
+    like :rst:dir:`thumb-image:target-format`.
 
 .. _doctreedir: https://www.sphinx-doc.org/en/master/extdev/appapi.html#sphinx.application.Sphinx.doctreedir
 .. _target: https://docutils.sourceforge.io/docs/ref/rst/directives.html#target
