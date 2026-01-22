@@ -196,7 +196,9 @@ Set defaults for the extension in your ``conf.py`` file:
 
     .. code-block:: python
 
-        thumb_image_target_format_substitutions = {"key": lambda self, substitutions, target, env: "value"}
+        def formatter(self, substitutions, target, env):
+            return substitutions["fullsize_path"][2:]
+        thumb_image_target_format_substitutions = {"key": formatter}
 
 .. option:: thumb_image_default_target
 
