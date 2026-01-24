@@ -42,7 +42,7 @@ Images
     Equivalent to the built in `image directive <http://docutils.sourceforge.net/docs/ref/rst/directives.html#image>`_.
     Display a thumbnail image in the document the same way a regular image is displayed. The resized image is written to the
     Sphinx build working directory `doctreedir`_ and copied into the output image directory. If no other image directives
-    reference the fullsize image it won't be copied into the output directory to save disk space.
+    reference the fullsize image it won't be copied into the output documentation directory to save disk space.
 
     .. attribute:: align/alt/height/width/scale/target
 
@@ -63,6 +63,11 @@ Images
         and :rst:dir:`thumb-image:resize-height` are both specified the thumbnail will retain its aspect ratio and will be
         scaled down to fit within both dimensions. A default width may be specified with :option:`thumb_image_resize_width`
         in ``conf.py``.
+
+    .. rst:directive:option:: no-resize
+
+        Does not resize the image and instead just copies it to the output documentation directory. Useful when you want to
+        use the other features in the extension for images that are already small.
 
     .. rst:directive:option:: target-format
 
@@ -85,9 +90,23 @@ Images
 
         The thumbnail image will link to ``https://cdn/account/docs/posts/2026/assets/tux.png``.
 
+        Substitutions can also incorporate string slicing:
+
+        .. code-block:: reStructuredText
+
+            .. thumb-image:: assets/tux.png
+                :target: https://cdn/account/docs/%(fullsize_path:6:-4)s
+                :target-format:
+
+        The thumbnail image will link to ``https://cdn/account/docs/2026/assets/tux``.
+
     .. rst:directive:option:: no-target-format
 
         Boolean option to negate :rst:dir:`thumb-image:target-format` if :option:`thumb_image_target_format` is ``True``.
+
+    .. rst:directive:option:: no-default-target
+
+        Boolean option to ignore :option:`thumb_image_default_target` and leave the target unmodified.
 
 Figures
 =======
@@ -173,4 +192,21 @@ Set defaults for the extension in your ``conf.py`` file:
 
     Will replace ``%(key)s`` with ``value``.
 
+    You can also specify functions or callables as values:
+
+    .. code-block:: python
+
+        def formatter(self, substitutions, target, env):
+            return substitutions["fullsize_path"][2:]
+        thumb_image_target_format_substitutions = {"key": formatter}
+
+.. option:: thumb_image_default_target
+
+    *Default:* :guilabel:`None`
+
+    Sets a thumb's `target`_ URL by default for all thumb directives if set to a string. Use this if all thumb images should
+    link to files in the same location, such as an image host or another git repository's web interface. Supports formatting
+    like :rst:dir:`thumb-image:target-format`.
+
 .. _doctreedir: https://www.sphinx-doc.org/en/master/extdev/appapi.html#sphinx.application.Sphinx.doctreedir
+.. _target: https://docutils.sourceforge.io/docs/ref/rst/directives.html#target
