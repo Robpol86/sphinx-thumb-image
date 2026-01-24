@@ -43,6 +43,7 @@ These are the steps a maintainer will take to make a new release.
 3. Click "Publish release".
     1. https://github.com/Robpol86/sphinx-thumb-image/actions/workflows/pypi.yml will automatically run to publish to PyPI.
     1. Afterwards the workflow will also upload assets to the release you've just created.
+    1. Go to https://app.readthedocs.org/dashboard/sphinx-thumb-image/edit/ and set the default version to the new version
 
 ## Thank You!
 
