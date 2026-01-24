@@ -28,6 +28,9 @@ pygments_style = "sphinx"
 
 
 # Options for HTML output.
+html_context = {
+    "display_github": True,
+}
 html_copy_source = False
 html_theme = "sphinx_rtd_theme"
 
