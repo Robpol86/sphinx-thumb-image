@@ -1,6 +1,6 @@
 """Sphinx Thumb Image.
 
-Sphinx extension that resizes images into thumbnails on the fly.
+Resize images in Sphinx documents/pages to thumbnails.
 
 https://sphinx-thumb-image.readthedocs.io
 https://github.com/Robpol86/sphinx-thumb-image
@@ -14,7 +14,7 @@ from sphinx_thumb_image.resize import ThumbImageResize
 
 __author__ = "@Robpol86"
 __license__ = "BSD-2-Clause"
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 
 def setup(app: Sphinx) -> dict[str, str]:
