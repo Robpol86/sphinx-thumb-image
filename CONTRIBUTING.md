@@ -35,6 +35,7 @@ These are the steps a maintainer will take to make a new release.
     1. Finalize the [CHANGELOG.md](CHANGELOG.md) file and resetting the **Unreleased** section to "N/A".
     2. Set the new version in the extension's [`__init__.py`](sphinx_thumb_image/__init__.py) file.
     3. Also set the new version in the [pyproject.toml](pyproject.toml) file.
+    4. Run `make relock` to update the version in the `uv.lock` file.
 2. Manually draft a new release in: https://github.com/Robpol86/sphinx-thumb-image/releases
     1. Set a new tag using the `vX.X.X` convention.
     2. Set the release title using the `sphinx-thumb-image-X.X.X` convention.
