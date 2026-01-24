@@ -90,7 +90,7 @@ Images
 
         The thumbnail image will link to ``https://cdn/account/docs/posts/2026/assets/tux.png``.
 
-        Substutions can also incorporate string slicing:
+        Substitutions can also incorporate string slicing:
 
         .. code-block:: reStructuredText
 
