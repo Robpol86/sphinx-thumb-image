@@ -120,7 +120,11 @@ class ThumbImageResize:
             if not source.is_file():
                 continue  # Subclassed Image directive already emits a warning in this case.
             target_dir = thumbs_dir / Path(path_rel).parent
-            target = cls.resize(source, target_dir, request, doctree, node)
+            try:
+                target = cls.resize(source, target_dir, request, doctree, node)
+            except Exception as exc:
+                doctree.reporter.error(f"failed to resize {source}: {exc}", source=node.source, line=node.line)
+                raise
             if not target:
                 continue
             node["uri"] = relpath(target, start=doctree_source.parent)
