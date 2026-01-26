@@ -30,9 +30,6 @@ jobs:
       - name: Install Dependencies
         run: make deps
 
-      - name: Run Lints
-        run: make lint
-
       - name: Run Tests
         env:
           COVERAGE_FAIL_UNDER: ${{ github.event_name == 'pull_request' && '85' || '0' }}
@@ -41,6 +38,12 @@ jobs:
 
       - name: Run Integration Tests
         run: make it
+
+      - name: Run Lints
+        run: make lint
+
+      - name: Verify Formatting
+        run: make format && git diff-index HEAD -p --exit-code
 
       - name: Build Docs
         run: make docs

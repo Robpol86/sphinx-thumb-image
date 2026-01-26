@@ -12,11 +12,13 @@ def test_format_replacement_simple():
 
 def test_format_replacement_slicing():
     """Test string slicing."""
+
     def go(target: str, expected: str = None):
         if expected is None:
             expected = target
         actual = format_replacement(target, "fullsize_path", "_images/tux.png")
         assert actual == expected
+
     go("https://localhost/%(fullsize_path)s", "https://localhost/" + "_images/tux.png")
     go("https://localhost/%(fullsize_path:-4:)s", "https://localhost/" + "_images/tux.png"[-4:])
     go("https://localhost/%(fullsize_path:7:)s", "https://localhost/" + "_images/tux.png"[7:])
