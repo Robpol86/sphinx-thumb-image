@@ -42,7 +42,7 @@ jobs:
       - name: Run Lints
         run: make lint
 
-      - name: Verify formatting
+      - name: Verify Formatting
         run: make format && git diff-index HEAD -p --exit-code
 
       - name: Build Docs
