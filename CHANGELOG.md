@@ -7,8 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Changed animated image handling from implicit to explicit using the `:is-animated:` directive option ([#66](https://github.com/Robpol86/sphinx-thumb-image/issues/66)).
-- Fixed docs not rebuilding when `thumb_image_default_target` is changed ([#60](https://github.com/Robpol86/sphinx-thumb-image/issues/60)).
+- N/A
+
+## [0.3.0] - 2026-01-26
+
+### Added
+
+- `:is-animated:` directive option ([#66](https://github.com/Robpol86/sphinx-thumb-image/issues/66)).
+
+### Removed
+
+- Automatic detection of animated image files. Use `:is-animated:` instead.
+
+### Fixed
+
+- Docs not rebuilding when `thumb_image_default_target` is changed ([#60](https://github.com/Robpol86/sphinx-thumb-image/issues/60)).
 
 ## [0.2.0] - 2026-01-24
 
