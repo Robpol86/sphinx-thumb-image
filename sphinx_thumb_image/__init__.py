@@ -24,12 +24,12 @@ def setup(app: Sphinx) -> dict[str, str]:
 
     :returns: Extension version.
     """
-    app.add_config_value("thumb_image_resize_width", None, "html")
-    app.add_config_value("thumb_image_resize_height", None, "html")
-    app.add_config_value("thumb_image_is_animated", False, "html")
-    app.add_config_value("thumb_image_target_format", False, "html")
-    app.add_config_value("thumb_image_target_format_substitutions", {}, "html")
-    app.add_config_value("thumb_image_default_target", None, "html")
+    app.add_config_value("thumb_image_resize_width", None, "env")
+    app.add_config_value("thumb_image_resize_height", None, "env")
+    app.add_config_value("thumb_image_is_animated", False, "env")
+    app.add_config_value("thumb_image_target_format", False, "env")
+    app.add_config_value("thumb_image_target_format_substitutions", {}, "env")
+    app.add_config_value("thumb_image_default_target", None, "env")
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)
     app.connect("doctree-read", ThumbImageResize.resize_images_in_document, priority=499)
