@@ -55,9 +55,8 @@ class ThumbImageResize:
         log.debug(f"opening {source}")
         with PIL.Image.open(source) as image:
             source_size = image.size
-            is_animated = getattr(image, "is_animated", False) and image.n_frames > 1
             # Get target size.
-            if is_animated:
+            if request.is_animated:
                 image_copy = image.copy()
                 image_copy.thumbnail((request.width or source_size[0], request.height or source_size[1]))
                 target_size = image_copy.size
@@ -84,7 +83,7 @@ class ThumbImageResize:
                         log.debug(f"skipping {source} ({target} exists after lock)")
                         return target
                     log.debug(f"resizing {source} ({source_size[0]}x{source_size[1]}) to {target}")
-                    if is_animated:
+                    if request.is_animated:
                         cls.save_animated(image, target, target_size)
                     else:
                         image.save(target, format=image.format)
