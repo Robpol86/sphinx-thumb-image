@@ -14,7 +14,8 @@ class ThumbNodeRequest:
 
     width: Optional[int] = None
     height: Optional[int] = None
-    no_resize: Optional[bool] = None
+    no_resize: bool = False
+    is_animated: bool = False
 
     KEY: ClassVar[str] = "thumb-request"
 
