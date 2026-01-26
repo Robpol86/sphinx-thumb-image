@@ -30,28 +30,28 @@ def format_replacement(target: str, key: str, replacement: str) -> str:
     """
     # Simple slices.
     for search, a, b, c in re.findall(rf"(%\({key}:(-?\d+):(-?\d+):(-?\d+)\)s)", target):
-        target = target.replace(search, replacement[int(a):int(b):int(c)])
+        target = target.replace(search, replacement[int(a) : int(b) : int(c)])
     for search, a, b in re.findall(rf"(%\({key}:(-?\d+):(-?\d+)\)s)", target):
-        target = target.replace(search, replacement[int(a):int(b)])
+        target = target.replace(search, replacement[int(a) : int(b)])
     for search, a in re.findall(rf"(%\({key}:(-?\d+)\)s)", target):
         target = target.replace(search, replacement[int(a)])
     # Three slice permutations.
     for search, a, b in re.findall(rf"(%\({key}::(-?\d+):(-?\d+)\)s)", target):
-        target = target.replace(search, replacement[:int(a):int(b)])
+        target = target.replace(search, replacement[: int(a) : int(b)])
     for search, a, b in re.findall(rf"(%\({key}:(-?\d+)::(-?\d+)\)s)", target):
-        target = target.replace(search, replacement[int(a)::int(b)])
+        target = target.replace(search, replacement[int(a) :: int(b)])
     for search, a, b in re.findall(rf"(%\({key}:(-?\d+):(-?\d+):\)s)", target):
-        target = target.replace(search, replacement[int(a):int(b):])
+        target = target.replace(search, replacement[int(a) : int(b) :])
     for search, a in re.findall(rf"(%\({key}:(-?\d+)::\)s)", target):
-        target = target.replace(search, replacement[int(a)::])
+        target = target.replace(search, replacement[int(a) : :])
     for search, a in re.findall(rf"(%\({key}::(-?\d+):\)s)", target):
-        target = target.replace(search, replacement[:int(a):])
+        target = target.replace(search, replacement[: int(a) :])
     for search, a in re.findall(rf"(%\({key}:::(-?\d+)\)s)", target):
-        target = target.replace(search, replacement[::int(a)])
+        target = target.replace(search, replacement[:: int(a)])
     # Two slice permutations.
     for search, a in re.findall(rf"(%\({key}::(-?\d+)\)s)", target):
-        target = target.replace(search, replacement[:int(a)])
+        target = target.replace(search, replacement[: int(a)])
     for search, a in re.findall(rf"(%\({key}:(-?\d+):\)s)", target):
-        target = target.replace(search, replacement[int(a):])
+        target = target.replace(search, replacement[int(a) :])
     # No slice.
     return target.replace(f"%({key})s", replacement)
