@@ -16,6 +16,8 @@ class ThumbCommon(Image):
     __option_spec["resize-width"] = lambda arg: directives.nonnegative_int(arg.replace("px", ""))
     __option_spec["resize-height"] = __option_spec["resize-width"]
     __option_spec["no-resize"] = directives.flag
+    __option_spec["is-animated"] = directives.flag
+    __option_spec["no-is-animated"] = directives.flag
     __option_spec["target-format"] = directives.flag
     __option_spec["no-target-format"] = directives.flag
     __option_spec["no-default-target"] = directives.flag
@@ -76,29 +78,31 @@ class ThumbCommon(Image):
         :return: The same node list as the input with an annotated image node.
         """
         config = self.state.document.settings.env.config
+        request = ThumbNodeRequest()
 
+        # Determine width/height.
         if "no-resize" in self.options:
-            request = ThumbNodeRequest(
-                no_resize=True,
-            )
+            request.no_resize = True
         elif "resize-width" in self.options or "resize-height" in self.options:
             # Read width/height from directive options first.
-            request = ThumbNodeRequest(
-                width=self.options.get("resize-width", None),
-                height=self.options.get("resize-height", None),
-            )
+            request.width = self.options.get("resize-width", None)
+            request.height = self.options.get("resize-height", None)
         else:
             # Read width/height from Sphinx config.
             thumb_image_resize_width = config["thumb_image_resize_width"]
             thumb_image_resize_height = config["thumb_image_resize_height"]
             if thumb_image_resize_width is not None or thumb_image_resize_height is not None:
-                request = ThumbNodeRequest(
-                    width=thumb_image_resize_width,
-                    height=thumb_image_resize_height,
-                )
+                request.width = thumb_image_resize_width
+                request.height = thumb_image_resize_height
             else:
                 # User has not provided the width/height.
                 raise self.error('Error in %r directive: "resize-width" option is missing.' % self.name)
+
+        # Determine is_animated flag.
+        if "is-animated" in self.options:
+            request.is_animated = True
+        elif config["thumb_image_is_animated"] and "no-is-animated" not in self.options:
+            request.is_animated = True
 
         # Add request to the node.
         for node in sphinx_nodes:

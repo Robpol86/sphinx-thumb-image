@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- N/A
+- Changed animated image handling from implicit to explicit using the `:is-animated:` directive option ([#66](https://github.com/Robpol86/sphinx-thumb-image/issues/66)).
 
 ## [0.2.0] - 2026-01-24
 

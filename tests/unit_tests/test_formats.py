@@ -61,7 +61,14 @@ def test_formats(outdir: Path, img_tags: list[element.Tag], expected_name: str, 
     ],
     indirect=["app_params"],
 )
-@pytest.mark.sphinx("html", testroot="defaults", confoverrides={"thumb_image_resize_width": 10})
+@pytest.mark.sphinx(
+    "html",
+    testroot="defaults",
+    confoverrides={
+        "thumb_image_resize_width": 10,
+        "thumb_image_is_animated": True,
+    },
+)
 def test_animated(outdir: Path, img_tags: list[element.Tag], expected_name: str, expected_format: str, expected_frames: int):
     """Test with image of different non-animated formats."""
     # Confirm img src.
