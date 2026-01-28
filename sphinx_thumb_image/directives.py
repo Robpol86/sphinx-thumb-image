@@ -147,7 +147,9 @@ class ListTableThumbs(ListTable):
 
     CTX_KEY = "listTableThumbsKey"
     option_spec = ListTable.option_spec | {
-        k: v for k, v in ThumbCommon._ThumbCommon__option_spec.items() if k in ["resize-width", "resize-height"]
+        k: v
+        for k, v in ThumbCommon._ThumbCommon__option_spec.items()
+        if k in ["resize-width", "resize-height"]
     }
 
     def run(self):
