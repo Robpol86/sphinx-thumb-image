@@ -140,10 +140,13 @@ class ThumbFigure(Figure, ThumbCommon):
 class ListTableThumbs(ListTable):
     """TODO."""
 
+    CTX_KEY = "listTableThumbsKey"
     option_spec = ListTable.option_spec | ThumbCommon._ThumbCommon__option_spec
 
     def run(self):
         """TODO."""
-        # Set  self.state.document["MYKEY"]
-        return super().run()
-        # Pop  self.state.document["MYKEY"]
+        thumb_options = {k: v for k, v in self.options.items() if k in ThumbCommon._ThumbCommon__option_spec}
+        self.state.document[self.CTX_KEY] = thumb_options
+        sphinx_nodes = super().run()
+        self.state.document.attributes.pop(self.CTX_KEY)
+        return sphinx_nodes
