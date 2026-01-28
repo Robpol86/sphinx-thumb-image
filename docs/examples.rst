@@ -71,4 +71,24 @@ Animated GIF
 List Table Thumbs
 =================
 
-TODO
+.. list-table-thumbs::
+    :resize-width: 90px
+
+    * - .. thumb-figure:: _images/tux.png
+
+            One
+      - .. thumb-figure:: _images/tux.png
+
+            Two
+      - .. thumb-figure:: _images/tux.png
+
+            Three
+    * - .. thumb-figure:: _images/tux.png
+
+            Four
+      - .. thumb-figure:: _images/tux.png
+
+            Five
+      - .. thumb-figure:: _images/tux.png
+
+            Six
