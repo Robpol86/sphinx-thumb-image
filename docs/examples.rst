@@ -35,6 +35,7 @@ Animated PNG (APNG)
 
 .. thumb-figure:: _images/ball.apng
     :resize-width: 50px
+    :is-animated:
 
     Thumbnail
 
@@ -59,6 +60,7 @@ Animated GIF
 
 .. thumb-figure:: _images/goku.gif
     :resize-width: 100px
+    :is-animated:
 
     Thumbnail
 
