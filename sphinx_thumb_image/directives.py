@@ -141,3 +141,9 @@ class ListTableThumbs(ListTable):
     """TODO."""
 
     option_spec = ListTable.option_spec | ThumbCommon._ThumbCommon__option_spec
+
+    def run(self):
+        """TODO."""
+        # Set  self.state.document["MYKEY"]
+        return super().run()
+        # Pop  self.state.document["MYKEY"]
