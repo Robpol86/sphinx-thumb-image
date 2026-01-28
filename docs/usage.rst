@@ -159,6 +159,59 @@ Figures
 
     Figures have the same options as the :rst:dir:`thumb-image` directive.
 
+List Table Thumbs
+=================
+
+.. list-table-thumbs::
+    :resize-width: 90px
+
+    * - .. thumb-image:: _images/tux.png
+      - .. thumb-image:: _images/tux.png
+    * - .. thumb-image:: _images/tux.png
+      - .. thumb-image:: _images/tux.png
+
+.. tab-set::
+
+    .. tab-item:: reStructuredText
+
+        .. code-block:: reStructuredText
+
+            .. list-table-thumbs::
+                :resize-width: 90px
+
+                * - .. thumb-image:: _images/tux.png
+                  - .. thumb-image:: _images/tux.png
+                * - .. thumb-image:: _images/tux.png
+                  - .. thumb-image:: _images/tux.png
+
+    .. tab-item:: Markdown
+
+        .. code-block:: Markdown
+
+            ```{list-table-thumbs}
+            :resize-width: 90px
+
+            * - :::{thumb-image} _images/tux.png
+                :::
+              - :::{thumb-image} _images/tux.png
+                :::
+            * - :::{thumb-image} _images/tux.png
+                :::
+              - :::{thumb-image} _images/tux.png
+                :::
+            ```
+
+.. rst:directive:: list-table-thumbs
+
+    Equivalent to the built in `list-table`_ directive. The difference is that it supports additional options that are passed
+    to thumbnails in the table. This helps reduce repeated lines in your documentation such as if all the thumbnails have the
+    same width.
+
+    .. rst:directive:option:: resize-width
+    .. rst:directive:option:: resize-height
+
+        Applied to each :rst:dir:`thumb-image` and :rst:dir:`thumb-figure` directives used in the table.
+
 Configuration
 =============
 
@@ -223,4 +276,5 @@ Set defaults for the extension in your ``conf.py`` file:
     like :rst:dir:`thumb-image:target-format`.
 
 .. _doctreedir: https://www.sphinx-doc.org/en/master/extdev/appapi.html#sphinx.application.Sphinx.doctreedir
+.. _list-table: https://docutils.sourceforge.io/docs/ref/rst/directives.html#list-table
 .. _target: https://docutils.sourceforge.io/docs/ref/rst/directives.html#target

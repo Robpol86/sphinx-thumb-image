@@ -5,6 +5,7 @@ from pathlib import Path, PurePosixPath
 from docutils import nodes
 from docutils.parsers.rst import directives
 from docutils.parsers.rst.directives.images import Figure, Image
+from docutils.parsers.rst.directives.tables import ListTable
 
 from sphinx_thumb_image.lib import ThumbNodeRequest, format_replacement
 
@@ -78,6 +79,7 @@ class ThumbCommon(Image):
         :return: The same node list as the input with an annotated image node.
         """
         config = self.state.document.settings.env.config
+        list_table_thumbs_ctx = self.state.document.get(ListTableThumbs.CTX_KEY, {})
         request = ThumbNodeRequest()
 
         # Determine width/height.
@@ -87,6 +89,10 @@ class ThumbCommon(Image):
             # Read width/height from directive options first.
             request.width = self.options.get("resize-width", None)
             request.height = self.options.get("resize-height", None)
+        elif "resize-width" in list_table_thumbs_ctx or "resize-height" in list_table_thumbs_ctx:
+            # Read width/height from parent list-table-thumbs directive.
+            request.width = list_table_thumbs_ctx.get("resize-width", None)
+            request.height = list_table_thumbs_ctx.get("resize-height", None)
         else:
             # Read width/height from Sphinx config.
             thumb_image_resize_width = config["thumb_image_resize_width"]
@@ -134,3 +140,26 @@ class ThumbFigure(Figure, ThumbCommon):
         self._ThumbCommon__default_target()
         self._ThumbCommon__format_target()
         return self._ThumbCommon__add_request(super().run())
+
+
+class ListTableThumbs(ListTable):
+    """List table directive with some thumb-image directive options that are passed to the child directives."""
+
+    CTX_KEY = "listTableThumbsKey"
+    option_spec = ListTable.option_spec | {
+        k: v
+        for k, v in ThumbCommon._ThumbCommon__option_spec.items()
+        if k
+        in [
+            "resize-width",
+            "resize-height",
+        ]
+    }
+
+    def run(self):
+        """Entrypoint."""
+        thumb_options = {k: v for k, v in self.options.items() if k in ThumbCommon._ThumbCommon__option_spec}
+        self.state.document[self.CTX_KEY] = thumb_options
+        sphinx_nodes = super().run()
+        self.state.document.attributes.pop(self.CTX_KEY)
+        return sphinx_nodes
