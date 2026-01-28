@@ -162,6 +162,45 @@ Figures
 List Table Thumbs
 =================
 
+.. list-table-thumbs::
+    :resize-width: 90px
+
+    * - .. thumb-image:: _images/tux.png
+      - .. thumb-image:: _images/tux.png
+    * - .. thumb-image:: _images/tux.png
+      - .. thumb-image:: _images/tux.png
+
+.. tab-set::
+
+    .. tab-item:: reStructuredText
+
+        .. code-block:: reStructuredText
+
+            .. list-table-thumbs::
+                :resize-width: 90px
+
+                * - .. thumb-image:: _images/tux.png
+                  - .. thumb-image:: _images/tux.png
+                * - .. thumb-image:: _images/tux.png
+                  - .. thumb-image:: _images/tux.png
+
+    .. tab-item:: Markdown
+
+        .. code-block:: Markdown
+
+            ```{list-table-thumbs}
+            :resize-width: 90px
+
+            * - :::{thumb-image} _images/tux.png
+                :::
+              - :::{thumb-image} _images/tux.png
+                :::
+            * - :::{thumb-image} _images/tux.png
+                :::
+              - :::{thumb-image} _images/tux.png
+                :::
+            ```
+
 .. rst:directive:: list-table-thumbs
 
     TODO.
