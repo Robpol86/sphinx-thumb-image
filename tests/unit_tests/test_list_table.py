@@ -48,7 +48,6 @@ from bs4 import element
 def test_list_table(img_tags: list[element.Tag]):
     """Test setting default widths in list-table."""
     img_src = [t["src"] for t in img_tags]
-    pytest.skip("TODO")
     assert img_src == [
         "_images/tux.png",
         "_images/tux.132x156.png",

@@ -79,6 +79,7 @@ class ThumbCommon(Image):
         :return: The same node list as the input with an annotated image node.
         """
         config = self.state.document.settings.env.config
+        list_table_thumbs_ctx = self.state.document.get(ListTableThumbs.CTX_KEY, {})
         request = ThumbNodeRequest()
 
         # Determine width/height.
@@ -88,6 +89,10 @@ class ThumbCommon(Image):
             # Read width/height from directive options first.
             request.width = self.options.get("resize-width", None)
             request.height = self.options.get("resize-height", None)
+        elif "resize-width" in list_table_thumbs_ctx or "resize-height" in list_table_thumbs_ctx:
+            # Read width/height from parent list-table-thumbs directive.
+            request.width = list_table_thumbs_ctx.get("resize-width", None)
+            request.height = list_table_thumbs_ctx.get("resize-height", None)
         else:
             # Read width/height from Sphinx config.
             thumb_image_resize_width = config["thumb_image_resize_width"]
@@ -141,7 +146,9 @@ class ListTableThumbs(ListTable):
     """TODO."""
 
     CTX_KEY = "listTableThumbsKey"
-    option_spec = ListTable.option_spec | ThumbCommon._ThumbCommon__option_spec
+    option_spec = ListTable.option_spec | {
+        k: v for k, v in ThumbCommon._ThumbCommon__option_spec.items() if k in ["resize-width", "resize-height"]
+    }
 
     def run(self):
         """TODO."""

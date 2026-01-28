@@ -28,8 +28,8 @@ lint:
 .PHONY: format
 format: _HELP = Apply format/lint fixes
 format:
-	uv run ruff check --fix
 	uv run ruff format
+	uv run ruff check --fix
 
 .PHONY: test
 test: _HELP = Run unit tests
