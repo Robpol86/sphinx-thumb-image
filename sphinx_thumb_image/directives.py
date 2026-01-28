@@ -139,3 +139,5 @@ class ThumbFigure(Figure, ThumbCommon):
 
 class ListTableThumbs(ListTable):
     """TODO."""
+
+    option_spec = ListTable.option_spec | ThumbCommon._ThumbCommon__option_spec
