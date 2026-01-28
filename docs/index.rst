@@ -11,6 +11,9 @@ into your build's output directory.
 ``sphinx-thumb-image`` provides a ``thumb-image`` directive similar to the built in ``image`` directive. Set the thumbnail
 size using the ``:resize-width:`` and/or ``:resize-height:`` options.
 
+A ``list-table-thumbs`` directive is also provided to reduce repetition. See the :rst:dir:`list-table-thumbs` usage document
+for more information.
+
 Project Links
 =============
 

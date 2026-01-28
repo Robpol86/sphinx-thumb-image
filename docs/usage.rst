@@ -159,6 +159,13 @@ Figures
 
     Figures have the same options as the :rst:dir:`thumb-image` directive.
 
+List Table Thumbs
+=================
+
+.. rst:directive:: list-table-thumbs
+
+    TODO.
+
 Configuration
 =============
 
