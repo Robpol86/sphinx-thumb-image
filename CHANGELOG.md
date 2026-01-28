@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- N/A
+- Added new directive `list-table-thumbs` ([#72](https://github.com/Robpol86/sphinx-thumb-image/issues/72))
 
 ## [0.3.0] - 2026-01-26
 

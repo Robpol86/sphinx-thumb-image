@@ -1,7 +1,4 @@
-"""Test support for setting resize-width in a list-table and having it apply to all thumb images within.
-
-TODO rephrase.
-"""
+"""Test support for setting resize-width in a list-table subclass and having it apply to all thumb images within."""
 
 from textwrap import dedent
 
@@ -13,7 +10,7 @@ from bs4 import element
     "html",
     testroot="defaults",
     confoverrides={
-        "thumb_image_resize_width": 100,  # ignored
+        "thumb_image_resize_width": 100,
     },
     write_docs={
         "index.rst": dedent("""

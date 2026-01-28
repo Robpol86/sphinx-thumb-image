@@ -143,7 +143,7 @@ class ThumbFigure(Figure, ThumbCommon):
 
 
 class ListTableThumbs(ListTable):
-    """TODO."""
+    """List table directive with some thumb-image directive options that are passed to the child directives."""
 
     CTX_KEY = "listTableThumbsKey"
     option_spec = ListTable.option_spec | {
@@ -153,7 +153,7 @@ class ListTableThumbs(ListTable):
     }
 
     def run(self):
-        """TODO."""
+        """Entrypoint."""
         thumb_options = {k: v for k, v in self.options.items() if k in ThumbCommon._ThumbCommon__option_spec}
         self.state.document[self.CTX_KEY] = thumb_options
         sphinx_nodes = super().run()
