@@ -56,8 +56,8 @@ def test_list_table(img_tags: list[element.Tag]):
         "_images/tux.66x78.png",
         # sep
         "_images/tux.png",
-        "_images/tux.90x123.png",
-        "_images/tux.90x123.png",
+        "_images/tux.90x107.png",
+        "_images/tux.90x107.png",
         "_images/tux.66x78.png",
         # sep
         "_images/tux.png",
