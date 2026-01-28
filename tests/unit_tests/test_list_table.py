@@ -1,4 +1,7 @@
-"""Test support for setting resize-width in a list-table and having it apply to all thumb images within."""
+"""Test support for setting resize-width in a list-table and having it apply to all thumb images within.
+
+TODO rephrase.
+"""
 
 from textwrap import dedent
 
