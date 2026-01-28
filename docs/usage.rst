@@ -203,7 +203,14 @@ List Table Thumbs
 
 .. rst:directive:: list-table-thumbs
 
-    TODO.
+    Equivalent to the built in `list-table`_ directive. The difference is that it supports additional options that are passed
+    to thumbnails in the table. This helps reduce repeated lines in your documentation such as if all the thumbnails have the
+    same width.
+
+    .. rst:directive:option:: resize-width
+    .. rst:directive:option:: resize-height
+
+        Applied to each :rst:dir:`thumb-image` and :rst:dir:`thumb-figure` directives used in the table.
 
 Configuration
 =============
@@ -269,4 +276,5 @@ Set defaults for the extension in your ``conf.py`` file:
     like :rst:dir:`thumb-image:target-format`.
 
 .. _doctreedir: https://www.sphinx-doc.org/en/master/extdev/appapi.html#sphinx.application.Sphinx.doctreedir
+.. _list-table: https://docutils.sourceforge.io/docs/ref/rst/directives.html#list-table
 .. _target: https://docutils.sourceforge.io/docs/ref/rst/directives.html#target
