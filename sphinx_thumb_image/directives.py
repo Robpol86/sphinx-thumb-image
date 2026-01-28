@@ -5,6 +5,7 @@ from pathlib import Path, PurePosixPath
 from docutils import nodes
 from docutils.parsers.rst import directives
 from docutils.parsers.rst.directives.images import Figure, Image
+from docutils.parsers.rst.directives.tables import ListTable
 
 from sphinx_thumb_image.lib import ThumbNodeRequest, format_replacement
 
@@ -134,3 +135,7 @@ class ThumbFigure(Figure, ThumbCommon):
         self._ThumbCommon__default_target()
         self._ThumbCommon__format_target()
         return self._ThumbCommon__add_request(super().run())
+
+
+class ListTableThumbs(ListTable):
+    """TODO."""

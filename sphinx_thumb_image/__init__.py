@@ -9,7 +9,7 @@ https://pypi.org/project/sphinx-thumb-image
 
 from sphinx.application import Sphinx
 
-from sphinx_thumb_image.directives import ThumbFigure, ThumbImage
+from sphinx_thumb_image.directives import ListTableThumbs, ThumbFigure, ThumbImage
 from sphinx_thumb_image.resize import ThumbImageResize
 
 __author__ = "@Robpol86"
@@ -32,6 +32,7 @@ def setup(app: Sphinx) -> dict[str, str]:
     app.add_config_value("thumb_image_default_target", None, "env")
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)
+    app.add_directive("list-table-thumbs", ListTableThumbs)
     app.connect("doctree-read", ThumbImageResize.resize_images_in_document, priority=499)
     return {
         "parallel_read_safe": True,
