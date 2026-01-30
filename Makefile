@@ -64,7 +64,7 @@ build:
 	tar -tzf dist/*.tar.gz
 
 docs/_build/html/index.html::
-	uv run sphinx-build -a -E -n -W docs $(@D)
+	uv run sphinx-build -T -n -W docs $(@D)
 	@echo Documentation available here: $@
 
 .PHONY: docs
