@@ -70,7 +70,10 @@ class ThumbImageResize:
                 doctree.reporter.warning(message, source=node.source, line=node.line)
                 return None
             # Get target file path.
-            thumb_file_name = f"{source.stem}.{target_size[0]}x{target_size[1]}{source.suffix}"
+            if request.quality:
+                thumb_file_name = f"{source.stem}.{target_size[0]}x{target_size[1]}.{request.quality}{source.suffix}"
+            else:
+                thumb_file_name = f"{source.stem}.{target_size[0]}x{target_size[1]}{source.suffix}"
             target = target_dir / thumb_file_name
             if target.exists():
                 log.debug(f"skipping {source} ({target} exists)")
@@ -85,7 +88,7 @@ class ThumbImageResize:
                         return target
                     log.debug(f"resizing {source} ({source_size[0]}x{source_size[1]}) to {target}")
                     kwargs = dict(format=image.format)
-                    if request.quality is not None:
+                    if request.quality:
                         kwargs["quality"] = request.quality
                     if request.is_animated:
                         cls.save_animated(image, target, target_size, **kwargs)
