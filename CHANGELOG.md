@@ -7,8 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Added new directive `list-table-thumbs` ([#72](https://github.com/Robpol86/sphinx-thumb-image/issues/72))
-- Added `:resize-quality:` directive option ([#28](https://github.com/Robpol86/sphinx-thumb-image/issues/28))
+- N/A
+
+## [0.4.0] - 2026-01-30
+
+### Added
+
+- New directive `list-table-thumbs` ([#72](https://github.com/Robpol86/sphinx-thumb-image/issues/72))
+- `:resize-quality:` directive option ([#28](https://github.com/Robpol86/sphinx-thumb-image/issues/28))
 
 ## [0.3.0] - 2026-01-26
 

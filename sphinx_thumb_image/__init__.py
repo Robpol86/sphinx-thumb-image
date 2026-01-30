@@ -14,7 +14,7 @@ from sphinx_thumb_image.resize import ThumbImageResize
 
 __author__ = "@Robpol86"
 __license__ = "BSD-2-Clause"
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 
 def setup(app: Sphinx) -> dict[str, str]:
