@@ -14,6 +14,7 @@ class ThumbNodeRequest:
 
     width: Optional[int] = None
     height: Optional[int] = None
+    quality: Optional[int] = None
     no_resize: bool = False
     is_animated: bool = False
 

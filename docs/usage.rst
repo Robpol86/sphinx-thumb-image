@@ -69,6 +69,16 @@ Images
         Does not resize the image and instead just copies it to the output documentation directory. Useful when you want to
         use the other features in the extension for images that are already small.
 
+    .. rst:directive:option:: resize-quality
+
+        An integer between 1 and 100 that overrides the
+        `default image save quality <https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html#jpeg-saving>`__
+        used by PIL.
+
+    .. rst:directive:option:: no-resize-quality
+
+        Boolean option to ignore :option:`thumb_image_resize_quality` if it is set.
+
     .. rst:directive:option:: is-animated
 
         Boolean option that indicates the image is animated (e.g. an animated GIF).
@@ -234,6 +244,12 @@ Set defaults for the extension in your ``conf.py`` file:
     be overridden with the :rst:dir:`thumb-image:resize-height` option in the directive in document files. If
     :option:`thumb_image_resize_width` and :option:`thumb_image_resize_height` are both set the thumbnail will retain its
     aspect ratio and fit within both dimensions.
+
+.. option:: thumb_image_resize_quality
+
+    *Default:* :guilabel:`None`
+
+    Sets :rst:dir:`thumb-image:resize-quality` by default for all thumb directives if set.
 
 .. option:: thumb_image_is_animated
 

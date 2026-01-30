@@ -21,19 +21,20 @@ class ThumbImageResize:
     THUMBS_SUBDIR = "_thumbs"
 
     @classmethod
-    def save_animated(cls, image: PIL.ImageFile.ImageFile, target: Path, target_size: tuple[int, int]):
+    def save_animated(cls, image: PIL.ImageFile.ImageFile, target: Path, target_size: tuple[int, int], **kwargs):
         """Save all frames in an animated image file to the target file.
 
         :param image: Opened source image.
         :param target: Path to target file.
         :param target_size: Image width and height to resize to.
+        :param kwargs: Pass additional keyword arguments to PIL.save().
         """
         frames = []
         for frame in PIL.ImageSequence.Iterator(image):
             frame_resized = frame.resize(target_size)
             frames.append(frame_resized)
         disposal = 2  # https://github.com/Robpol86/sphinx-thumb-image/issues/43
-        frames[0].save(target, format=image.format, save_all=True, append_images=frames[1:], disposal=disposal)
+        frames[0].save(target, save_all=True, append_images=frames[1:], disposal=disposal, **kwargs)
 
     @classmethod
     def resize(
@@ -69,7 +70,10 @@ class ThumbImageResize:
                 doctree.reporter.warning(message, source=node.source, line=node.line)
                 return None
             # Get target file path.
-            thumb_file_name = f"{source.stem}.{target_size[0]}x{target_size[1]}{source.suffix}"
+            if request.quality:
+                thumb_file_name = f"{source.stem}.{target_size[0]}x{target_size[1]}.{request.quality}{source.suffix}"
+            else:
+                thumb_file_name = f"{source.stem}.{target_size[0]}x{target_size[1]}{source.suffix}"
             target = target_dir / thumb_file_name
             if target.exists():
                 log.debug(f"skipping {source} ({target} exists)")
@@ -83,10 +87,13 @@ class ThumbImageResize:
                         log.debug(f"skipping {source} ({target} exists after lock)")
                         return target
                     log.debug(f"resizing {source} ({source_size[0]}x{source_size[1]}) to {target}")
+                    kwargs = dict(format=image.format)
+                    if request.quality:
+                        kwargs["quality"] = request.quality
                     if request.is_animated:
-                        cls.save_animated(image, target, target_size)
+                        cls.save_animated(image, target, target_size, **kwargs)
                     else:
-                        image.save(target, format=image.format)
+                        image.save(target, **kwargs)
             except LockException:
                 log.debug(f"skipping {source} ({target} exists after race)")
                 return target

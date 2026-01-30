@@ -26,6 +26,7 @@ def setup(app: Sphinx) -> dict[str, str]:
     """
     app.add_config_value("thumb_image_resize_width", None, "env")
     app.add_config_value("thumb_image_resize_height", None, "env")
+    app.add_config_value("thumb_image_resize_quality", None, "env")
     app.add_config_value("thumb_image_is_animated", False, "env")
     app.add_config_value("thumb_image_target_format", False, "env")
     app.add_config_value("thumb_image_target_format_substitutions", {}, "env")

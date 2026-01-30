@@ -16,6 +16,8 @@ class ThumbCommon(Image):
     __option_spec = {}
     __option_spec["resize-width"] = lambda arg: directives.nonnegative_int(arg.replace("px", ""))
     __option_spec["resize-height"] = __option_spec["resize-width"]
+    __option_spec["resize-quality"] = directives.percentage
+    __option_spec["no-resize-quality"] = directives.flag
     __option_spec["no-resize"] = directives.flag
     __option_spec["is-animated"] = directives.flag
     __option_spec["no-is-animated"] = directives.flag
@@ -71,7 +73,7 @@ class ThumbCommon(Image):
         else:
             self.options["target"] = target
 
-    def __add_request(self, sphinx_nodes: list[nodes.Element]) -> list[nodes.Element]:
+    def __add_request(self, sphinx_nodes: list[nodes.Element]) -> list[nodes.Element]:  # noqa: PLR0912
         """Build and add a ThumbRequest to the image node.
 
         :param sphinx_nodes: List of nodes returned by super().run(), one of which contains an image node to be modified.
@@ -103,6 +105,16 @@ class ThumbCommon(Image):
             else:
                 # User has not provided the width/height.
                 raise self.error('Error in %r directive: "resize-width" option is missing.' % self.name)
+
+        # Determine quality percentage.
+        if "no-resize-quality" in self.options:
+            pass
+        elif "resize-quality" in self.options:
+            request.quality = self.options["resize-quality"]
+        else:
+            thumb_image_resize_quality = config["thumb_image_resize_quality"]
+            if thumb_image_resize_quality is not None:
+                request.quality = thumb_image_resize_quality
 
         # Determine is_animated flag.
         if "no-is-animated" in self.options:
