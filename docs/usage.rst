@@ -72,7 +72,8 @@ Images
     .. rst:directive:option:: resize-quality
 
         An integer between 1 and 100 that overrides the
-        [default image save quality](https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html) used by PIL.
+        `default image save quality <https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html#jpeg-saving>`__
+        used by PIL.
 
     .. rst:directive:option:: no-resize-quality
 
