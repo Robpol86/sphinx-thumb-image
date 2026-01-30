@@ -76,7 +76,7 @@ Images
 
     .. rst:directive:option:: no-resize-quality
 
-        Boolean option to negate :rst:dir:`thumb-image:resize-quality` if :option:`thumb_image_resize_quality` is set.
+        Boolean option to ignore :option:`thumb_image_resize_quality` if it is set.
 
     .. rst:directive:option:: is-animated
 
