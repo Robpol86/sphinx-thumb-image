@@ -27,7 +27,7 @@ class ThumbImageResize:
         :param image: Opened source image.
         :param target: Path to target file.
         :param target_size: Image width and height to resize to.
-        :param kwargs: TODO
+        :param kwargs: Pass additional keyword arguments to PIL.save().
         """
         frames = []
         for frame in PIL.ImageSequence.Iterator(image):
