@@ -2,6 +2,7 @@
 
 import re
 from pathlib import Path
+from textwrap import dedent
 from typing import Optional
 
 import PIL.Image
@@ -117,3 +118,33 @@ def test_no_resize(img_tags: list[element.Tag]):
     # Confirm img src.
     img_src = [t["src"] for t in img_tags]
     assert img_src == ["_images/tux.png"]
+
+
+@pytest.mark.sphinx(
+    "html",
+    testroot="defaults",
+    confoverrides={
+        "thumb_image_resize_width": 300,
+        "thumb_image_resize_quality": 50,
+    },
+    write_docs={
+        "index.rst": dedent("""
+            .. thumb-image:: _images/apple.jpg
+                :no-resize-quality:
+            .. thumb-image:: _images/apple.jpg
+            .. thumb-image:: _images/apple.jpg
+                :resize-quality: 25%
+        """),
+    },
+)
+def test_quality(outdir: Path, img_tags: list[element.Tag]):
+    """Test resize image quality percentage."""
+    img_src = [t["src"] for t in img_tags]
+    assert img_src == [
+        "_images/apple.300x36.jpg",  # 75 is the PIL default
+        "_images/apple.300x36.50.jpg",
+        "_images/apple.300x36.25.jpg",
+    ]
+    file_sizes = [(outdir / s).stat().st_size for s in img_src]
+    assert file_sizes[0] > file_sizes[1]
+    assert file_sizes[1] > file_sizes[2]
