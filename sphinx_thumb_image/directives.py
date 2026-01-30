@@ -105,9 +105,9 @@ class ThumbCommon(Image):
                 raise self.error('Error in %r directive: "resize-width" option is missing.' % self.name)
 
         # Determine is_animated flag.
-        if "is-animated" in self.options:
-            request.is_animated = True
-        elif config["thumb_image_is_animated"] and "no-is-animated" not in self.options:
+        if "no-is-animated" in self.options:
+            pass
+        elif "is-animated" in self.options or config["thumb_image_is_animated"]:
             request.is_animated = True
 
         # Add request to the node.
