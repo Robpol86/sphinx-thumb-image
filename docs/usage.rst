@@ -69,6 +69,14 @@ Images
         Does not resize the image and instead just copies it to the output documentation directory. Useful when you want to
         use the other features in the extension for images that are already small.
 
+    .. rst:directive:option:: resize-quality
+
+        TODO
+
+    .. rst:directive:option:: no-resize-quality
+
+        Boolean option to negate :rst:dir:`thumb-image:resize-quality` if :option:`thumb_image_resize_quality` is set.
+
     .. rst:directive:option:: is-animated
 
         Boolean option that indicates the image is animated (e.g. an animated GIF).
@@ -234,6 +242,12 @@ Set defaults for the extension in your ``conf.py`` file:
     be overridden with the :rst:dir:`thumb-image:resize-height` option in the directive in document files. If
     :option:`thumb_image_resize_width` and :option:`thumb_image_resize_height` are both set the thumbnail will retain its
     aspect ratio and fit within both dimensions.
+
+.. option:: thumb_image_resize_quality
+
+    *Default:* :guilabel:`None`
+
+    TODO
 
 .. option:: thumb_image_is_animated
 
