@@ -71,7 +71,8 @@ Images
 
     .. rst:directive:option:: resize-quality
 
-        TODO
+        An integer between 1 and 100 that overrides the
+        [default image save quality](https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html) used by PIL.
 
     .. rst:directive:option:: no-resize-quality
 
@@ -247,7 +248,7 @@ Set defaults for the extension in your ``conf.py`` file:
 
     *Default:* :guilabel:`None`
 
-    TODO
+    Sets :rst:dir:`thumb-image:resize-quality` by default for all thumb directives if set.
 
 .. option:: thumb_image_is_animated
 
