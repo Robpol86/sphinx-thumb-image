@@ -71,10 +71,10 @@ def test(app: SphinxTestApp):
     track_files["apple_src"].touch(exist_ok=True)
     log, mtimes_before, mtimes_after = build_return(app, track_files)
     assert "\ndocnames to write: control\n" in log
-    pytest.skip("TODO fix below")
     apple_out_before = mtimes_before.pop("apple_out")
     apple_out_after = mtimes_after.pop("apple_out")
     assert apple_out_before < apple_out_after
+    pytest.skip("TODO fix below")
     control_out_before = mtimes_before.pop("control_out")
     control_out_after = mtimes_after.pop("control_out")
     assert control_out_before < control_out_after
