@@ -60,7 +60,7 @@ def test(app: SphinxTestApp):
     # No changes, confirm nothing on rebuild.
     mtimes_before = {k: v.stat().st_mtime for k, v in track_files.items()}
     log = build_return_log(app)
-    assert "no targets are out of date" in log
+    assert "\nno targets are out of date.\n" in log
     mtimes_after = {k: v.stat().st_mtime for k, v in track_files.items()}
     assert mtimes_before == mtimes_after
 
