@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 from bs4 import BeautifulSoup, element
 from sphinx.testing.util import SphinxTestApp
+from sphinx.util.console import nocolor
 
 pytest_plugins = ("sphinx.testing.fixtures",)  # pylint: disable=invalid-name
 
@@ -30,9 +31,11 @@ def rootdir() -> Path:
 @pytest.fixture(name="app_params")
 def _app_params(app_params, request: pytest.FixtureRequest):
     """Inject Sphinx test app config before each test, including conf overrides (enabled with indirect=True)."""
+    nocolor()
     app_params.kwargs.setdefault("exception_on_warning", True)
     app_params.kwargs.setdefault("warningiserror", True)
     app_params.kwargs.setdefault("freshenv", True)
+    # app_params.kwargs["verbosity"] = 3
     srcdir: Path = app_params.kwargs["srcdir"]
     # Implement copy_files.
     for copy_files in (app_params.kwargs.get("copy_files", []), getattr(request, "param", {}).get("copy_files", [])):

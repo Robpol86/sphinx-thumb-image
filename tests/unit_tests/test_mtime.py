@@ -35,18 +35,19 @@ def write_build_read(app: SphinxTestApp, index_rst_contents: str) -> list[str]:
     write_docs={
         "control.rst": dedent("""
             :orphan:\n
-            .. image:: pictures/apple.jpg
+            .. image:: _images/apple.jpg
         """),
         "test.rst": dedent("""
             :orphan:\n
-            .. thumb-image:: pictures/tux.png
+            .. thumb-image:: _images/tux.png
         """),
     },
 )
 def test(app: SphinxTestApp):
     """Test cases for the option."""
     # Initial build.
-    pytest.skip("TODO")
+    app.build()
+    assert "\x1b" not in app.status.getvalue()  # TODO remove
 
     # No changes, confirm nothing on rebuild.
     pytest.skip("TODO")
