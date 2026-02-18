@@ -1,10 +1,14 @@
 """Test re-creating the thumbnail when an image's mtime changes."""
 
+import time
+from datetime import timedelta
 from textwrap import dedent
 
 import pytest
 from bs4 import BeautifulSoup
 from sphinx.testing.util import SphinxTestApp
+
+DELAY = timedelta(seconds=1.5)
 
 
 def write_build_read(app: SphinxTestApp, index_rst_contents: str) -> list[str]:
@@ -45,6 +49,17 @@ def write_build_read(app: SphinxTestApp, index_rst_contents: str) -> list[str]:
 )
 def test(app: SphinxTestApp):
     """Test cases for the option."""
+    track_files = dict(
+        apple_src=app.srcdir / "_images" / "apple.jpg",
+        tux_src=app.srcdir / "_images" / "tux.png",
+        tux_intermed=app.doctreedir / "_thumbs" / "_images" / "tux.100x118.png",
+        apple_out=app.outdir / "_images" / "apple.jpg",
+        tux_out=app.outdir / "_images" / "tux.100x118.png",
+        control_out=app.outdir / "control.html",
+        index_out=app.outdir / "index.html",
+        test_out=app.outdir / "test.html",
+    )
+
     # Initial build.
     app.build()
     log = app.status.getvalue()
@@ -53,9 +68,16 @@ def test(app: SphinxTestApp):
     assert "writing output... [100%] test" in log
 
     # No changes, confirm nothing on rebuild.
-    pytest.skip("TODO")
+    mtimes_before = {k: v.stat().st_mtime for k, v in track_files.items()}
+    app.status.truncate(0)
+    app.build()
+    log = app.status.getvalue()
+    assert "no targets are out of date" in log
+    mtimes_after = {k: v.stat().st_mtime for k, v in track_files.items()}
+    assert mtimes_before == mtimes_after
 
     # Change control, only control changes.
+    time.sleep(DELAY.total_seconds())
     pytest.skip("TODO")
 
     # Change thumb, only thumb changes.
