@@ -47,7 +47,10 @@ def test(app: SphinxTestApp):
     """Test cases for the option."""
     # Initial build.
     app.build()
-    assert "\x1b" not in app.status.getvalue()  # TODO remove
+    log = app.status.getvalue()
+    assert "writing output... [ 33%] control" in log
+    assert "writing output... [ 67%] index" in log
+    assert "writing output... [100%] test" in log
 
     # No changes, confirm nothing on rebuild.
     pytest.skip("TODO")
