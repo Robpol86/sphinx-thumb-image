@@ -35,6 +35,7 @@ def _app_params(app_params, request: pytest.FixtureRequest):
     app_params.kwargs.setdefault("exception_on_warning", True)
     app_params.kwargs.setdefault("warningiserror", True)
     app_params.kwargs.setdefault("freshenv", True)
+    app_params.kwargs.setdefault("verbosity", 2)
     srcdir: Path = app_params.kwargs["srcdir"]
     # Implement copy_files.
     for copy_files in (app_params.kwargs.get("copy_files", []), getattr(request, "param", {}).get("copy_files", [])):
