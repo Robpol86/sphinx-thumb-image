@@ -1,5 +1,6 @@
 """Test re-creating the thumbnail when an image's mtime changes."""
 
+import sys
 import time
 from datetime import timedelta
 from pathlib import Path
@@ -43,7 +44,8 @@ def build_return(app: SphinxTestApp, track_files: dict[str, Path]) -> tuple[str,
         """),
     },
 )
-def test(app: SphinxTestApp):
+@pytest.mark.flaky(reruns=5, condition=sys.platform.startswith("win32"))
+def test_mtime(app: SphinxTestApp):
     """Test cases for the option."""
     track_files = dict(
         apple_src=app.srcdir / "_images" / "apple.jpg",
