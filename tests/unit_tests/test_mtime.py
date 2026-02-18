@@ -2,6 +2,7 @@
 
 import time
 from datetime import timedelta
+from pathlib import Path
 from textwrap import dedent
 
 import pytest
@@ -10,17 +11,19 @@ from sphinx.testing.util import SphinxTestApp
 DELAY = timedelta(seconds=1.5)
 
 
-def build_return_log(app: SphinxTestApp) -> str:
-    """Reset the test environment, Sphinx build, and return the log.
+def build_return(app: SphinxTestApp, track_files: dict[str, Path]) -> tuple[str, dict[str, tuple], dict[str, tuple]]:
+    """Reset the test environment, Sphinx build, and return the log and before/after mtimes.
 
     :param app: Sphinx test app.
 
-    :return: Entire log output for this build.
+    :return: Entire log output for this build and before/after mtimes.
     """
+    mtimes_before = {k: v.stat().st_mtime for k, v in track_files.items()}
     app.status.truncate(0)
     app.status.seek(0)
     app.build()
-    return app.status.getvalue()
+    mtimes_after = {k: v.stat().st_mtime for k, v in track_files.items()}
+    return app.status.getvalue(), mtimes_before, mtimes_after
 
 
 @pytest.mark.sphinx(
@@ -54,22 +57,28 @@ def test(app: SphinxTestApp):
     )
 
     # Initial build.
-    log = build_return_log(app)
+    app.build()
+    log = app.status.getvalue()
     assert "\ndocnames to write: control, index, test\n" in log
 
     # No changes, confirm nothing on rebuild.
-    mtimes_before = {k: v.stat().st_mtime for k, v in track_files.items()}
-    log = build_return_log(app)
+    log, mtimes_before, mtimes_after = build_return(app, track_files)
     assert "\nno targets are out of date.\n" in log
-    mtimes_after = {k: v.stat().st_mtime for k, v in track_files.items()}
     assert mtimes_before == mtimes_after
 
     # Change control, only control changes.
     time.sleep(DELAY.total_seconds())
-    (app.srcdir / "control.rst").touch(exist_ok=True)
-    log = build_return_log(app)
+    track_files["apple_src"].touch(exist_ok=True)
+    log, mtimes_before, mtimes_after = build_return(app, track_files)
     assert "\ndocnames to write: control\n" in log
-    pytest.skip("TODO")
+    pytest.skip("TODO fix below")
+    apple_out_before = mtimes_before.pop("apple_out")
+    apple_out_after = mtimes_after.pop("apple_out")
+    assert apple_out_before < apple_out_after
+    control_out_before = mtimes_before.pop("control_out")
+    control_out_after = mtimes_after.pop("control_out")
+    assert control_out_before < control_out_after
+    assert mtimes_before == mtimes_after
 
     # Change thumb, only thumb changes.
     pytest.skip("TODO")
