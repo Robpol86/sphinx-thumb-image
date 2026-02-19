@@ -29,6 +29,7 @@ def rebuild(
     return mtimes_before, mtimes_after
 
 
+# TODO parametrize animated too
 @pytest.mark.sphinx(
     "html",
     testroot="defaults",
@@ -52,16 +53,22 @@ def test_mtime(app: SphinxTestApp):
     )
 
     # Initial build.
-    rebuild(app, track_files, initial=True)
+    _, mtimes_after = rebuild(app, track_files, initial=True)
+    # assert mtimes_after["tux_src"] == mtimes_after["tux_intermed"]  # TODO
+    # assert mtimes_after["tux_intermed"] == mtimes_after["tux_out"]  # TODO
 
     # No changes, confirm nothing on rebuild.
     mtimes_before, mtimes_after = rebuild(app, track_files)
+    # assert mtimes_after["tux_src"] == mtimes_after["tux_intermed"]  # TODO
+    # assert mtimes_after["tux_intermed"] == mtimes_after["tux_out"]  # TODO
     assert mtimes_before == mtimes_after
 
     # Change mtime.
     time.sleep(1.5)  # TODO reduce
     track_files["tux_src"].touch(exist_ok=True)
     mtimes_before, mtimes_after = rebuild(app, track_files)
+    # assert mtimes_after["tux_src"] == mtimes_after["tux_intermed"]  # TODO
+    # assert mtimes_after["tux_intermed"] == mtimes_after["tux_out"]  # TODO github.com/sphinx-doc/sphinx/issues/14312
 
     tux_intermed_before = mtimes_before.pop("tux_intermed")
     tux_intermed_after = mtimes_after.pop("tux_intermed")
@@ -81,4 +88,6 @@ def test_mtime(app: SphinxTestApp):
 
     # Confirm no changes again.
     mtimes_before, mtimes_after = rebuild(app, track_files)
+    # assert mtimes_after["tux_src"] == mtimes_after["tux_intermed"]  # TODO
+    # assert mtimes_after["tux_intermed"] == mtimes_after["tux_out"]  # TODO github.com/sphinx-doc/sphinx/issues/14312
     assert mtimes_before == mtimes_after
