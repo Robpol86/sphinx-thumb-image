@@ -46,39 +46,39 @@ def rebuild(
 def test_mtime(app: SphinxTestApp):
     """Test cases for the option."""
     track_files = dict(
-        tux_src=app.srcdir / "_images" / "tux.png",
-        tux_intermed=app.doctreedir / "_thumbs" / "_images" / "tux.100x118.png",
-        tux_out=app.outdir / "_images" / "tux.100x118.png",
+        img_src=app.srcdir / "_images" / "tux.png",
+        img_intermed=app.doctreedir / "_thumbs" / "_images" / "tux.100x118.png",
+        img_out=app.outdir / "_images" / "tux.100x118.png",
         index_out=app.outdir / "index.html",
     )
 
     # Initial build.
     _, mtimes_after = rebuild(app, track_files, initial=True)
-    # assert mtimes_after["tux_src"] == mtimes_after["tux_intermed"]  # TODO
-    # assert mtimes_after["tux_intermed"] == mtimes_after["tux_out"]  # TODO
+    # assert mtimes_after["img_src"] == mtimes_after["img_intermed"]  # TODO
+    # assert mtimes_after["img_intermed"] == mtimes_after["img_out"]  # TODO
 
     # No changes, confirm nothing on rebuild.
     mtimes_before, mtimes_after = rebuild(app, track_files)
-    # assert mtimes_after["tux_src"] == mtimes_after["tux_intermed"]  # TODO
-    # assert mtimes_after["tux_intermed"] == mtimes_after["tux_out"]  # TODO
+    # assert mtimes_after["img_src"] == mtimes_after["img_intermed"]  # TODO
+    # assert mtimes_after["img_intermed"] == mtimes_after["img_out"]  # TODO
     assert mtimes_before == mtimes_after
 
     # Change mtime.
     time.sleep(1.5)  # TODO reduce
-    track_files["tux_src"].touch(exist_ok=True)
+    track_files["img_src"].touch(exist_ok=True)
     mtimes_before, mtimes_after = rebuild(app, track_files)
-    # assert mtimes_after["tux_src"] == mtimes_after["tux_intermed"]  # TODO
-    # assert mtimes_after["tux_intermed"] == mtimes_after["tux_out"]  # TODO github.com/sphinx-doc/sphinx/issues/14312
+    # assert mtimes_after["img_src"] == mtimes_after["img_intermed"]  # TODO
+    # assert mtimes_after["img_intermed"] == mtimes_after["img_out"]  # TODO github.com/sphinx-doc/sphinx/issues/14312
 
-    tux_intermed_before = mtimes_before.pop("tux_intermed")
-    tux_intermed_after = mtimes_after.pop("tux_intermed")
+    img_intermed_before = mtimes_before.pop("img_intermed")
+    img_intermed_after = mtimes_after.pop("img_intermed")
     pytest.skip("TODO implement")
-    assert tux_intermed_before < tux_intermed_after
+    assert img_intermed_before < img_intermed_after
 
     # TODO uncomment below when resolved: https://github.com/sphinx-doc/sphinx/issues/14312
-    # tux_out_before = mtimes_before.pop("tux_out")
-    # tux_out_after = mtimes_after.pop("tux_out")
-    # assert tux_out_before < tux_out_after
+    # img_out_before = mtimes_before.pop("img_out")
+    # img_out_after = mtimes_after.pop("img_out")
+    # assert img_out_before < img_out_after
 
     index_out_before = mtimes_before.pop("index_out")
     index_out_after = mtimes_after.pop("index_out")
@@ -88,6 +88,6 @@ def test_mtime(app: SphinxTestApp):
 
     # Confirm no changes again.
     mtimes_before, mtimes_after = rebuild(app, track_files)
-    # assert mtimes_after["tux_src"] == mtimes_after["tux_intermed"]  # TODO
-    # assert mtimes_after["tux_intermed"] == mtimes_after["tux_out"]  # TODO github.com/sphinx-doc/sphinx/issues/14312
+    # assert mtimes_after["img_src"] == mtimes_after["img_intermed"]  # TODO
+    # assert mtimes_after["img_intermed"] == mtimes_after["img_out"]  # TODO github.com/sphinx-doc/sphinx/issues/14312
     assert mtimes_before == mtimes_after
