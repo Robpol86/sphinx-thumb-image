@@ -1,5 +1,6 @@
 """Image resizing module."""
 
+import os
 from os.path import relpath
 from pathlib import Path
 from typing import Optional
@@ -94,6 +95,8 @@ class ThumbImageResize:
                         cls.save_animated(image, target, target_size, **kwargs)
                     else:
                         image.save(target, **kwargs)
+                    source_stat = source.stat()
+                    os.utime(target, ns=(source_stat.st_atime_ns, source_stat.st_mtime_ns))
             except LockException:
                 log.debug(f"skipping {source} ({target} exists after race)")
                 return target

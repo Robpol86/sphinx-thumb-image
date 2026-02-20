@@ -33,35 +33,33 @@ def rebuild(
     "html",
     testroot="defaults",
     confoverrides={
-        "thumb_image_resize_width": 10,
+        "thumb_image_resize_width": 100,
     },
     write_docs={
         "index.rst": dedent("""
-            .. thumb-image:: _images/goku.gif
+            .. thumb-image:: _images/tux.png
         """),
     },
 )
 @pytest.mark.flaky(reruns=5, condition=sys.platform.startswith("win32"))  # Windows time precision issues.
-@pytest.mark.parametrize("animated", [False, True])
-def test_mtime(app: SphinxTestApp, animated: bool):
+def test_mtime(app: SphinxTestApp):
     """Test cases for the option."""
     track_files = dict(
-        img_src=app.srcdir / "_images" / "goku.gif",
-        img_intermed=app.doctreedir / "_thumbs" / "_images" / "goku.10x3.gif",
-        img_out=app.outdir / "_images" / "goku.10x3.gif",
+        img_src=app.srcdir / "_images" / "tux.png",
+        img_intermed=app.doctreedir / "_thumbs" / "_images" / "tux.100x118.png",
+        img_out=app.outdir / "_images" / "tux.100x118.png",
         index_out=app.outdir / "index.html",
     )
 
     # Initial build.
-    app.config["thumb_image_is_animated"] = animated
     _, mtimes_after = rebuild(app, track_files, initial=True)
-    # assert mtimes_after["img_src"] == mtimes_after["img_intermed"]  # TODO
-    # assert mtimes_after["img_intermed"] == mtimes_after["img_out"]  # TODO
+    assert mtimes_after["img_src"] == mtimes_after["img_intermed"]
+    assert mtimes_after["img_intermed"] == mtimes_after["img_out"]
 
     # No changes, confirm nothing on rebuild.
     mtimes_before, mtimes_after = rebuild(app, track_files)
-    # assert mtimes_after["img_src"] == mtimes_after["img_intermed"]  # TODO
-    # assert mtimes_after["img_intermed"] == mtimes_after["img_out"]  # TODO
+    assert mtimes_after["img_src"] == mtimes_after["img_intermed"]
+    assert mtimes_after["img_intermed"] == mtimes_after["img_out"]
     assert mtimes_before == mtimes_after
 
     # Change mtime.
