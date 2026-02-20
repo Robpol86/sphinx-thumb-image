@@ -74,9 +74,7 @@ class ThumbImageResize:
             return None
         # Get target file path.
         if request.quality:
-            thumb_file_name = (
-                f"{self.source.stem}.{target_size[0]}x{target_size[1]}.{request.quality}{self.source.suffix}"
-            )
+            thumb_file_name = f"{self.source.stem}.{target_size[0]}x{target_size[1]}.{request.quality}{self.source.suffix}"
         else:
             thumb_file_name = f"{self.source.stem}.{target_size[0]}x{target_size[1]}{self.source.suffix}"
         target = self.target_dir / thumb_file_name
