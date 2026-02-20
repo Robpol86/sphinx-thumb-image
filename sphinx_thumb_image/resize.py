@@ -14,11 +14,11 @@ from sphinx.util import logging
 
 from sphinx_thumb_image.lib import ThumbNodeRequest
 
+THUMBS_SUBDIR = "_thumbs"
+
 
 class ThumbImageResize:
     """Resize images."""
-
-    THUMBS_SUBDIR = "_thumbs"
 
     def __init__(self, source: Path, target_dir: Path, image: PIL.Image):
         """Instantiate class to resize one image.
@@ -102,42 +102,42 @@ class ThumbImageResize:
             return target
         return target
 
-    @classmethod
-    def resize_images_in_document(cls, app: Sphinx, doctree: document):
-        """Resize all images in one Sphinx document.
 
-        Called from the doctree-read event.
+def resize_images_in_document(app: Sphinx, doctree: document):
+    """Resize all images in one Sphinx document.
 
-        :param app: Sphinx application object.
-        :param doctree: Current document.
-        """
-        log = logging.getLogger(__name__)
-        thumbs_dir = app.env.doctreedir / cls.THUMBS_SUBDIR
-        doctree_source = Path(doctree["source"])
-        for node in doctree.findall(lambda n: ThumbNodeRequest.KEY in n):
-            request: ThumbNodeRequest = node[ThumbNodeRequest.KEY]
-            if request.no_resize:
-                continue
-            imguri = node["uri"]
-            if imguri.startswith("data:"):
-                doctree.reporter.warning("embedded images (data:...) are not supported", source=node.source, line=node.line)
-                continue
-            if imguri.find("://") != -1:
-                doctree.reporter.warning("external images are not supported", source=node.source, line=node.line)
-                continue
-            path_rel, path_abs = app.env.relfn2path(imguri, app.env.docname)
-            source = Path(path_abs)
-            if not source.is_file():
-                continue  # Subclassed Image directive already emits a warning in this case.
-            target_dir = thumbs_dir / Path(path_rel).parent
-            try:
-                log.debug(f"opening {source}")
-                with PIL.Image.open(source) as image:
-                    instance = cls(source, target_dir, image)
-                    target = instance.resize(request, doctree, node)
-            except Exception as exc:
-                doctree.reporter.error(f"failed to resize {source}: {exc}", source=node.source, line=node.line)
-                raise
-            if not target:
-                continue
-            node["uri"] = relpath(target, start=doctree_source.parent)
+    Called from the doctree-read event.
+
+    :param app: Sphinx application object.
+    :param doctree: Current document.
+    """
+    log = logging.getLogger(__name__)
+    thumbs_dir = app.env.doctreedir / THUMBS_SUBDIR
+    doctree_source = Path(doctree["source"])
+    for node in doctree.findall(lambda n: ThumbNodeRequest.KEY in n):
+        request: ThumbNodeRequest = node[ThumbNodeRequest.KEY]
+        if request.no_resize:
+            continue
+        imguri = node["uri"]
+        if imguri.startswith("data:"):
+            doctree.reporter.warning("embedded images (data:...) are not supported", source=node.source, line=node.line)
+            continue
+        if imguri.find("://") != -1:
+            doctree.reporter.warning("external images are not supported", source=node.source, line=node.line)
+            continue
+        path_rel, path_abs = app.env.relfn2path(imguri, app.env.docname)
+        source = Path(path_abs)
+        if not source.is_file():
+            continue  # Subclassed Image directive already emits a warning in this case.
+        target_dir = thumbs_dir / Path(path_rel).parent
+        try:
+            log.debug(f"opening {source}")
+            with PIL.Image.open(source) as image:
+                instance = ThumbImageResize(source, target_dir, image)
+                target = instance.resize(request, doctree, node)
+        except Exception as exc:
+            doctree.reporter.error(f"failed to resize {source}: {exc}", source=node.source, line=node.line)
+            raise
+        if not target:
+            continue
+        node["uri"] = relpath(target, start=doctree_source.parent)
