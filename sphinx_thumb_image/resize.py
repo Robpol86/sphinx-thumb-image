@@ -100,6 +100,7 @@ class ThumbImageResize:
             except LockException:
                 log.debug(f"skipping {source} ({target} exists after race)")
                 return target
+            # TODO record source/target and docname in env somewhere.
         return target
 
     @classmethod

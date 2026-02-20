@@ -17,6 +17,14 @@ __license__ = "BSD-2-Clause"
 __version__ = "0.4.0"
 
 
+def get_outdated(app: Sphinx, env, added, changed, removed) -> list[str]:
+    """TODO.
+
+    Get source/target and docname from env and if atime/mtime changes then return docnames.
+    """
+    return []  # e.g. ["index"]
+
+
 def setup(app: Sphinx) -> dict[str, str]:
     """Register extension components with Sphinx (called by Sphinx during phase 0 [initialization]).
 
@@ -34,6 +42,7 @@ def setup(app: Sphinx) -> dict[str, str]:
     app.add_directive("thumb-image", ThumbImage)
     app.add_directive("thumb-figure", ThumbFigure)
     app.add_directive("list-table-thumbs", ListTableThumbs)
+    app.connect("env-get-outdated", get_outdated)
     app.connect("doctree-read", ThumbImageResize.resize_images_in_document, priority=499)
     return {
         "parallel_read_safe": True,
