@@ -133,8 +133,8 @@ def resize_images_in_document(app: Sphinx, doctree: document):
         try:
             log.debug(f"opening {source}")
             with PIL.Image.open(source) as image:
-                instance = ThumbImageResize(source, target_dir, image)
-                target = instance.resize(request, doctree, node)
+                tir = ThumbImageResize(source, target_dir, image)
+                target = tir.resize(request, doctree, node)
         except Exception as exc:
             doctree.reporter.error(f"failed to resize {source}: {exc}", source=node.source, line=node.line)
             raise
