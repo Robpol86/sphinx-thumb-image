@@ -38,6 +38,52 @@ class ThumbImageResize:
         frames[0].save(target, save_all=True, append_images=frames[1:], disposal=disposal, **kwargs)
 
     @classmethod
+    def read_image(cls, request, image, source):
+        """TODO."""
+        log = logging.getLogger(__name__)
+        source_size = image.size
+        # Get target size.
+        if request.is_animated:
+            image_copy = image.copy()
+            image_copy.thumbnail((request.width or source_size[0], request.height or source_size[1]))
+            target_size = image_copy.size
+        else:
+            image.thumbnail((request.width or source_size[0], request.height or source_size[1]))
+            target_size = image.size
+        if target_size[0] >= source_size[0]:
+            paren = f"{node['uri']} {source_size[0]}x{source_size[1]}"
+            message = f"requested thumbnail size is not smaller than source image ({paren})"
+            doctree.reporter.warning(message, source=node.source, line=node.line)
+            return None
+        # Get target file path.
+        if request.quality:
+            thumb_file_name = f"{source.stem}.{target_size[0]}x{target_size[1]}.{request.quality}{source.suffix}"
+        else:
+            thumb_file_name = f"{source.stem}.{target_size[0]}x{target_size[1]}{source.suffix}"
+        target = target_dir / thumb_file_name
+        if target.exists():
+            log.debug(f"skipping {source} ({target} exists)")
+            return target
+    
+    @classmethod
+    def write_image(cls, image, source, target):
+        """TODO."""
+        log = logging.getLogger(__name__)
+        if target.exists():
+            log.debug(f"skipping {source} ({target} exists after lock)")
+            return target
+        log.debug(f"resizing {source} ({source_size[0]}x{source_size[1]}) to {target}")
+        kwargs = dict(format=image.format)
+        if request.quality:
+            kwargs["quality"] = request.quality
+        if request.is_animated:
+            cls.save_animated(image, target, target_size, **kwargs)
+        else:
+            image.save(target, **kwargs)
+        source_stat = source.stat()
+        os.utime(target, ns=(source_stat.st_atime_ns, source_stat.st_mtime_ns))
+
+    @classmethod
     def resize(
         cls, source: Path, target_dir: Path, request: ThumbNodeRequest, doctree: document, node: Element
     ) -> Optional[Path]:
@@ -56,47 +102,12 @@ class ThumbImageResize:
         log = logging.getLogger(__name__)
         log.debug(f"opening {source}")
         with PIL.Image.open(source) as image:
-            source_size = image.size
-            # Get target size.
-            if request.is_animated:
-                image_copy = image.copy()
-                image_copy.thumbnail((request.width or source_size[0], request.height or source_size[1]))
-                target_size = image_copy.size
-            else:
-                image.thumbnail((request.width or source_size[0], request.height or source_size[1]))
-                target_size = image.size
-            if target_size[0] >= source_size[0]:
-                paren = f"{node['uri']} {source_size[0]}x{source_size[1]}"
-                message = f"requested thumbnail size is not smaller than source image ({paren})"
-                doctree.reporter.warning(message, source=node.source, line=node.line)
-                return None
-            # Get target file path.
-            if request.quality:
-                thumb_file_name = f"{source.stem}.{target_size[0]}x{target_size[1]}.{request.quality}{source.suffix}"
-            else:
-                thumb_file_name = f"{source.stem}.{target_size[0]}x{target_size[1]}{source.suffix}"
-            target = target_dir / thumb_file_name
-            if target.exists():
-                log.debug(f"skipping {source} ({target} exists)")
-                return target
-            # Write to target file path.
+            target = cls.read_image()
             target.parent.mkdir(exist_ok=True, parents=True)
             lock_file = target.parent / f"{target.name}.lock"
             try:
                 with TemporaryFileLock(lock_file, timeout=0):
-                    if target.exists():
-                        log.debug(f"skipping {source} ({target} exists after lock)")
-                        return target
-                    log.debug(f"resizing {source} ({source_size[0]}x{source_size[1]}) to {target}")
-                    kwargs = dict(format=image.format)
-                    if request.quality:
-                        kwargs["quality"] = request.quality
-                    if request.is_animated:
-                        cls.save_animated(image, target, target_size, **kwargs)
-                    else:
-                        image.save(target, **kwargs)
-                    source_stat = source.stat()
-                    os.utime(target, ns=(source_stat.st_atime_ns, source_stat.st_mtime_ns))
+                    cls.write_image(target)
             except LockException:
                 log.debug(f"skipping {source} ({target} exists after race)")
                 return target
@@ -108,6 +119,8 @@ class ThumbImageResize:
         """Resize all images in one Sphinx document.
 
         Called from the doctree-read event.
+
+        TODO INSTANTIATE CLASS HERE, ONE INSTANCE PER EITHER DOCUMENT OR IMAGE?
 
         :param app: Sphinx application object.
         :param doctree: Current document.
