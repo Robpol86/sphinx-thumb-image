@@ -112,8 +112,8 @@ def resize_images_in_document(app: Sphinx, doctree: document):
     :param doctree: Current document.
     """
     log = logging.getLogger(__name__)
-    thumbs_dir = app.env.doctreedir / THUMBS_SUBDIR
     doctree_source = Path(doctree["source"])
+
     for node in doctree.findall(lambda n: ThumbNodeRequest.KEY in n):
         request: ThumbNodeRequest = node[ThumbNodeRequest.KEY]
         if request.no_resize:
@@ -129,7 +129,7 @@ def resize_images_in_document(app: Sphinx, doctree: document):
         source = Path(path_abs)
         if not source.is_file():
             continue  # Subclassed Image directive already emits a warning in this case.
-        target_dir = thumbs_dir / Path(path_rel).parent
+        target_dir = app.env.doctreedir / THUMBS_SUBDIR / Path(path_rel).parent
         try:
             log.debug(f"opening {source}")
             with PIL.Image.open(source) as image:
