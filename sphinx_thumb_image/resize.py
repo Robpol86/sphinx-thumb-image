@@ -137,3 +137,7 @@ class ThumbImageResize:
             if not target:
                 continue
             node["uri"] = relpath(target, start=doctree_source.parent)
+
+
+# TODO store thumb -> original path associations in a dict somehere in cache
+# TODO use a Sphinx API to update mtimes.
