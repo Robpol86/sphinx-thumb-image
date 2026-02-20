@@ -20,8 +20,16 @@ class ThumbImageResize:
 
     THUMBS_SUBDIR = "_thumbs"
 
-    @classmethod
-    def save_animated(cls, image: PIL.ImageFile.ImageFile, target: Path, target_size: tuple[int, int], **kwargs):
+    def __init__(self, source: Path, target_dir: Path):
+        """Instantiate class to resize one image.
+
+        :param source: Path to image file to resize.
+        :param target_dir: Path to directory to write resized output image to.
+        """
+        self.source = source
+        self.target_dir = target_dir
+
+    def save_animated(self, image: PIL.ImageFile.ImageFile, target: Path, target_size: tuple[int, int], **kwargs):
         """Save all frames in an animated image file to the target file.
 
         :param image: Opened source image.
@@ -36,16 +44,11 @@ class ThumbImageResize:
         disposal = 2  # https://github.com/Robpol86/sphinx-thumb-image/issues/43
         frames[0].save(target, save_all=True, append_images=frames[1:], disposal=disposal, **kwargs)
 
-    @classmethod
-    def resize(
-        cls, source: Path, target_dir: Path, request: ThumbNodeRequest, doctree: document, node: Element
-    ) -> Optional[Path]:
+    def resize(self, request: ThumbNodeRequest, doctree: document, node: Element) -> Optional[Path]:
         """Resize one image.
 
         Output image saved with the same relative path as the source image but in the thumbs directory.
 
-        :param source: Path to image file to resize.
-        :param target_dir: Path to directory to write resized output image to.
         :param request: Image node's extension request object.
         :param doctree: Current document.
         :param node: Current image node.
@@ -53,8 +56,8 @@ class ThumbImageResize:
         :returns: Path to the output image or None if no resizing is done.
         """
         log = logging.getLogger(__name__)
-        log.debug(f"opening {source}")
-        with PIL.Image.open(source) as image:
+        log.debug(f"opening {self.source}")
+        with PIL.Image.open(self.source) as image:  # TODO move to resize_images_in_document?
             source_size = image.size
             # Get target size.
             if request.is_animated:
@@ -71,12 +74,14 @@ class ThumbImageResize:
                 return None
             # Get target file path.
             if request.quality:
-                thumb_file_name = f"{source.stem}.{target_size[0]}x{target_size[1]}.{request.quality}{source.suffix}"
+                thumb_file_name = (
+                    f"{self.source.stem}.{target_size[0]}x{target_size[1]}.{request.quality}{self.source.suffix}"
+                )
             else:
-                thumb_file_name = f"{source.stem}.{target_size[0]}x{target_size[1]}{source.suffix}"
-            target = target_dir / thumb_file_name
+                thumb_file_name = f"{self.source.stem}.{target_size[0]}x{target_size[1]}{self.source.suffix}"
+            target = self.target_dir / thumb_file_name
             if target.exists():
-                log.debug(f"skipping {source} ({target} exists)")
+                log.debug(f"skipping {self.source} ({target} exists)")
                 return target
             # Write to target file path.
             target.parent.mkdir(exist_ok=True, parents=True)
@@ -84,18 +89,18 @@ class ThumbImageResize:
             try:
                 with TemporaryFileLock(lock_file, timeout=0):
                     if target.exists():
-                        log.debug(f"skipping {source} ({target} exists after lock)")
+                        log.debug(f"skipping {self.source} ({target} exists after lock)")
                         return target
-                    log.debug(f"resizing {source} ({source_size[0]}x{source_size[1]}) to {target}")
+                    log.debug(f"resizing {self.source} ({source_size[0]}x{source_size[1]}) to {target}")
                     kwargs = dict(format=image.format)
                     if request.quality:
                         kwargs["quality"] = request.quality
                     if request.is_animated:
-                        cls.save_animated(image, target, target_size, **kwargs)
+                        self.save_animated(image, target, target_size, **kwargs)
                     else:
                         image.save(target, **kwargs)
             except LockException:
-                log.debug(f"skipping {source} ({target} exists after race)")
+                log.debug(f"skipping {self.source} ({target} exists after race)")
                 return target
         return target
 
@@ -127,7 +132,8 @@ class ThumbImageResize:
                 continue  # Subclassed Image directive already emits a warning in this case.
             target_dir = thumbs_dir / Path(path_rel).parent
             try:
-                target = cls.resize(source, target_dir, request, doctree, node)
+                instance = cls(source, target_dir)
+                target = instance.resize(request, doctree, node)
             except Exception as exc:
                 doctree.reporter.error(f"failed to resize {source}: {exc}", source=node.source, line=node.line)
                 raise
