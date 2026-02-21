@@ -1,6 +1,5 @@
 """Test re-creating the thumbnail when an image's mtime changes."""
 
-import sys
 import time
 from pathlib import Path
 from textwrap import dedent
@@ -42,7 +41,6 @@ def rebuild(
         """),
     },
 )
-@pytest.mark.flaky(reruns=5, condition=sys.platform.startswith("win32"))  # Windows time precision issues.
 def test_mtime(app: SphinxTestApp):
     """Test cases for the option."""
     track_files = dict(

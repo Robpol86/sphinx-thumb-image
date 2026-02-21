@@ -46,8 +46,7 @@ def prune_outdated_thumbs(app: Sphinx):
 
     TODO log
     """
-    env = app.builder.env
-    back_ref = ThumbBackReference(env)
+    back_ref = ThumbBackReference(app.env)
     for thumb_path, source_path in back_ref.items():
         prune = False
         try:

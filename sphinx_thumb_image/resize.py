@@ -101,7 +101,6 @@ class ThumbImageResize:
             except LockException:
                 log.debug(f"skipping {source} ({target} exists after race)")
                 return target
-            # TODO record source/target and docname in env somewhere.
         return target
 
     @classmethod
@@ -115,7 +114,7 @@ class ThumbImageResize:
         """
         thumbs_dir = app.env.doctreedir / cls.THUMBS_SUBDIR
         doctree_source = Path(doctree["source"])
-        back_ref = ThumbBackReference(app.env)  # TODO app.env vs app.builder.env?
+        back_ref = ThumbBackReference(app.env)
         for node in doctree.findall(lambda n: ThumbNodeRequest.KEY in n):
             request: ThumbNodeRequest = node[ThumbNodeRequest.KEY]
             if request.no_resize:
@@ -139,8 +138,8 @@ class ThumbImageResize:
                 raise
             if not target:
                 continue
-            back_ref.set(target, source)  # TODO multiprocessing test?
             node["uri"] = relpath(target, start=doctree_source.parent)
+            back_ref.set(target, source)  # TODO multiprocessing test?
 
 
 # TODO store thumb -> original path associations in a dict somehere in cache
