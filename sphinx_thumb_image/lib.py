@@ -2,7 +2,8 @@
 
 import re
 from dataclasses import dataclass
-from typing import ClassVar, Optional
+from pathlib import Path
+from typing import ClassVar, Iterator, Optional
 
 from sphinx.environment import BuildEnvironment
 
@@ -29,19 +30,28 @@ class ThumbBackReference:
     Rewrite matching implementation signatures.
     """
 
-    KEY: str = "thumb_image_back_ref"
+    KEY = "thumb_image_back_ref"
 
-    @classmethod
-    def get_from_env(cls, env: BuildEnvironment, initialize: bool = False) -> dict:
-        """TODO."""
-        if initialize and not hasattr(env, cls.KEY):
-            setattr(env, cls.KEY, {})
-        return getattr(env, cls.KEY)
+    def __init__(self, env: BuildEnvironment):
+        """Initialize the class.
 
-    @classmethod
-    def set_in_env(cls, env: BuildEnvironment, data: dict):
+        :param env: Sphinx build environment.
+        """
+        self.env = env
+        if not hasattr(env, self.KEY):
+            setattr(env, self.KEY, {})
+
+    def set(self, thumb_path: Path, source_path: Path):
         """TODO."""
-        setattr(env, cls.KEY, data)
+        getattr(self.env, self.KEY)[thumb_path] = source_path
+
+    def pop(self, thumb_path: Path) -> Path:
+        """TODO."""
+        return getattr(self.env, self.KEY).pop(thumb_path)
+
+    def items(self) -> Iterator[tuple[Path, Path]]:
+        """TODO."""
+        yield from getattr(self.env, self.KEY).items()
 
 
 def format_replacement(target: str, key: str, replacement: str) -> str:

@@ -138,7 +138,7 @@ class ThumbImageResize:
                 raise
             if not target:
                 continue
-            back_ref.set(target, source)
+            back_ref.set(target, source)  # TODO multiprocessing test?
             node["uri"] = relpath(target, start=doctree_source.parent)
 
 
