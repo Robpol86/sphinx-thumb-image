@@ -13,7 +13,8 @@ from portalocker import LockException, TemporaryFileLock
 from sphinx.application import Sphinx
 from sphinx.util import logging
 
-from sphinx_thumb_image.lib import ThumbBackReference, ThumbNodeRequest
+from sphinx_thumb_image.lib import ThumbNodeRequest
+from sphinx_thumb_image.mtime import ThumbBackReference
 
 
 class ThumbImageResize:

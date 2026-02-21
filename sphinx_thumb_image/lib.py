@@ -2,10 +2,7 @@
 
 import re
 from dataclasses import dataclass
-from pathlib import Path
-from typing import ClassVar, Iterator, Optional
-
-from sphinx.environment import BuildEnvironment
+from typing import ClassVar, Optional
 
 
 @dataclass
@@ -22,36 +19,6 @@ class ThumbNodeRequest:
     is_animated: bool = False
 
     KEY: ClassVar[str] = "thumb-request"
-
-
-class ThumbBackReference:
-    """TODO.
-
-    Rewrite matching implementation signatures.
-    """
-
-    KEY = "thumb_image_back_ref"
-
-    def __init__(self, env: BuildEnvironment):
-        """Initialize the class.
-
-        :param env: Sphinx build environment.
-        """
-        self.env = env
-        if not hasattr(env, self.KEY):
-            setattr(env, self.KEY, {})
-
-    def set(self, thumb_path: Path, source_path: Path):
-        """TODO."""
-        getattr(self.env, self.KEY)[thumb_path] = source_path
-
-    def pop(self, thumb_path: Path) -> Path:
-        """TODO."""
-        return getattr(self.env, self.KEY).pop(thumb_path)
-
-    def items(self) -> Iterator[tuple[Path, Path]]:
-        """TODO."""
-        yield from getattr(self.env, self.KEY).items()
 
 
 def format_replacement(target: str, key: str, replacement: str) -> str:
