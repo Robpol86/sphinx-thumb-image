@@ -64,7 +64,7 @@ def test_mtime(app: SphinxTestApp):
     assert mtimes_before == mtimes_after
 
     # Change mtime.
-    time.sleep(1.5)  # TODO reduce
+    time.sleep(0.5)
     track_files["img_src"].touch(exist_ok=True)
     mtimes_before, mtimes_after = rebuild(app, track_files)
     assert mtimes_after["img_src"] == mtimes_after["img_intermed"]
