@@ -62,3 +62,8 @@ def prune_outdated_thumbs(app: Sphinx):
         if prune:
             os.unlink(thumb_path)  # TODO Sphinx has api for this?
             back_ref.pop(thumb_path)
+
+
+def todo_merge_env(app: Sphinx, env: BuildEnvironment, docnames: list[str], other: BuildEnvironment):
+    """TODO."""
+    pass
