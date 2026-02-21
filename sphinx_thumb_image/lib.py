@@ -4,6 +4,8 @@ import re
 from dataclasses import dataclass
 from typing import ClassVar, Optional
 
+from sphinx.environment import BuildEnvironment
+
 
 @dataclass
 class ThumbNodeRequest:
@@ -19,6 +21,27 @@ class ThumbNodeRequest:
     is_animated: bool = False
 
     KEY: ClassVar[str] = "thumb-request"
+
+
+class ThumbBackReference:
+    """TODO.
+
+    Rewrite matching implementation signatures.
+    """
+
+    KEY: str = "thumb_image_back_ref"
+
+    @classmethod
+    def get_from_env(cls, env: BuildEnvironment, initialize: bool = False) -> dict:
+        """TODO."""
+        if initialize and not hasattr(env, cls.KEY):
+            setattr(env, cls.KEY, {})
+        return getattr(env, cls.KEY)
+
+    @classmethod
+    def set_in_env(cls, env: BuildEnvironment, data: dict):
+        """TODO."""
+        setattr(env, cls.KEY, data)
 
 
 def format_replacement(target: str, key: str, replacement: str) -> str:

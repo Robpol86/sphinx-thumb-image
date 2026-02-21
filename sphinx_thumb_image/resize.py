@@ -13,7 +13,7 @@ from portalocker import LockException, TemporaryFileLock
 from sphinx.application import Sphinx
 from sphinx.util import logging
 
-from sphinx_thumb_image.lib import ThumbNodeRequest
+from sphinx_thumb_image.lib import ThumbBackReference, ThumbNodeRequest
 
 
 class ThumbImageResize:
@@ -114,6 +114,7 @@ class ThumbImageResize:
         """
         thumbs_dir = app.env.doctreedir / cls.THUMBS_SUBDIR
         doctree_source = Path(doctree["source"])
+        back_ref = ThumbBackReference(app.env)  # TODO app.env vs app.builder.env?
         for node in doctree.findall(lambda n: ThumbNodeRequest.KEY in n):
             request: ThumbNodeRequest = node[ThumbNodeRequest.KEY]
             if request.no_resize:
@@ -137,6 +138,7 @@ class ThumbImageResize:
                 raise
             if not target:
                 continue
+            back_ref.set(target, source)
             node["uri"] = relpath(target, start=doctree_source.parent)
 
 
