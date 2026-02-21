@@ -140,7 +140,3 @@ class ThumbImageResize:
                 continue
             node["uri"] = relpath(target, start=doctree_source.parent)
             back_ref.set(target, source)  # TODO multiprocessing test?
-
-
-# TODO store thumb -> original path associations in a dict somehere in cache
-# TODO use a Sphinx API to update mtimes.
