@@ -24,6 +24,7 @@ def rebuild(
         mtimes_before = {}
     else:
         mtimes_before = {k: v.stat().st_mtime for k, v in track_files.items()}
+    app._init_builder()
     app.build()
     mtimes_after = {k: v.stat().st_mtime for k, v in track_files.items()}
     return mtimes_before, mtimes_after
@@ -66,7 +67,7 @@ def test_mtime(app: SphinxTestApp):
     time.sleep(1.5)  # TODO reduce
     track_files["img_src"].touch(exist_ok=True)
     mtimes_before, mtimes_after = rebuild(app, track_files)
-    # assert mtimes_after["img_src"] == mtimes_after["img_intermed"]  # TODO
+    assert mtimes_after["img_src"] == mtimes_after["img_intermed"]
     # assert mtimes_after["img_intermed"] == mtimes_after["img_out"]  # TODO github.com/sphinx-doc/sphinx/issues/14312
 
     img_intermed_before = mtimes_before.pop("img_intermed")
@@ -87,6 +88,6 @@ def test_mtime(app: SphinxTestApp):
 
     # Confirm no changes again.
     mtimes_before, mtimes_after = rebuild(app, track_files)
-    # assert mtimes_after["img_src"] == mtimes_after["img_intermed"]  # TODO
+    assert mtimes_after["img_src"] == mtimes_after["img_intermed"]
     # assert mtimes_after["img_intermed"] == mtimes_after["img_out"]  # TODO github.com/sphinx-doc/sphinx/issues/14312
     assert mtimes_before == mtimes_after

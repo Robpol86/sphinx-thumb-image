@@ -35,7 +35,7 @@ class ThumbBackReference:
 
     def items(self) -> Iterator[tuple[Path, Path]]:
         """TODO."""
-        yield from getattr(self.env, self.KEY).items()
+        yield from list(getattr(self.env, self.KEY).items())
 
 
 def prune_outdated_thumbs(app: Sphinx):
