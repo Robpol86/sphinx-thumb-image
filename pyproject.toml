@@ -64,7 +64,6 @@ dev = [
     "pytest",
     "pytest-cov",
     "pytest-icdiff",
-    "pytest-rerunfailures",
 ]
 
 [tool.coverage.report]
