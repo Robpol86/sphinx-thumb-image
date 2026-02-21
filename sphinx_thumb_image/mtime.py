@@ -23,6 +23,7 @@ class ThumbBackReference:
         """
         self.env = env
         if not hasattr(env, self.KEY):
+            # TODO confirm this persist in cache
             setattr(env, self.KEY, {})
 
     def set(self, thumb_path: Path, source_path: Path):
