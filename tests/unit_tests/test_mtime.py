@@ -72,7 +72,6 @@ def test_mtime(app: SphinxTestApp):
 
     img_intermed_before = mtimes_before.pop("img_intermed")
     img_intermed_after = mtimes_after.pop("img_intermed")
-    pytest.skip("TODO implement")
     assert img_intermed_before < img_intermed_after
 
     # TODO uncomment below when resolved: https://github.com/sphinx-doc/sphinx/issues/14312
